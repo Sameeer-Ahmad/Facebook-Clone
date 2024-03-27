@@ -2,6 +2,7 @@ const AllRoutes=()=>{
     return(
         <div>
             routes
+            
         </div>
     )
 }
