@@ -1,9 +1,14 @@
 
 import './App.css';
 
+import { Box } from "@chakra-ui/react";
+import Signup from "./pages/Signup";
+
 function App() {
   return (
-   <h2>Facebook  Clone</h2>
+  <div className='App'>
+   <Signup/>
+   </div>
   );
 }
 
