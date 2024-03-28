@@ -1,9 +1,9 @@
 
-
 const Reducer=()=>{
     return(
         <>
         </>
     )
 }
-export default Reducer;
+
+export default Reducer
