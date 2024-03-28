@@ -6,11 +6,13 @@ import AllRoutes from './routes/Allroutes';
 function App() {
   return (
     <>
-  
-   <Nav />
-   <AllRoutes />
-   </>
+
+      <Nav />
+      <AllRoutes />
+    </>
   );
 }
 
 export default App;
+
+
