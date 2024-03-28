@@ -1,9 +1,15 @@
 
 import './App.css';
+import Nav from './components/Navbar';
+import AllRoutes from './routes/Allroutes';
 
 function App() {
   return (
-   <h2>Facebook  Clone</h2>
+    <>
+  
+   <Nav />
+   <AllRoutes />
+   </>
   );
 }
 
