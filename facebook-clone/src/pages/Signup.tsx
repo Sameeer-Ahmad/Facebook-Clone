@@ -1,8 +1,329 @@
-const Signup=()=>{
-    return (
-        <div>
-            <h1>Signup</h1>
-        </div>
-    )
+import {
+  Box,
+  Button,
+  Flex,
+  Image,
+  Input,
+  Radio,
+  RadioGroup,
+  Select,
+  Text,
+} from "@chakra-ui/react";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { app, db } from "../firebase";
+import { FC, useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
+// import useInputChange from "../utils/signup";
+
+const Days: number[] = [];
+for (let day = 1; day <= 31; day++) {
+  Days.push(day);
 }
-export default Signup
+
+const months = [
+  { value: 1, label: "Jan" },
+  { value: 2, label: "Feb" },
+  { value: 3, label: "Mar" },
+  { value: 4, label: "Apr" },
+  { value: 5, label: "May" },
+  { value: 6, label: "Jun" },
+  { value: 7, label: "Jul" },
+  { value: 8, label: "Aug" },
+  { value: 9, label: "Sep" },
+  { value: 10, label: "Oct" },
+  { value: 11, label: "Nov" },
+  { value: 12, label: "Dec" },
+];
+
+const years: number[] = [];
+for (let year = 2024; year >= 1905; year--) {
+  years.push(year);
+}
+
+const auth = getAuth(app);
+
+const Signup: FC = () => {
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+const [birthday, setBirthday] = useState<{ day: string; month: string; year: string }>({ day: "", month: "", year: "" });
+  const [gender, setGender] = useState<string>("");
+
+  const handleonChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFirstName(e.target.value);
+  };
+  const handleonChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLastName(e.target.value);
+  };
+  const handleonChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+  const handleonChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleonChangeBirthday = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setBirthday((prevBirthday) => ({
+      ...prevBirthday,
+      [name]: value,
+    }));
+  };
+
+  const handleOnChangeGender = (value: string) => {
+    setGender(value);
+  };
+  interface UserData {
+    displayName: string;
+    email: string;
+    birthday: { day: string; month: string; year: string };
+    gender: string;
+  }
+const createUserProfile = (userId:string, userData:UserData) => {
+  const userRef = doc(db, "users", userId); // Assuming you have a 'users' collection in your Firestore
+  return setDoc(userRef, userData, { merge: true })
+    .then(() => {
+      console.log("User profile created successfully!");
+    })
+    .catch((error) => {
+      console.error("Error creating user profile: ", error);
+    });
+};
+
+  const handleSubmitSignupUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+      console.log(userCredential);
+      const user=userCredential.user;
+      createUserProfile(user.uid, {
+     displayName: `${firstName} ${lastName}`,
+        email,
+        birthday,
+        gender,
+      }).catch((err)=>{
+        console.log(err);
+      })
+      alert("user created successfully");
+    });
+    console.log(firstName, lastName, email, password, birthday, gender);
+  };
+  return (
+    <Box
+      display={"flex"}
+      flexDirection={"column"}
+      alignItems={"center"}
+      mt={4}
+      gap={4}
+    >
+      <Image
+        w={["25%", "25%", "25%", "24%", "15%", "14%"]}
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Facebook_Logo_%282019%29.svg/1280px-Facebook_Logo_%282019%29.svg.png"
+      />
+
+      <Box
+        p={4}
+        boxShadow={"md"}
+        borderRadius={"10px"}
+        w={["90%", "80%", "70%", "60%", "35%"]}
+        bg={"white"}
+      >
+        <Box mt={-4}>
+          <Text fontSize={"32px"} fontWeight={"600"}>
+            Sign Up
+          </Text>
+          <Text fontSize={"15px"} fontWeight={"400"} mb={2}>
+            It's quick and easy.
+          </Text>
+        </Box>
+        <hr />
+        <Box as="form" onSubmit={handleSubmitSignupUser}>
+          <Box display={"flex"} gap={4}>
+            <Input
+              bg={"rgb(245,246,247)"}
+              placeholder="First name"
+              type="text"
+              value={firstName}
+              mt={4}
+              isRequired
+              onChange={handleonChangeFirstName}
+            />
+            <Input
+              bg={"rgb(245,246,247)"}
+              value={lastName}
+              type="text"
+              placeholder="Surname"
+              mt={4}
+              onChange={handleonChangeLastName}
+            />
+          </Box>
+          <Input
+            bg={"rgb(245,246,247)"}
+            type="email"
+            value={email}
+            placeholder="Email address"
+            mt={4}
+            onChange={handleonChangeEmail}
+          />
+          <Input
+            bg={"rgb(245,246,247)"}
+            type="password"
+            value={password}
+            placeholder="New password"
+            mt={4}
+            onChange={handleonChangePassword}
+          />
+
+          <Text fontSize={"13px"} mt={4}>
+            Date of birth
+          </Text>
+          <Box display={"flex"} gap={4} mt={1}>
+            <Select h={"35px"} name="day" onChange={handleonChangeBirthday}>
+              {Days.map((days) => (
+                <option key={days} value={days}>
+                  {days}
+                </option>
+              ))}
+            </Select>
+
+            <Select h={"35px"} name="month" onChange={handleonChangeBirthday}>
+              {months.map((month) => (
+                <option key={month.value} value={month.value}>
+                  {month.label}
+                </option>
+              ))}
+            </Select>
+
+            <Select h={"35px"} name="year" onChange={handleonChangeBirthday}>
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </Select>
+          </Box>
+          <Text fontSize={"13px"} mt={4}>
+            Gender
+          </Text>
+          <RadioGroup
+            onChange={handleOnChangeGender}
+            value={gender}
+            display={"flex"}
+          >
+            <Flex
+              border="1px solid gray"
+              borderRadius="md"
+              p={1}
+              mr={2}
+              mb={2}
+              flexDirection="row"
+              w={"33%"}
+              h={"35px"}
+            >
+              <span>Female</span>
+              <Radio
+                value="female"
+                ml={["20%", "50%", "52%", "68%", "44%", "75%"]}
+              ></Radio>
+            </Flex>
+            <Flex
+              border="1px solid gray"
+              borderRadius="md"
+              p={1}
+              mr={2}
+              mb={2}
+              w={"33%"}
+              flexDirection="row"
+              h={"35px"}
+            >
+              <span>Male</span>
+              <Radio
+                value="male"
+                ml={["38%", "62%", "64%", "75z%", "57%", "80%"]}
+              ></Radio>
+            </Flex>
+
+            <Flex
+              border="1px solid gray"
+              borderRadius="md"
+              p={1}
+              mr={2}
+              mb={2}
+              flexDirection="row"
+              w={"33%"}
+              h={"35px"}
+            >
+              <span>Custom</span>
+              <Radio
+                value="custom"
+                ml={["14%", "46%", "50%", "65%", "40%", "75%"]}
+                borderWidth="2px"
+              ></Radio>
+            </Flex>
+          </RadioGroup>
+          <Box>
+            <Text fontSize={"13px"} color={"gray"} mb={4}>
+              Privacy who use our service may have uploaded your contact
+              information to Facebook.{" "}
+              <Text
+                color={"rgb(48,89,127)"}
+                _hover={{ cursor: "pointer", textDecoration: "underline" }}
+                as={"span"}
+              >
+                Learn more
+              </Text>
+            </Text>
+
+            <Text fontSize={"13px"} color={"gray"}>
+              By clicking Sign Up, you agree to our{" "}
+              <Text
+                color={"rgb(48,89,127)"}
+                as={"span"}
+                _hover={{ cursor: "pointer", textDecoration: "underline" }}
+              >
+                Terms,
+              </Text>{" "}
+              <Text
+                color={"rgb(48,89,127)"}
+                as={"span"}
+                _hover={{ cursor: "pointer", textDecoration: "underline" }}
+              >
+                {" "}
+                Privacy Policy
+              </Text>{" "}
+              and{" "}
+              <Text
+                color={"rgb(48,89,127)"}
+                _hover={{ cursor: "pointer", textDecoration: "underline" }}
+                as={"span"}
+              >
+                Cookies Policy.
+              </Text>{" "}
+              you may receive SMS notifications from us and can opt out at any
+              time.
+            </Text>
+          </Box>
+          <Flex justifyContent="center">
+            <Button
+              type="submit"
+              bg={"rgb(0,164,0)"}
+              w={"50%"}
+              color={"white"}
+              fontSize={"18px"}
+              lineHeight={"23px"}
+              fontWeight={"600"}
+              mt={2}
+              _hover={{
+                bgGradient:
+                  "linear(green.500 0%, green.600 25%, green.600 50%)",
+              }}
+            >
+              Sign Up
+            </Button>
+          </Flex>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+export default Signup;
