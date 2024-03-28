@@ -19,7 +19,8 @@ import {
   InputLeftElement,
   InputGroup,
   Icon,
-  Tooltip,Text
+  Tooltip,
+  Text
 } from '@chakra-ui/react';
 import facebook_logo from "../Images/Facebook_logo.png";
 import { FaSearch } from "react-icons/fa";
@@ -53,8 +54,11 @@ const NavLink = (props: NavLinkProps) => {
 
   const activeStyle = {
     color: 'blue',
-    textdecoration: "underline",
+    textDecoration: "underline",
+    position: 'relative',
   };
+
+  const iconStyle = isActive ? activeStyle : defaultStyle;
 
   return (
     <Tooltip label={tooltipLabel}>
@@ -76,8 +80,22 @@ const NavLink = (props: NavLinkProps) => {
           }}
           fontSize={fontSize}
           textDecoration={isActive ? 'underline' : 'none'}
+          position="relative"
         >
-          {children}
+          <Flex alignItems="center" justifyContent="center">
+            {React.cloneElement(children as React.ReactElement, { style: iconStyle })}
+          </Flex>
+          {isActive && (
+            <Box
+              as="div"
+              position="absolute"
+              bottom="-2px"
+              left="0"
+              w="100%"
+              h="2px"
+              bg="currentColor"
+            />
+          )}
         </Box>
       </Link>
     </Tooltip>
@@ -157,6 +175,7 @@ export default function Nav() {
                     type="text"
                     placeholder="Search Facebook"
                     borderRadius={20}
+                    color={"grey.200"}
                   />
                 </InputGroup>
               )}
@@ -175,7 +194,6 @@ export default function Nav() {
                     to={ele.to}
                     fontSize={['large', 'medium', 'xx-large']}
                     tooltipLabel={ele.tooltipLabel}
-                    
                   >
                     {ele.display}
                   </NavLink>
