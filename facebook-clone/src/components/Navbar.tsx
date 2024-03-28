@@ -175,6 +175,7 @@ export default function Nav() {
                     type="text"
                     placeholder="Search Facebook"
                     borderRadius={20}
+                    color={"grey.200"}
                   />
                 </InputGroup>
               )}
