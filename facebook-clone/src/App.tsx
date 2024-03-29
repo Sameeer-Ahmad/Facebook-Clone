@@ -1,8 +1,6 @@
 
 import './App.css';
-import Nav from './components/Navbar';
-import Sidebar from './components/Sidebar';
-import AllRoutes from './routes/Allroutes';
+
 
 function App() {
   return (
@@ -10,9 +8,7 @@ function App() {
  <div className='App'>
 
     
-    <Nav />
-      <AllRoutes />
-      <Sidebar/>
+    
 
   </div>
 
