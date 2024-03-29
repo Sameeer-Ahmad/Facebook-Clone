@@ -12,9 +12,7 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
-  useColorMode,
   Center,
-  Image,
   Input,
   InputLeftElement,
   InputGroup,
@@ -33,6 +31,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   AvatarBadge,
+  useColorMode,
 } from '@chakra-ui/react';
 import facebook_logo from "../Images/Facebook_logo.png";
 import { FaSearch } from "react-icons/fa";
@@ -56,6 +55,7 @@ import { MdGroups } from "react-icons/md";
 import { HiShoppingBag } from "react-icons/hi2";
 import { MdOutlineEventAvailable } from "react-icons/md";
 import '../App.css';
+
 
 interface NavLinkProps {
   children: React.ReactNode;
