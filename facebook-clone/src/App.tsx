@@ -1,6 +1,8 @@
 
 import './App.css';
-import Nav from './components/Navbar';
+
+import Nav from './components/Navbar';  
+import Profile from './pages/profile/Profile';
 import AllRoutes from './routes/Allroutes';
 
 function App() {
@@ -9,9 +11,9 @@ function App() {
  <div className='App'>
 
     
-    <Nav />
-    <AllRoutes />
-
+    {/* <Nav /> */}
+    {/* <AllRoutes /> */}
+    <Profile/>
   </div>
 
   );

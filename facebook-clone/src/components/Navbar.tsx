@@ -12,17 +12,14 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
-  useColorMode,
   Center,
-  Image,
   Input,
   InputLeftElement,
   InputGroup,
   Icon,
   Tooltip,
-  Text
 } from '@chakra-ui/react';
-import facebook_logo from "../Images/Facebook_logo.png";
+import facebook_logo from "../images/Facebook_logo.png";
 import { FaSearch } from "react-icons/fa";
 import { BiHomeAlt } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
@@ -35,6 +32,7 @@ import { FaFacebookMessenger } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
 import { useBreakpointValue } from '@chakra-ui/react';
 import '../App.css';
+
 
 interface NavLinkProps {
   children: React.ReactNode;
@@ -201,7 +199,9 @@ export default function Nav() {
                 {index !== link.length - 1 && <Spacer size={spacingSize || 'small' } />} {/* Add Spacer component between links */}
               </React.Fragment>
             ))}
+            
           </Flex>
+       
 
           <Flex alignItems={'center'} ml={1}>
             <Stack direction={'row'} spacing={7}>
