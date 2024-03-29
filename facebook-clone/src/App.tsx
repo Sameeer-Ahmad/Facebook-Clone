@@ -1,6 +1,7 @@
 
 import './App.css';
 import Nav from './components/Navbar';
+import Sidebar from './components/Sidebar';
 import AllRoutes from './routes/Allroutes';
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
     
     <Nav />
     <AllRoutes />
-
+<Sidebar />
   </div>
 
   );
