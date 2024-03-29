@@ -1,4 +1,4 @@
-// import { StoryCards } from "./StoryCards";
+
 
 import { SmallAddIcon } from "@chakra-ui/icons";
 import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
@@ -7,7 +7,7 @@ import { StoryCards } from "./StoryCards";
 export const Story = () => {
   return (
     <>
-   {/* <Center> */}
+   <Center>
     <Flex>
       <Box
         // border={"1px solid"}
@@ -41,9 +41,9 @@ export const Story = () => {
           width={"30px"}
           height={"30px"}
           bg={"blue"}
-          position={"absolute"}
-          top={"160px"}
-          left={"60px"}
+          position={"relative"}
+          top={"-15px"}
+          left={"50px"}
           objectFit={"cover"}
           
         />
@@ -51,14 +51,14 @@ export const Story = () => {
           fontSize={"sm"}
           fontWeight={500}
           textAlign={"center"}
-          marginTop={6}
+          marginTop={1}
         >
           Create story
         </Text>
       </Box>
       <StoryCards/>
       </Flex>
-      {/* </Center> */}
+      </Center>
     </>
   );
 };
