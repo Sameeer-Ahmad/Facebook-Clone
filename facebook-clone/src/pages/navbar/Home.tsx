@@ -1,7 +1,10 @@
+import { PostPage } from "../../components/MiddleFeedParts/PostPage"
+
 const Home=()=>{
     return(
         <div>
-            home
+           
+           <PostPage/>
         </div>
     )
 
