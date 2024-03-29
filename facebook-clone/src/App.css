@@ -5,7 +5,92 @@
   /* background-color: rgb(240,242,245); */
 }
 
-
 .activeLink {
   text-decoration: underline;
+}
+
+.leftBar {
+  flex: 2;
+  position: sticky;
+  top: 70px;
+  height: calc(100vh - 70px);
+  overflow: scroll;
+  background-color: var(--themed-bg);
+  color: var(--themed-textColor);
+  width: 20%;
+  /* border: 1px solid red; */
+}
+
+.leftBar::-webkit-scrollbar {
+  display: none;
+}
+
+.leftBar:hover::-webkit-scrollbar {
+  border-right: 4px solid rgb(175, 173, 173);
+  display: block;
+}
+.leftBar .container {
+  padding: 20px;
+  /* background-color: green; */
+}
+
+.leftBar .container hr {
+  margin: 20px 0px;
+  border: none;
+  height: 0.5px;
+  background-color: var(--themed-border);
+}
+
+.leftBar .container .menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leftBar .container .menu span {
+  font-size: 12px;
+}
+
+.leftBar .container .menu .user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.leftBar .container .menu .user img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.leftBar .container .menu .user span {
+  font-size: 14px;
+}
+
+.leftBar .container .menu .item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+.leftBar .container .menu .item:hover {
+  cursor: pointer;
+  background-color: gray;
+  border-radius: 5px;
+  color: white;
+}
+
+.leftBar .container .menu .item img {
+  width: 30px;
+}
+
+.leftBar .container .menu .item span {
+  font-size: 14px;
+}
+
+@media screen and (max-width: 768px) {
+  .leftBar {
+    display: none;
+  }
 }
