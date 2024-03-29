@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
-import { FirebaseAuthProvider } from "./Context/AuthContextProvider";
+import AuthProvider from "./Context/AuthContextProvider";
 
 
 const root = ReactDOM.createRoot(
@@ -15,9 +15,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
   <ChakraProvider>
-   <FirebaseAuthProvider>
+   <AuthProvider>
       <App />
-      </FirebaseAuthProvider>
+      </AuthProvider>
 
   </ChakraProvider>
   </BrowserRouter>

@@ -142,7 +142,7 @@ export default function Nav() {
 
   const link = [
     {
-      to: "/",
+      to: "/home",
       display: <BiHomeAlt />,
       tooltipLabel: "Home"
     },
