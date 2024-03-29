@@ -12,9 +12,7 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
-  useColorMode,
   Center,
-  Image,
   Input,
   InputLeftElement,
   InputGroup,
@@ -33,6 +31,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   AvatarBadge,
+
   IconButton,
   DrawerOverlay,
   DrawerContent,
@@ -40,6 +39,9 @@ import {
   DrawerHeader,
   Drawer,
   DrawerBody,
+
+  useColorMode,
+
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 import facebook_logo from "../Images/Facebook_logo.png";
@@ -84,6 +86,7 @@ import Fund from "../Images/13.png";
 
 import { element } from "prop-types";
 import Sidebar from "./Sidebar";
+
 
 interface NavLinkProps {
   children: React.ReactNode;

@@ -5,11 +5,15 @@
   /* background-color: rgb(240,242,245); */
 }
 
+.mainbody {
+  display: flex;
+  /* background-color: rgb(240,242,245); */
+}
 .activeLink {
   text-decoration: underline;
 }
 
-.leftBar {
+.mainbody > .leftBar {
   flex: 2;
   position: sticky;
   top: 70px;
@@ -18,7 +22,7 @@
   background-color: var(--themed-bg);
   color: var(--themed-textColor);
   width: 20%;
-  /* border: 1px solid red; */
+  border: 1px solid red;
 }
 
 .leftBar::-webkit-scrollbar {
@@ -93,4 +97,111 @@
   .leftBar {
     display: none;
   }
+}
+
+/* -------------------rightbar */
+/* Assuming the import path is correct */
+ .rightBar {
+  flex: 3;
+  position: sticky;
+  top: 70px;
+  height: calc(100vh - 70px);
+  overflow: scroll;
+  background-color: var(--bgSoft);
+  width: 30%;
+  border: 1px solid red;
+}
+
+@media (max-width: 767px) {
+  .rightBar {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .rightBar {
+    display: none;
+  }
+}
+
+.rightBar::-webkit-scrollbar {
+  display: none;
+}
+
+.rightBar .container {
+  padding: 20px;
+}
+
+.rightBar .container .item {
+  -webkit-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+  -moz-box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+  box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.09);
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: var(--bg);
+}
+
+.rightBar .container .item span {
+  color: gray;
+}
+
+.rightBar .container .item .user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0px;
+}
+
+.rightBar .container .item .user .userInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.rightBar .container .item .user .userInfo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.rightBar .container .item .user .userInfo .online {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: limegreen;
+  position: absolute;
+  top: 0;
+  left: 30px;
+}
+
+.rightBar .container .item .user .userInfo p {
+  color: var(--textColorSoft);
+}
+
+.rightBar .container .item .user .userInfo span {
+  font-weight: 500;
+  color: var(--textColor);
+}
+
+.rightBar .container .item .user .buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rightBar .container .item .user .buttons button {
+  border: none;
+  padding: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.rightBar .container .item .user .buttons button:first-child {
+  background-color: #5271ff;
+}
+
+.rightBar .container .item .user .buttons button:last-child {
+  background-color: #f0544f;
 }

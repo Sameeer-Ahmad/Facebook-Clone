@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getStorage} from "firebase/storage";
+import { getStorage } from "firebase/storage";
 
 //  web app's Firebase configuration
 const firebaseConfig = {
@@ -9,7 +9,7 @@ const firebaseConfig = {
   projectId: "facebook-clone-7ff4a",
   storageBucket: "facebook-clone-7ff4a.appspot.com",
   messagingSenderId: "539624084118",
-  appId: "1:539624084118:web:7c016099f6898b086b28b7"
+  appId: "1:539624084118:web:7c016099f6898b086b28b7",
 };
 
 // Initialize Firebase
@@ -18,5 +18,4 @@ export const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
 
-export const storage=getStorage();
-
+export const storage = getStorage();

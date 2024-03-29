@@ -4,14 +4,20 @@ import Friends from "../pages/navbar/Friends"
 import Watch from "../pages/navbar/Watch"
 import Marketplace from "../pages/navbar/Marketplace"
 import Groups from "../pages/navbar/Groups"
-import Nav from "../components/Navbar"
 
+
+import Signup from "../pages/Signup"
+import Login from "../pages/Login/Login"
+import Profile from "../pages/profile/Profile"
+import Nav from "../components/Navbar"
 
 
 const AllRoutes=()=>{
     return(
         <div>
-           <Nav />
+
+           <Nav/>
+
             <Routes>
             
                 <Route path="/" element={<Home />} />
@@ -19,7 +25,9 @@ const AllRoutes=()=>{
                 <Route path="/watch" element={<Watch />} />
                 <Route path="/marketplace" element={<Marketplace />} />
                 <Route path="/groups" element={<Groups />} />
-
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/:username/:uid" element={<Profile/>} />
             </Routes>
         </div>
     )
