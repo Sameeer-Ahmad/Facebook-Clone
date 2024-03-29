@@ -1,165 +1,99 @@
-'use client'
+import "../App.css";
+import Friends from "../Images/friend.png";
+import Groups from "../Images/2.png";
+import Market from "../Images/3.png";
+import Watch from "../Images/4.png";
+import Memories from "../Images/5.png";
+import Events from "../Images/6.png";
+import Gaming from "../Images/7.png";
+import Gallery from "../Images/8.png";
+import Videos from "../Images/9.png";
+import Messages from "../Images/10.png";
+import Tutorials from "../Images/11.png";
+import Courses from "../Images/12.png";
+import Fund from "../Images/13.png";
+// import { AuthContext } from "../../context/authContext";
+// import { useContext } from "react";
 
-import React, { ReactNode } from 'react'
-import {
-  IconButton,
-  Box,
-  CloseButton,
-  Flex,
-  Icon,
-  useColorModeValue,
-  Text,
-  Drawer,
-  DrawerContent,
-  useDisclosure,
-  BoxProps,
-  FlexProps,
-} from '@chakra-ui/react'
-import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
-  FiMenu,
-} from 'react-icons/fi'
-import { IconType } from 'react-icons'
-import { ReactText } from 'react'
-import { FaUserFriends } from "react-icons/fa";
-import { MdFeed } from "react-icons/md";
-import { AiFillShop } from "react-icons/ai";
-interface LinkItemProps {
-  name: string
-  icon: IconType
-}
-const LinkItems: Array<LinkItemProps> = [
-  { name: 'Friends', icon: FaUserFriends },
-  { name: 'Feed', icon: MdFeed },
-  {name: 'MarketPlace', icon: AiFillShop},
-  { name: 'Trending', icon: FiTrendingUp },
-  { name: 'Explore', icon: FiCompass },
-  { name: 'Favourites', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
-]
+const Sidebar = () => {
 
-export default function Sidebar() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  // const { currentUser } = useContext(AuthContext);
+
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
-      <Drawer
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        returnFocusOnClose={false}
-        onOverlayClick={onClose}
-        size="full">
-        <DrawerContent>
-          <SidebarContent onClose={onClose} />
-        </DrawerContent>
-      </Drawer>
-      {/* mobilenav */}
-      <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        {/* Content */}
-      </Box>
-    </Box>
-  )
-}
+    <div className="leftBar">
+      <div className="container">
+        <div className="menu">
+          <div className="user">
+            <img
+              // src={currentUser.profilePic}
+              alt=""
+            />
+            {/* <span>{currentUser.name}</span> */}
+          </div>
+          <div className="item">
+            <img src={Friends} alt="" />
+            <span>Friends</span>
+          </div>
+          <div className="item">
+            <img src={Groups} alt="" />
+            <span>Groups</span>
+          </div>
+          <div className="item">
+            <img src={Market} alt="" />
+            <span>Marketplace</span>
+          </div>
+          <div className="item">
+            <img src={Watch} alt="" />
+            <span>Watch</span>
+          </div>
+          <div className="item">
+            <img src={Memories} alt="" />
+            <span>Memories</span>
+          </div>
+        </div>
+        <hr />
+        <div className="menu">
+          <span>Your shortcuts</span>
+          <div className="item">
+            <img src={Events} alt="" />
+            <span>Events</span>
+          </div>
+          <div className="item">
+            <img src={Gaming} alt="" />
+            <span>Gaming</span>
+          </div>
+          <div className="item">
+            <img src={Gallery} alt="" />
+            <span>Gallery</span>
+          </div>
+          <div className="item">
+            <img src={Videos} alt="" />
+            <span>Videos</span>
+          </div>
+          <div className="item">
+            <img src={Messages} alt="" />
+            <span>Messages</span>
+          </div>
+        </div>
+        <hr />
+        <div className="menu">
+          <span>Others</span>
+          <div className="item">
+            <img src={Fund} alt="" />
+            <span>Fundraiser</span>
+          </div>
+          <div className="item">
+            <img src={Tutorials} alt="" />
+            <span>Tutorials</span>
+          </div>
+          <div className="item">
+            <img src={Courses} alt="" />
+            <span>Courses</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-interface SidebarProps extends BoxProps {
-  onClose: () => void
-}
-
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  return (
-    <Box
-      bg={useColorModeValue('white', 'gray.900')}
-      borderRight="1px"
-      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      w={{ base: 'full', md: 60 }}
-      pos="fixed"
-      h="full"
-      {...rest}>
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
-        </Text>
-        <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
-      </Flex>
-      {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
-          {link.name}
-        </NavItem>
-      ))}
-    </Box>
-  )
-}
-
-interface NavItemProps extends FlexProps {
-  icon: IconType
-  children: ReactText
-}
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
-  return (
-    <Box
-      as="a"
-      href="#"
-      style={{ textDecoration: 'none' }}
-      _focus={{ boxShadow: 'none' }}>
-      <Flex
-        align="center"
-        p="4"
-        mx="4"
-        borderRadius="lg"
-        role="group"
-        cursor="pointer"
-        _hover={{
-          bg: '#e4e6eb',
-          // color: 'black',
-        }}
-        {...rest}>
-        {icon && (
-          <Icon
-            mr="4"
-            fontSize="16"
-            _groupHover={{
-              // color: 'white',
-            }}
-            as={icon}
-          />
-        )}
-        {children}
-      </Flex>
-    </Box>
-  )
-}
-
-interface MobileProps extends FlexProps {
-  onOpen: () => void
-}
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
-  return (
-    <Flex
-      ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 24 }}
-      height="20"
-      alignItems="center"
-      bg={useColorModeValue('white', 'gray.900')}
-      borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-      justifyContent="flex-start"
-      {...rest}>
-      <IconButton
-        variant="outline"
-        onClick={onOpen}
-        aria-label="open menu"
-        icon={<FiMenu />}
-      />
-
-      <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        Logo
-      </Text>
-    </Flex>
-  )
-}
+export default Sidebar;

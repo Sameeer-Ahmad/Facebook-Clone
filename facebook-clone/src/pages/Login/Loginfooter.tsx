@@ -9,7 +9,7 @@ const Loginfooter = () => {
     bg={useColorModeValue('gray.50', 'gray.900')}
     color={useColorModeValue('gray.700', 'gray.200')}>
     <Center as={Stack} maxW={'100%'} py={10}>
-         <Flex  gap={"15px"}>
+         <Flex  gap={"15px"} flexWrap={"wrap"}>
             <span>English(UK)</span>
             <span>ଓଡ଼ିଆ</span>
             <span>हिन्दी</span>
@@ -24,7 +24,7 @@ const Loginfooter = () => {
           <Divider/>
       <SimpleGrid gap={"10px"}>
         <Stack>
-        <Flex gap={"15px"}>
+        <Flex gap={"15px"} justify={'center'} flexWrap={"wrap"} p={'6px'}>
             <span>Sign </span>
             <span>Login</span>
             <span>inMessengerFacebook</span>
@@ -48,7 +48,8 @@ const Loginfooter = () => {
           </Flex>
         </Stack>
         <Stack>  
-        <Flex gap={"15px"}>
+        <Flex gap={"15px"} justify={'center'} flexWrap={"wrap"} p
+        ={'6px'}>
         <span>CentrePrivacy </span>
             <span>AIInstagram</span>
             <span>Privacy policy</span>
@@ -72,7 +73,7 @@ const Loginfooter = () => {
           </Flex>
         </Stack>
         <Stack>
-        <Flex gap={"15px"}>
+        <Flex gap={"15px"} justify={'center'} flexWrap={"wrap"} p={'6px'}>
         <span>security </span>
             <span>adCreate </span>
             <span>inMessengerFacebook</span>
@@ -98,7 +99,7 @@ const Loginfooter = () => {
         
       </SimpleGrid>
     </Center>
-    <Text marginLeft={"20px"}> Meta © 2024</Text>
+    <Text ml={"30px"} fontSize={"18px"} > Meta © 2024</Text>
     </Box>
   )
 }
