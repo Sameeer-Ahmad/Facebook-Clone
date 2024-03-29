@@ -11,8 +11,10 @@ function App() {
 
     
     <Nav />
-    <AllRoutes />
-<Sidebar />
+
+      <AllRoutes />
+      <Sidebar/>
+
   </div>
 
   );
