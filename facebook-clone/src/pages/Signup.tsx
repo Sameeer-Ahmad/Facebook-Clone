@@ -9,7 +9,7 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,updateProfile } from "firebase/auth";
 import { app, db } from "../firebase";
 import { FC, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
@@ -80,34 +80,36 @@ const [birthday, setBirthday] = useState<{ day: string; month: string; year: str
     birthday: { day: string; month: string; year: string };
     gender: string;
   }
-const createUserProfile = (userId:string, userData:UserData) => {
-  const userRef = doc(db, "users", userId); // Assuming you have a 'users' collection in your Firestore
-  return setDoc(userRef, userData, { merge: true })
-    .then(() => {
-      console.log("User profile created successfully!");
+
+const handleSubmitSignupUser = (e: React.FormEvent) => {
+  e.preventDefault();
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((res) => {
+      if (auth.currentUser) {
+        updateProfile(auth.currentUser, {
+          displayName: firstName + " " + lastName,
+          photoURL: "https://i.stack.imgur.com/l60Hf.png",
+        }).then((s) => {
+           setDoc(doc(db, "users", res.user.uid), {
+           uid: res.user.uid,
+           displayName: res.user.displayName,
+           email: res.user.email,
+           photoURL: "https://i.stack.imgur.com/l60Hf.png",
+           birthday,
+           gender,
+           bio:""
+          });
+        }).then(() => {
+          console.log("User signed up and profile updated successfully.");
+        }).catch((error) => {
+          console.error("Error updating profile: ", error);
+        });
+      }
     })
     .catch((error) => {
-      console.error("Error creating user profile: ", error);
+      console.error("Error signing up: ", error);
     });
 };
-
-  const handleSubmitSignupUser = (e: React.FormEvent) => {
-    e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-      console.log(userCredential);
-      const user=userCredential.user;
-      createUserProfile(user.uid, {
-     displayName: `${firstName} ${lastName}`,
-        email,
-        birthday,
-        gender,
-      }).catch((err)=>{
-        console.log(err);
-      })
-      alert("user created successfully");
-    });
-    console.log(firstName, lastName, email, password, birthday, gender);
-  };
   return (
     <Box
       display={"flex"}
