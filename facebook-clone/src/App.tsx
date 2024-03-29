@@ -1,25 +1,20 @@
-
-import './App.css';
-import Nav from './components/Navbar';
-import Sidebar from './components/Sidebar';
-import AllRoutes from './routes/Allroutes';
+import React from "react";
+import Nav from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
+import AllRoutes from "./routes/Allroutes";
+import { PostPage } from "./components/MiddleFeedParts/PostPage";
 
 function App() {
   return (
+   
+        <div className="App">
+          <AllRoutes />
+          <Sidebar />
+          <PostPage />
+        </div>
 
- <div className='App'>
-
-    
-    <Nav />
-
-      <AllRoutes />
-      <Sidebar/>
-
-  </div>
 
   );
 }
 
 export default App;
-
-
