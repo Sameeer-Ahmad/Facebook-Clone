@@ -7,13 +7,12 @@ import Groups from "../pages/navbar/Groups"
 import Signup from "../pages/Signup"
 import Login from "../pages/Login/Login"
 import Profile from "../pages/profile/Profile"
-
-
+import Nav from "../components/Navbar"
 
 const AllRoutes=()=>{
     return(
         <div>
-           
+           <Nav/>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/friends" element={<Friends />} />
