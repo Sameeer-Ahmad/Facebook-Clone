@@ -40,7 +40,6 @@ import {
   DrawerHeader,
   Drawer,
   DrawerBody,
-  Image,
   useColorMode,
 
 } from '@chakra-ui/react';
