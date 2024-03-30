@@ -40,6 +40,7 @@ import {
   DrawerHeader,
   Drawer,
   DrawerBody,
+
   useColorMode,
 
 } from '@chakra-ui/react';
@@ -247,7 +248,7 @@ export default function Nav() {
       <ColorModeScript />
       {breakpoint === "md" && (
         <ColorModeProvider>
-          <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" position="fixed" top={0} zIndex={1000}>
+          <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%"  top={0} zIndex={1000}>
             <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
               <Flex alignItems="center">
                 <Avatar
