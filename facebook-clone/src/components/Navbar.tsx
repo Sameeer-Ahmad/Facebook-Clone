@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -40,6 +40,7 @@ import {
   DrawerHeader,
   Drawer,
   DrawerBody,
+
   useColorMode,
 
 } from '@chakra-ui/react';
@@ -86,7 +87,8 @@ import Fund from "../Images/13.png";
 
 import { element } from "prop-types";
 import Sidebar from "./Sidebar";
-
+import { db } from "../firebase"; // Import Firebase configuration
+import { collection, getDocs } from "firebase/firestore";
 
 interface NavLinkProps {
   children: React.ReactNode;
@@ -94,6 +96,12 @@ interface NavLinkProps {
   fontSize: string[];
   tooltipLabel: string;
 }
+
+interface SearchResult {
+  uid: string;
+  displayName: string;
+}
+
 
 const NavLink = (props: NavLinkProps) => {
   const { children, to, fontSize, tooltipLabel } = props;
@@ -168,6 +176,54 @@ export default function Nav() {
   const { toggleColorMode, colorMode } = useColorMode(); // Extract colorMode
   const [isMenuOpen, setMenuOpen] = useState(false);
 
+  // search starts------------------------
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searching, setSearching] = useState(false);
+
+
+
+  useEffect(() => {
+    const searchFirebase = async () => {
+      setSearching(true);
+      try {
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const results: SearchResult[] = [];
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          if (userData.displayName.toLowerCase().includes(searchTerm.toLowerCase())) {
+            results.push({ uid: doc.id, displayName: userData.displayName });
+          }
+        });
+        setSearchResults(results);
+      } catch (error) {
+        console.error("Error searching Firestore:", error);
+      } finally {
+        setSearching(false);
+      }
+    };
+
+    if (searchTerm) {
+      searchFirebase();
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchTerm]);
+
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const clearSearch = () => {
+    setSearchTerm("");
+    setSearchResults([]);
+  };
+
+
+
+
+  // search functionality ends----------------
   // const toggleMenu = () => {
   //   setMenuOpen(!isMenuOpen);
   // };
@@ -247,7 +303,7 @@ export default function Nav() {
       <ColorModeScript />
       {breakpoint === "md" && (
         <ColorModeProvider>
-          <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" position="fixed" top={0} zIndex={1000}>
+          <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={0} zIndex={1000}>
             <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
               <Flex alignItems="center">
                 <Avatar
@@ -255,31 +311,91 @@ export default function Nav() {
                   boxSize="57px"
                   src={facebook_logo}
                 />
+                {/* ------------------------------ -------------------------------*/}
                 <Box display={{ base: "block", md: "block", lg: "none" }}>
                   <FaSearch color="gray" onClick={toggleSearch} />
                   {isSearchOpen && (
-                    <InputGroup
-                      w="50%"
-                      position="absolute"
-                      top={12}
-                      zIndex={10}
-                      bg="white"
-                      boxShadow="lg"
-                      borderRadius={20}
-                      mt={2}
-                    >
-                      <Input
-                        type="text"
-                        placeholder="Search Facebook"
+                    <>
+                      <InputGroup
+                        w="50%"
+                        position="absolute"
+                        top={12}
+                        zIndex={10}
+                        bg="white"
+                        boxShadow="lg"
                         borderRadius={20}
-                      />
-                    </InputGroup>
+                        mt={2}
+                      >
+                        <Input
+                          type="text"
+                          placeholder="Search Facebook"
+                          borderRadius={20}
+                          value={searchTerm}
+                          onChange={handleSearchChange}
+                          width="200px"
+                        />
+                      </InputGroup>
+                      <Box
+                        position="absolute"
+                        top="calc(100% + 10px)"
+                        left="0"
+                        right="0"
+                        zIndex="999"
+                        bg="white"
+                        boxShadow="lg"
+                        borderRadius="md"
+                        width="200px" // Adjust the width as needed
+                      >
+                        {searching ? (
+                          <Text>Loading...</Text>
+                        ) : searchResults.length === 0 ? (
+                          <Text>No results found</Text>
+                        ) : (
+                          searchResults.map((result, index) => (
+                            <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
+                              <Box p={3} borderBottomWidth="1px">
+                                <Text>{result.displayName}</Text>
+                              </Box>
+                            </Link>
+                          ))
+                        )}
+                      </Box>
+                    </>
                   )}
                 </Box>
-                <InputGroup ml={4} display={{ base: "none", md: "none", lg: "block" }}>
-                  <InputLeftElement pointerEvents="none" children={<FaSearch color="gray" />} />
-                  <Input type="text" placeholder="Search Facebook" bg="gray.100" borderRadius={20} />
-                </InputGroup>
+
+                <Box position="relative">
+                  <InputGroup ml={4} display={{ base: "none", md: "none", lg: "block" }}>
+                    <InputLeftElement pointerEvents="none" children={<FaSearch color="gray" />} />
+                    <Input type="text" placeholder="Search Facebook" bg="gray.100" borderRadius={20} value={searchTerm} onChange={handleSearchChange} width="200px" />
+                  </InputGroup>
+                  {searchTerm && (
+                    <Box
+                      position="absolute"
+                      top="calc(100% + 10px)"
+                      left="0"
+                      right="0"
+                      zIndex="999"
+                      bg="white"
+                      boxShadow="lg"
+                      borderRadius="md"
+                    >
+                      {searching ? (
+                        <Text>Loading...</Text>
+                      ) : searchResults.length === 0 ? (
+                        <Text>No results found</Text>
+                      ) : (
+                        searchResults.map((result, index) => (
+                          <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
+                            <Box p={3} borderBottomWidth="1px">
+                              <Text>{result.displayName}</Text>
+                            </Box>
+                          </Link>
+                        ))
+                      )}
+                    </Box>
+                  )}
+                </Box>
               </Flex>
 
               <Flex>
@@ -510,396 +626,200 @@ export default function Nav() {
           </Box>
 
         </ColorModeProvider >
-      )}
-      {breakpoint === ("sm") && (
-        <ColorModeProvider>
-          <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" position="fixed" top={0} zIndex={1000}>
-            <Flex h={16} alignItems={'center'} justifyContent={'space-between'} flexShrink={0}>
-              <Flex alignItems="center">
-                <Avatar
-                  borderRadius="full"
-                  boxSize="57px"
-                  src={facebook_logo}
-                />
-                <Box display={{ base: "block", md: "block", lg: "none" }}>
-                  <FaSearch color="gray" onClick={toggleSearch} />
-                  {isSearchOpen && (
-                    <InputGroup
-                      w="50%"
-                      position="absolute"
-                      top={12}
-                      zIndex={10}
-                      bg="white"
-                      boxShadow="lg"
-                      borderRadius={20}
-                      mt={2}
-                    >
-                      <Input
-                        type="text"
-                        placeholder="Search Facebook"
-                        borderRadius={20}
-                      />
-                    </InputGroup>
-                  )}
-                </Box>
-                <InputGroup ml={4} display={{ base: "none", md: "none", lg: "block" }}>
-                  <InputLeftElement pointerEvents="none" children={<FaSearch color="gray" />} />
-                  <Input type="text" placeholder="Search Facebook" bg="gray.100" borderRadius={20} />
-                </InputGroup>
-              </Flex>
-
-              <Flex>
-                {Midlink.map((ele, index) => (
-                  <React.Fragment key={index}>
-                    <Box color="grey" fontWeight="100">
-                      <Center>
-                        <NavLink
-                          to={ele.to}
-                          fontSize={['large', '30px', 'xx-large']}
-                          tooltipLabel={ele.tooltipLabel}
-                        >
-                          {ele.display}
-                        </NavLink>
-                      </Center>
-                    </Box>
-                    {index !== link.length - 1 && <Spacer size={spacingSize || 'small'} />}
-                  </React.Fragment>
-                ))}
-              </Flex>
-
-              {/* Hamburger icon with dropdown menu */}
-
-              <Menu>
-                <MenuButton
-                  as={IconButton}
-                  icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
-                  aria-label="Toggle menu"
-                  display={{ base: "block", md: "none" }}
-                  variant="ghost"
-                  onClick={toggleMenu}
-                />
+      )
+      }
+      {
+        breakpoint === ("sm") && (
+          <ColorModeProvider>
+            <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" position="fixed" top={0} zIndex={1000}>
+              <Flex h={16} alignItems={'center'} justifyContent={'space-between'} flexShrink={0}>
                 <Flex alignItems="center">
-
-                  <MenuList>
-                    <MenuItem>
-                      <Link to="/groups">{<HiOutlineUserGroup fontSize={"30px"} />}</Link>
-                    </MenuItem>
-
-
-                    <MenuList>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Friends} alt="" />
-                          <span>Friends</span>
-                        </div>
-                      </MenuItem>
-                    </MenuList>
-                    <MenuList>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Groups} alt="" />
-                          <span>Groups</span>
-                        </div>
-                      </MenuItem>
-                    </MenuList>
-                    <MenuList>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Market} alt="" />
-                          <span>Marketplace</span>
-                        </div>
-                      </MenuItem>
-                    </MenuList>
-                    <MenuList>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Watch} alt="" />
-                          <span>Watch</span>
-                        </div>
-                      </MenuItem>
-                    </MenuList>
-                    <MenuList>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Memories} alt="" />
-                          <span>Memories</span>
-                        </div>
-                      </MenuItem>
-                    </MenuList>
-                    <hr />
-                    <MenuItem>
-                      <span>Your shortcuts</span>
-                    </MenuItem>
-                    <MenuList>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Events} alt="" />
-                          <span>Events</span>
-                        </div>
-                      </MenuItem>
-                    </MenuList>
-                    <MenuList>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Gaming} alt="" />
-                          <span>Gaming</span>
-                        </div>
-                      </MenuItem>
-                    </MenuList>
-                    <MenuList>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Gallery} alt="" />
-                          <span>Gallery</span>
-                        </div>
-                      </MenuItem>
-                    </MenuList>
-                    <MenuList>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Videos} alt="" />
-                          <span>Videos</span>
-                        </div>
-                      </MenuItem>
-                    </MenuList>
-                    <MenuItem>
-                      <div className="item">
-                        <img src={Messages} alt="" />
-                        <span>Messages</span>
-                      </div>
-                    </MenuItem>
-                    <hr />
-                    <MenuItem>
-                      <span>Others</span>
-                    </MenuItem>
-                    <MenuItem>
-                      <div className="item">
-                        <img src={Fund} alt="" />
-                        <span>Fundraiser</span>
-                      </div>
-                    </MenuItem>
-                    <MenuItem>
-                      <div className="item">
-                        <img src={Tutorials} alt="" />
-                        <span>Tutorials</span>
-                      </div>
-                    </MenuItem>
+                  <Avatar
+                    borderRadius="full"
+                    boxSize="57px"
+                    src={facebook_logo}
+                  />
 
 
-                    <MenuItem>
-                      <div className="item">
-                        <img src={Courses} alt="" />
-                        <span>Courses</span>
-                      </div>
-                    </MenuItem>
-                  </MenuList>
-                </Flex>
-              </Menu>
-              <Box>
-                <Menu>
+                  <Box >
+                    {/* Search Icon */}
+                    <FaSearch color="gray" onClick={toggleSearch} />
 
-
-                  <MenuButton
-                    as={Button}
-                    rounded={'full'}
-                    variant={'link'}
-                    cursor={'pointer'}
-                    minW={0}>
-                    <Box borderRadius="50%" bg="gray.200" p={1}>
-                      <Icon as={IoNotifications} boxSize={6} color="black" fontWeight="bold" />
-                    </Box>
-                  </MenuButton>
-                  <MenuList alignItems={'center'}>
-                    <Center>
-                      <Tooltip label='Notifications'>
-                        <p >Notifications</p>
-                      </Tooltip>
-                    </Center>
-                    <br />
-                    <MenuDivider />
-                    <MenuItem>Your Servers</MenuItem>
-                    <MenuItem>Account Settings</MenuItem>
-                    <MenuItem>Logout</MenuItem>
-                  </MenuList>
-                </Menu>
-
-                <Menu >
-                  <MenuButton
-                    as={Button}
-                    rounded={'full'}
-                    variant={'link'}
-                    cursor={'pointer'}
-                    minW={0}>
-                    {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
-                    <Avatar boxSize='15px'>
-                      <AvatarBadge boxSize='1.00em' bg='green.500' />
-                    </Avatar>
-                  </MenuButton>
-                  <MenuList alignItems={'center'}>
-                    <Flex p={4}>
-                      <Center>
-                        <Avatar boxSize='15px' src='https://bit.ly/broken-link' />
-                      </Center>
-                      <Center p={2}>
-                        <p>Username</p>
-                      </Center>
-                    </Flex>
-                    <MenuDivider />
-                    <MenuItem>Your Servers</MenuItem>
-                    <Accordion defaultIndex={[0]} allowMultiple>
-                      <AccordionItem>
-                        <h2>
-                          <AccordionButton>
-                            <Box as="span" flex='1' textAlign='left'>
-                              Account Settings
-                            </Box>
-                            <AccordionIcon />
-                          </AccordionButton>
-                        </h2>
-                        <AccordionPanel pb={4}>
-                          <FormControl display='flex' alignItems='center'>
-                            <FormLabel htmlFor='dark-mode' mb='0'>
-                              Dark mode
-                            </FormLabel>
-                            <Switch id='dark-mode' isChecked={colorMode === 'dark'} onChange={toggleColorMode} />
-                          </FormControl>
-                        </AccordionPanel>
-                        <Divider />
-                        <AccordionPanel pb={4}>
-                          <FormControl display='flex' alignItems='center'>
-                            <FormLabel htmlFor='light-mode' mb='0'>
-                              Light mode
-                            </FormLabel>
-                            <Switch id='light-mode' isChecked={colorMode === 'light'} onChange={toggleColorMode} />
-                          </FormControl>
-                        </AccordionPanel>
-                      </AccordionItem>
-                    </Accordion>
-                    <MenuItem>Logout</MenuItem>
-                  </MenuList>
-                </Menu>
-              </Box>
-            </Flex>
-          </Box>
-        </ColorModeProvider>
-      )}
-
-
-
-
-      {breakpoint === "base" && (
-        <ColorModeProvider>
-          <Box>
-            <Flex alignItems="center" justifyContent="space-between">
-              <Image src={facebook} width={"40%"} height={"100px"} top={"0%"} />
-
-              <Flex alignItems="center">
-                <InputGroup display={{ base: "none", md: "none", lg: "block" }} w="10%"
-                  position="absolute"
-                  top={12}
-                  left={-2920} zIndex={10}
-                  bg="white"
-                  boxShadow="lg"
-                  borderRadius={20}
-                  mt={2}>
-                  <InputLeftElement pointerEvents="none" children={<FaSearch color="gray" />} />
-                  <Input type="text" placeholder="Search Facebook" bg="gray.100" borderRadius={20} />
-                </InputGroup>
-
-
-                <Box display={{ base: "block", md: "block", lg: "none" }} borderRadius="60%" bg="gray.200" p={2} mr={2}>
-                  <FaSearch color="gray" onClick={toggleSearch} size={'25px'} />
-                  {isSearchOpen && (
-                    <InputGroup
-                      w="50%"
-                      position="absolute"
-                      top={12}
-                      zIndex={10}
-                      bg="white"
-                      boxShadow="lg"
-                      borderRadius={20}
-                      mt={2}
-                    >
-                      <Input
-                        type="text"
-                        placeholder="Search Facebook"
+                    {/* Search Input Field */}
+                    {isSearchOpen && (
+                      <InputGroup
+                        position="absolute"
+                        top={10}
+                        zIndex={10}
+                        bg="white"
+                        boxShadow="lg"
                         borderRadius={20}
-                      />
-                    </InputGroup>
-                  )}
-                </Box>
+                        mt={2}
+                        width="200px" // Adjust width as needed
+                      >
+                        <Input
+                          type="text"
+                          placeholder="Search Facebook"
+                          borderRadius={20}
+                          value={searchTerm}
+                          onChange={handleSearchChange}
+                        // position="relative"
 
+                        />
+                      </InputGroup>
+                    )}
+
+                    {/* Search Results */}
+                    {searchTerm && (
+                      <Box
+                        position="absolute"
+                        top="calc(80% + 40px)"
+                        left="20"
+                        // top="35"
+                        right="0"
+                        zIndex="999"
+                        bg="white"
+                        boxShadow="lg"
+                        borderRadius="md"
+                        width="200px" // Adjust width as needed
+                      >
+                        {searching ? (
+                          <Text>Loading...</Text>
+                        ) : searchResults.length === 0 ? (
+                          <Text>No results found</Text>
+                        ) : (
+                          searchResults.map((result, index) => (
+                            <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
+                              <Box p={3} borderBottomWidth="1px">
+                                <Text>{result.displayName}</Text>
+                              </Box>
+                            </Link>
+                          ))
+                        )}
+                      </Box>
+                    )}
+                  </Box>
+
+                  <InputGroup ml={4} display={{ base: "none", md: "none", lg: "block" }}>
+                    <InputLeftElement pointerEvents="none" children={<FaSearch color="gray" />} />
+                    <Input type="text" placeholder="Search Facebook" bg="gray.100" borderRadius={20} />
+                  </InputGroup>
+                </Flex>
+
+                <Flex>
+                  {Midlink.map((ele, index) => (
+                    <React.Fragment key={index}>
+                      <Box color="grey" fontWeight="100">
+                        <Center>
+                          <NavLink
+                            to={ele.to}
+                            fontSize={['large', '30px', 'xx-large']}
+                            tooltipLabel={ele.tooltipLabel}
+                          >
+                            {ele.display}
+                          </NavLink>
+                        </Center>
+                      </Box>
+                      {index !== link.length - 1 && <Spacer size={spacingSize || 'small'} />}
+                    </React.Fragment>
+                  ))}
+                </Flex>
+
+                {/* Hamburger icon with dropdown menu */}
 
                 <Menu>
                   <MenuButton
                     as={IconButton}
                     icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
                     aria-label="Toggle menu"
-                    borderRadius="50%" bg="gray.200"
                     display={{ base: "block", md: "none" }}
                     variant="ghost"
                     onClick={toggleMenu}
                   />
                   <Flex alignItems="center">
+
                     <MenuList>
                       <MenuItem>
-                        <div className="item">
-                          <img src={Friends} alt="" />
-                          <span>Friends</span>
-                        </div>
+                        <Link to="/groups">{<HiOutlineUserGroup fontSize={"30px"} />}</Link>
                       </MenuItem>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Groups} alt="" />
-                          <span>Groups</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Market} alt="" />
-                          <span>Marketplace</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Watch} alt="" />
-                          <span>Watch</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Memories} alt="" />
-                          <span>Memories</span>
-                        </div>
-                      </MenuItem>
+
+
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Friends} alt="" />
+                            <span>Friends</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Groups} alt="" />
+                            <span>Groups</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Market} alt="" />
+                            <span>Marketplace</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Watch} alt="" />
+                            <span>Watch</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Memories} alt="" />
+                            <span>Memories</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
                       <hr />
                       <MenuItem>
                         <span>Your shortcuts</span>
                       </MenuItem>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Events} alt="" />
-                          <span>Events</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Gaming} alt="" />
-                          <span>Gaming</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Gallery} alt="" />
-                          <span>Gallery</span>
-                        </div>
-                      </MenuItem>
-                      <MenuItem>
-                        <div className="item">
-                          <img src={Videos} alt="" />
-                          <span>Videos</span>
-                        </div>
-                      </MenuItem>
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Events} alt="" />
+                            <span>Events</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Gaming} alt="" />
+                            <span>Gaming</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Gallery} alt="" />
+                            <span>Gallery</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Videos} alt="" />
+                            <span>Videos</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
                       <MenuItem>
                         <div className="item">
                           <img src={Messages} alt="" />
@@ -922,6 +842,8 @@ export default function Nav() {
                           <span>Tutorials</span>
                         </div>
                       </MenuItem>
+
+
                       <MenuItem>
                         <div className="item">
                           <img src={Courses} alt="" />
@@ -931,92 +853,352 @@ export default function Nav() {
                     </MenuList>
                   </Flex>
                 </Menu>
+                <Box>
+                  <Menu>
+
+
+                    <MenuButton
+                      as={Button}
+                      rounded={'full'}
+                      variant={'link'}
+                      cursor={'pointer'}
+                      minW={0}>
+                      <Box borderRadius="50%" bg="gray.200" p={1}>
+                        <Icon as={IoNotifications} boxSize={6} color="black" fontWeight="bold" />
+                      </Box>
+                    </MenuButton>
+                    <MenuList alignItems={'center'}>
+                      <Center>
+                        <Tooltip label='Notifications'>
+                          <p >Notifications</p>
+                        </Tooltip>
+                      </Center>
+                      <br />
+                      <MenuDivider />
+                      <MenuItem>Your Servers</MenuItem>
+                      <MenuItem>Account Settings</MenuItem>
+                      <MenuItem>Logout</MenuItem>
+                    </MenuList>
+                  </Menu>
+
+                  <Menu >
+                    <MenuButton
+                      as={Button}
+                      rounded={'full'}
+                      variant={'link'}
+                      cursor={'pointer'}
+                      minW={0}>
+                      {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
+                      <Avatar boxSize='15px'>
+                        <AvatarBadge boxSize='1.00em' bg='green.500' />
+                      </Avatar>
+                    </MenuButton>
+                    <MenuList alignItems={'center'}>
+                      <Flex p={4}>
+                        <Center>
+                          <Avatar boxSize='15px' src='https://bit.ly/broken-link' />
+                        </Center>
+                        <Center p={2}>
+                          <p>Username</p>
+                        </Center>
+                      </Flex>
+                      <MenuDivider />
+                      <MenuItem>Your Servers</MenuItem>
+                      <Accordion defaultIndex={[0]} allowMultiple>
+                        <AccordionItem>
+                          <h2>
+                            <AccordionButton>
+                              <Box as="span" flex='1' textAlign='left'>
+                                Account Settings
+                              </Box>
+                              <AccordionIcon />
+                            </AccordionButton>
+                          </h2>
+                          <AccordionPanel pb={4}>
+                            <FormControl display='flex' alignItems='center'>
+                              <FormLabel htmlFor='dark-mode' mb='0'>
+                                Dark mode
+                              </FormLabel>
+                              <Switch id='dark-mode' isChecked={colorMode === 'dark'} onChange={toggleColorMode} />
+                            </FormControl>
+                          </AccordionPanel>
+                          <Divider />
+                          <AccordionPanel pb={4}>
+                            <FormControl display='flex' alignItems='center'>
+                              <FormLabel htmlFor='light-mode' mb='0'>
+                                Light mode
+                              </FormLabel>
+                              <Switch id='light-mode' isChecked={colorMode === 'light'} onChange={toggleColorMode} />
+                            </FormControl>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      </Accordion>
+                      <MenuItem>Logout</MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Box>
               </Flex>
-            </Flex>
-          </Box>
-          <Divider borderWidth="2px" color={'grey'} />
+            </Box>
+          </ColorModeProvider>
+        )
+      }
 
 
-          <Flex>
-            <Center>
-              {Midlink.map((ele, index) => (
-                <React.Fragment key={index}>
-                  <Box color="grey" fontWeight="100" ml={1}>
+
+
+      {
+        breakpoint === "base" && (
+          <ColorModeProvider>
+            <Box>
+              <Flex alignItems="center" justifyContent="space-between">
+                <Image src={facebook} width={"40%"} height={"100px"} top={"0%"} />
+
+                <Flex alignItems="center" position="relative">
+                  {/* Search Icon */}
+                  <FaSearch color="gray" onClick={toggleSearch} />
+
+                  {/* Search Input Field */}
+                  {isSearchOpen && (
+                    <Box
+                      position="absolute"
+                      top={7}
+                      right={34}
+                      zIndex={10}
+                      bg="white"
+                      boxShadow="lg"
+                      borderRadius={20}
+                      mt={2}
+                      width="200px" // Adjust width as needed
+                    >
+                      <Input
+                        type="text"
+                        placeholder="Search Facebook"
+                        borderRadius={20}
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        position={"absolute"}
+                      />
+                    </Box>
+                  )}
+
+                  {/* Search Results */}
+                  {searchTerm && (
+                    <Box
+                      position="absolute"
+                      top="calc(100% + 40px)"
+                      left={0}
+                      right={100}
+                      zIndex={999}
+                      bg="white"
+                      boxShadow="lg"
+                      borderRadius="md"
+                      width="200px" // Adjust width as needed
+                    >
+                      {searching ? (
+                        <Text></Text>
+                      ) : searchResults.length === 0 ? (
+                        <Text>No results found</Text>
+                      ) : (
+                        searchResults.map((result, index) => (
+                          <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
+                            <Box p={3} borderBottomWidth="1px">
+                              <Text>{result.displayName}</Text>
+                            </Box>
+                          </Link>
+                        ))
+                      )}
+                    </Box>
+                  )}
+                  {/* </Flex> */}
+
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
+                      aria-label="Toggle menu"
+                      borderRadius="50%" bg="gray.200"
+                      display={{ base: "block", md: "none" }}
+                      variant="ghost"
+                      onClick={toggleMenu}
+                    />
+                    <Flex alignItems="center">
+                      <MenuList>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Friends} alt="" />
+                            <span>Friends</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Groups} alt="" />
+                            <span>Groups</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Market} alt="" />
+                            <span>Marketplace</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Watch} alt="" />
+                            <span>Watch</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Memories} alt="" />
+                            <span>Memories</span>
+                          </div>
+                        </MenuItem>
+                        <hr />
+                        <MenuItem>
+                          <span>Your shortcuts</span>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Events} alt="" />
+                            <span>Events</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Gaming} alt="" />
+                            <span>Gaming</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Gallery} alt="" />
+                            <span>Gallery</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Videos} alt="" />
+                            <span>Videos</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Messages} alt="" />
+                            <span>Messages</span>
+                          </div>
+                        </MenuItem>
+                        <hr />
+                        <MenuItem>
+                          <span>Others</span>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Fund} alt="" />
+                            <span>Fundraiser</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Tutorials} alt="" />
+                            <span>Tutorials</span>
+                          </div>
+                        </MenuItem>
+                        <MenuItem>
+                          <div className="item">
+                            <img src={Courses} alt="" />
+                            <span>Courses</span>
+                          </div>
+                        </MenuItem>
+                      </MenuList>
+                    </Flex>
+                  </Menu>
+                </Flex>
+              </Flex>
+            </Box>
+            <Divider borderWidth="2px" color={'grey'} />
+
+
+            <Flex>
+              <Center>
+                {Midlink.map((ele, index) => (
+                  <React.Fragment key={index}>
+                    <Box color="grey" fontWeight="100" ml={1}>
+                      <Center>
+                        <NavLink
+                          to={ele.to}
+                          fontSize={["30px", 'large', '30px', 'xx-large']}
+                          tooltipLabel={ele.tooltipLabel}
+                        >
+                          {ele.display}
+                        </NavLink>
+                      </Center>
+                    </Box>
+                    {index !== link.length - 1 && <Spacer size={spacingSize || 'small'} />}
+                  </React.Fragment>
+                ))}
+              </Center>
+              <Box ml={2} mt={2}>
+                <Menu >
+
+
+                  <MenuButton
+                    as={Button}
+                    rounded={'full'}
+                    variant={'link'}
+                    cursor={'pointer'}
+                    minW={0}>
+                    <Box >
+                      <Icon as={IoNotificationsOutline} boxSize={8} color="grey" fontWeight="bold" />
+                    </Box>
+                  </MenuButton>
+                  <MenuList alignItems={'center'}>
                     <Center>
-                      <NavLink
-                        to={ele.to}
-                        fontSize={["30px", 'large', '30px', 'xx-large']}
-                        tooltipLabel={ele.tooltipLabel}
-                      >
-                        {ele.display}
-                      </NavLink>
+                      <Tooltip label='Notifications'>
+                        <p >Notifications</p>
+                      </Tooltip>
                     </Center>
-                  </Box>
-                  {index !== link.length - 1 && <Spacer size={spacingSize || 'small'} />}
-                </React.Fragment>
-              ))}
-            </Center>
-            <Box ml={2} mt={2}>
-              <Menu >
+                    <br />
+                    <MenuDivider />
+                    <MenuItem>Your Servers</MenuItem>
+                    <MenuItem>Account Settings</MenuItem>
+                    <MenuItem>Logout</MenuItem>
+                  </MenuList>
+                </Menu>
+              </Box>
+              <Box ml={3} mt={2} >
+                <Menu>
+
+                  <MenuButton
+                    as={Button}
+                    rounded={'full'}
+                    variant={'link'}
+                    cursor={'pointer'}
+                    minW={0}>
+                    <Box >
+                      <Icon as={RiMessengerLine} boxSize={7} color="grey" fontWeight="bold" />
+                    </Box>
+                  </MenuButton>
+                  <MenuList alignItems={'center'}>
+                    <Center>
+                      <Tooltip label='Chats'>
+                        <p >Chats</p>
+                      </Tooltip>
+                    </Center>
+                    <br />
+                    <MenuDivider />
+                    <MenuItem>Your Servers</MenuItem>
+                    <MenuItem>Account Settings</MenuItem>
+                    <MenuItem>Logout</MenuItem>
+                  </MenuList>
+                </Menu>
+              </Box>
+            </Flex>
+            <Divider borderWidth="1px" color={'black'} />
 
 
-                <MenuButton
-                  as={Button}
-                  rounded={'full'}
-                  variant={'link'}
-                  cursor={'pointer'}
-                  minW={0}>
-                  <Box >
-                    <Icon as={IoNotificationsOutline} boxSize={8} color="grey" fontWeight="bold" />
-                  </Box>
-                </MenuButton>
-                <MenuList alignItems={'center'}>
-                  <Center>
-                    <Tooltip label='Notifications'>
-                      <p >Notifications</p>
-                    </Tooltip>
-                  </Center>
-                  <br />
-                  <MenuDivider />
-                  <MenuItem>Your Servers</MenuItem>
-                  <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
-                </MenuList>
-              </Menu>
-            </Box>
-            <Box ml={3} mt={2} >
-              <Menu>
-
-                <MenuButton
-                  as={Button}
-                  rounded={'full'}
-                  variant={'link'}
-                  cursor={'pointer'}
-                  minW={0}>
-                  <Box >
-                    <Icon as={RiMessengerLine} boxSize={7} color="grey" fontWeight="bold" />
-                  </Box>
-                </MenuButton>
-                <MenuList alignItems={'center'}>
-                  <Center>
-                    <Tooltip label='Chats'>
-                      <p >Chats</p>
-                    </Tooltip>
-                  </Center>
-                  <br />
-                  <MenuDivider />
-                  <MenuItem>Your Servers</MenuItem>
-                  <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
-                </MenuList>
-              </Menu>
-            </Box>
-          </Flex>
-          <Divider borderWidth="1px" color={'black'} />
-
-
-        </ColorModeProvider>
-      )}
+          </ColorModeProvider >
+        )
+      }
 
 
 

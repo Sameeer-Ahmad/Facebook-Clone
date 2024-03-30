@@ -31,13 +31,13 @@ export default function Login() {
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((res) => {
-        navigate("/home");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+    signInWithEmailAndPassword(auth,email,password).then((res)=>{
+             navigate("/")
+              
+    }).catch((err)=>{console.log(err);
+    })
+
   };
 
   return (
