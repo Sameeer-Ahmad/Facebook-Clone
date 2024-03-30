@@ -1,3 +1,4 @@
+
 // import { Flex } from "@chakra-ui/layout";
 import "./App.css";
 // import { useContext, useEffect, useState } from "react";
@@ -15,6 +16,8 @@ function App() {
   // console.log(authContext);
   
   return (
+
+
     <div>
       <AllRoutes />
     </div>
@@ -22,3 +25,4 @@ function App() {
 }
 
 export default App;
+
