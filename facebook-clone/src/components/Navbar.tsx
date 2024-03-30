@@ -17,6 +17,7 @@ import {
   InputLeftElement,
   InputGroup,
   Icon,
+  Image,
   Tooltip,
   Text,
   FormControl,

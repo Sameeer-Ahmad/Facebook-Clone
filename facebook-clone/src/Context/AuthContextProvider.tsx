@@ -1,43 +1,37 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import firebase from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { User, getAuth } from "firebase/auth";
+// import { getAuth, User } from "firebase/auth";
 
-
-// Define the context
 interface AuthContextType {
-  currentUser: any | null;
+  currentUser: User | null;
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType>({
+  currentUser: null,
+});
 
-// Define a custom hook to use the context
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
-
-// Provider component to wrap your application
-export const FirebaseAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<any | null>(null);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const auth = getAuth(); // Get the Firebase Auth instance
+    const auth = getAuth();
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setCurrentUser(user); // Update the currentUser state
-      
+      setCurrentUser(user);
     });
-   
-    // Unsubscribe when component unmounts
+
     return () => unsubscribe();
   }, []);
 
-
   return (
-    <AuthContext.Provider value={{ currentUser }}>
+    <AuthContext.Provider value={ {currentUser} }>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = (): AuthContextType => useContext(AuthContext);
+
+export default AuthProvider;
