@@ -10,6 +10,7 @@ import Signup from "../pages/Signup"
 import Login from "../pages/Login/Login"
 import Profile from "../pages/profile/Profile"
 import Nav from "../components/Navbar"
+import PrivateRoute from "./PrivateRoutes"
 
 
 const AllRoutes=()=>{
@@ -19,12 +20,15 @@ const AllRoutes=()=>{
            <Nav/>
 
             <Routes>
-            
+
+                <Route element={<PrivateRoute/>}>
+
                 <Route path="/" element={<Home />} />
                 <Route path="/friends" element={<Friends />} />
                 <Route path="/watch" element={<Watch />} />
                 <Route path="/marketplace" element={<Marketplace />} />
                 <Route path="/groups" element={<Groups />} />
+                </Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/:username/:uid" element={<Profile/>} />
