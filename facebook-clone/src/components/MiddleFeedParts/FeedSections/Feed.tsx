@@ -24,9 +24,9 @@ import {
 } from "@chakra-ui/modal";
 
 import { useEffect, useRef, useState } from "react";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db, storage } from "../../../firebase";
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -35,12 +35,12 @@ export const Feed = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   // const [useName, setUserName] = useState<string>("");
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<any>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [caption, setCaption] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [likes, setLikes] = useState<number>(0);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement|any>(null);
 
   const auth = getAuth();
   // const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {});
@@ -59,62 +59,68 @@ export const Feed = () => {
       setImageUrl(URL.createObjectURL(selectedFile));
     }
   };
-  // else {
-  //   e.preventDefault();
-  //   if (imageUrl === "") {
-  //     setDoc(doc(db, "posts"), {
-  //       caption: caption,
-  //       imageUrl: "",
-  //       likes: likes,
-  //       userName: user?.displayName,
-  //       uid: user?.uid,
-  //     });
-  //     setCaption("");
-  //     setImage(null);
-  //   }
-  const handleUpload = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    if(image) {
-      e.preventDefault()
 
-       const storage=getStorage();
-       const storageref=ref(storage)
-       const uploadTask=uploadBytesResumable(storageref,image)
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            setProgress(progress);
-          },
-          (error) => {
-            console.log(error);
-            alert(error.message);
-          },
-          () => {
-            storage
-              .ref("images")
-              .child(image.name)
-              .getDownloadURL()
-              .then((url) => {
-                setDoc(doc(db, "posts"), {
-                  timestam: serverTimestamp(),
-                  caption: caption,
-                  imageUrl: url,
-                  userName: user?.displayName,
-                  uid: user?.uid,
-                });
-                setProgress(0);
+  const handleUpload = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (caption === "" && imageUrl === "") {
+        console.log("Prevented access to photo and caption submission ");
+    } else {
+        e.preventDefault();
+        if (imageUrl === "") {
+            // If imageUrl is empty, create a new post with a unique ID as the document name
+            addDoc(collection(db, "posts"), {
+                caption: caption,
+                imageUrl: "",
+                likes: likes,
+                userName: user?.displayName,
+                uid: user?.uid,
+            }).then(() => {
+                // After adding the document, reset caption and image states
                 setCaption("");
                 setImage(null);
-              });
-          }
-        );
-      }
+            }).catch((error) => {
+                // Handle errors
+                console.log(error);
+                alert(error.message);
+            });
+        } else {
+            const storage = getStorage();
+            const storageRef = ref(storage, `images/${image.name}`);
+            const uploadTask = uploadBytes(storageRef, image);
+
+            uploadTask.then((snapshot) => {
+                // Upload completed successfully, get the download URL
+                getDownloadURL(storageRef).then((url: string) => {
+                    // Add a new document to the "posts" collection
+                    addDoc(collection(db, "posts"), {
+                        caption: caption,
+                        imageUrl: url,
+                        likes: likes,
+                        userName: user?.displayName,
+                        uid: user?.uid,
+                    }).then(() => {
+                        // After adding the document, reset caption and image states
+                        setProgress(0);
+                        setCaption("");
+                        setImage(null);
+                    }).catch((error) => {
+                        // Handle errors
+                        console.log(error);
+                        alert(error.message);
+                    });
+                });
+            }).catch((error) => {
+                // Handle errors
+                console.log(error);
+                alert(error.message);
+            });
+        }
     }
-  };
+};
+
+
 
   const sizes = ["xs", "sm", "md", "lg", "xl", "full"];
+  
   return (
     <>
       <Center>
@@ -128,8 +134,9 @@ export const Feed = () => {
             <ModalBody borderTop={"2px solid #e4e6eb"}>
               {/* Your modal content */}
               <Flex align={"center"} gap={1}>
+                
                 <Image
-                  src="https://imgs.search.brave.com/W0m65Ec8YpeLX-lOk5PobJNCAWt8p0U5UHz_3AwrS0A/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzFmL2Yz/L2MzLzFmZjNjMzVh/MzVjZTNmZjAzZWYx/OTAyMTJiZTIwZmU4/LmpwZw"
+                  src ={user?.photoURL as string}
                   width={"50px"}
                   height={"50px"}
                   borderRadius={"50%"}
@@ -138,7 +145,7 @@ export const Feed = () => {
                 />
                 <Box>
                   <Text fontWeight={"700"} marginBottom={1}>
-                    Sujeet Kumar
+                  {user?.displayName}
                   </Text>
                   <Text
                     display={"flex"}
@@ -159,10 +166,12 @@ export const Feed = () => {
                 </Box>
               </Flex>
               <Textarea
-                height={"200px"}
+                height={"60px"}
                 marginTop={2}
-                placeholder=" What's in your mind, Sujeet?"
+                value={caption} onChange={(e:React.ChangeEvent<HTMLTextAreaElement>)=>setCaption(e.target.value)}
+                placeholder={`What's in your mind, ${user?.displayName}`}
               />
+                <Image w={"250px"}  src={imageUrl as string} alt="" />
               <Flex justifyContent={"space-between"} p={1}>
                 <Image
                   src="https://www.facebook.com/images/composer/SATP_Aa_square-2x.png"
@@ -194,6 +203,8 @@ export const Feed = () => {
                     type="file"
                     display={"none"}
                     ref={fileInputRef}
+                    accept="image/*"
+                    
                     onChange={handleChange}
                   />
                   <Image
@@ -244,7 +255,7 @@ export const Feed = () => {
         >
           <Flex gap={5} p={2} borderBottom={"3px solid #e4e6eb"}>
             <Image
-              src="https://imgs.search.brave.com/W0m65Ec8YpeLX-lOk5PobJNCAWt8p0U5UHz_3AwrS0A/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzFmL2Yz/L2MzLzFmZjNjMzVh/MzVjZTNmZjAzZWYx/OTAyMTJiZTIwZmU4/LmpwZw"
+              src={user?.photoURL as string}
               width={"40px"}
               height={"40px"}
               borderRadius={"50%"}
@@ -260,8 +271,9 @@ export const Feed = () => {
               textAlign={"start"}
               onClick={onOpen}
             >
-              What's in your mind, Sujeet?
+            {`What's in your mind, ${user?.displayName}`}
             </Button>
+          
           </Flex>
 
           <Flex justifyContent={"space-around"} p={1}>
