@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { app } from "../../firebase";
 
 export default function Login() {
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
@@ -92,6 +93,7 @@ export default function Login() {
                 background={"#42B72A"}
                 color={"white"}
                 _hover={{ background: "green" }}
+                onClick={() => navigate("/signup")}
               >
                 Create New Account
               </Button>
