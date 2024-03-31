@@ -35,7 +35,7 @@ export const Feed = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   // const [useName, setUserName] = useState<string>("");
-  const [image, setImage] = useState<any>(null);
+  const [image, setImage] = useState<any>("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [caption, setCaption] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
@@ -61,6 +61,9 @@ export const Feed = () => {
   };
 
   const handleUpload = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setCaption("");
+    // setImage("");
+   setImageUrl("")
     if (caption === "" && imageUrl === "") {
         console.log("Prevented access to photo and caption submission ");
     } else {
@@ -76,7 +79,8 @@ export const Feed = () => {
             }).then(() => {
                 // After adding the document, reset caption and image states
                 setCaption("");
-                setImage(null);
+                // setImage("");
+                setImageUrl("")
             }).catch((error) => {
                 // Handle errors
                 console.log(error);
@@ -97,11 +101,14 @@ export const Feed = () => {
                         likes: likes,
                         userName: user?.displayName,
                         uid: user?.uid,
+
                     }).then(() => {
                         // After adding the document, reset caption and image states
-                        setProgress(0);
+                      console.log("Uploaded successfully");
+                      
                         setCaption("");
-                        setImage(null);
+                        // setImage("");
+                        setImageUrl("")
                     }).catch((error) => {
                         // Handle errors
                         console.log(error);
@@ -117,6 +124,12 @@ export const Feed = () => {
     }
 };
 
+const handleCloseModal = () => {
+  setCaption("");
+  // setImage(null);
+  setImageUrl("");
+};
+
 
 
   const sizes = ["xs", "sm", "md", "lg", "xl", "full"];
@@ -124,7 +137,7 @@ export const Feed = () => {
   return (
     <>
       <Center>
-        <Modal isOpen={isOpen} onClose={onClose} size={sizes}>
+        <Modal isOpen={isOpen} onClose={()=>{onClose(); handleCloseModal();}} size={sizes}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader alignSelf={"center"} fontWeight={"700"}>
@@ -171,7 +184,7 @@ export const Feed = () => {
                 value={caption} onChange={(e:React.ChangeEvent<HTMLTextAreaElement>)=>setCaption(e.target.value)}
                 placeholder={`What's in your mind, ${user?.displayName}`}
               />
-                <Image w={"250px"}  src={imageUrl as string} alt="" />
+                <Image w={"250px"} borderRadius={"7px"}  src={imageUrl as string} alt="" />
               <Flex justifyContent={"space-between"} p={1}>
                 <Image
                   src="https://www.facebook.com/images/composer/SATP_Aa_square-2x.png"
@@ -228,13 +241,14 @@ export const Feed = () => {
                 </Flex>
               </Flex>
             </ModalBody>
-
             <ModalFooter>
               <Button
                 bg={"#0866ff"}
                 width={"100%"}
                 color={"white"}
+                _hover={{ bg: "blue" }}
                 onClick={handleUpload}
+                isDisabled={!caption.trim() || !imageUrl}
               >
                 Post
               </Button>
@@ -263,6 +277,7 @@ export const Feed = () => {
               objectFit={"cover"}
             />
             <Button
+           
               borderRadius={"25px"}
               bg={"#e4e6eb"}
               marginRight={"5px"}

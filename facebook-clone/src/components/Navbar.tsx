@@ -66,6 +66,7 @@ import { HiSpeakerphone } from "react-icons/hi";
 import { MdGroups } from "react-icons/md";
 import { HiShoppingBag } from "react-icons/hi2";
 import { MdOutlineEventAvailable } from "react-icons/md";
+
 import '../App.css';
 import facebook from "../Images/Facebook.png"
 import { IoNotificationsOutline } from "react-icons/io5";
@@ -88,7 +89,8 @@ import Fund from "../Images/13.png";
 import { element } from "prop-types";
 import Sidebar from "./Sidebar";
 import { db } from "../firebase"; // Import Firebase configuration
-import { collection, getDocs } from "firebase/firestore";
+import { QueryDocumentSnapshot, collection, getDocs, onSnapshot } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 interface NavLinkProps {
   children: React.ReactNode;
@@ -100,6 +102,10 @@ interface NavLinkProps {
 interface SearchResult {
   uid: string;
   displayName: string;
+}
+interface Notification {
+  id: string;
+  content: string;
 }
 
 
@@ -175,6 +181,7 @@ export default function Nav() {
   const { pathname } = useLocation();
   const { toggleColorMode, colorMode } = useColorMode(); // Extract colorMode
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isntMenuOpen, setIsMenuOpen] = useState(false);
 
   // search starts------------------------
   const [searchTerm, setSearchTerm] = useState("");
@@ -220,20 +227,65 @@ export default function Nav() {
     setSearchResults([]);
   };
 
-
-
-
   // search functionality ends----------------
-  // const toggleMenu = () => {
-  //   setMenuOpen(!isMenuOpen);
-  // };
+
+
+  // ---------notification functionality starts here-------
+
+
+  // const [notifications, setNotifications] = useState<Notification[]>([]);
+
+
+  // useEffect(() => {
+  //   const fetchNotifications = async () => {
+  //     try {
+  //       const querySnapshot = await getDocs(collection(db, 'notifications'));
+  //       const fetchedNotifications: Notification[] = querySnapshot.docs.map((doc: QueryDocumentSnapshot) => ({
+  //         id: doc.id,
+  //         content: doc.data().content // Assuming content is a field in your notification document
+  //       }));
+  //       setNotifications(fetchedNotifications);
+  //     } catch (error) {
+  //       console.error('Error fetching notifications:', error);
+  //     }
+  //   };
+
+  //   fetchNotifications();
+  // }, []);
+
+
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "notifications"), (snapshot) => {
+      const fetchedNotifications: Notification[] = [];
+      snapshot.forEach((doc) => {
+        fetchedNotifications.push({ id: doc.id, content: doc.data().content });
+      });
+      setNotifications(fetchedNotifications);
+    });
+  
+    // Clean up the subscription when the component unmounts
+    return () => unsubscribe();
+  }, []);
+  
+
+
+
+
+
+
+
+  // -notification functionality ends here-------------------
+
+
 
   const toggleMenu = () => {
-    setMenuOpen(!isMenuOpen); // Toggle isMenuOpen state
+    setMenuOpen(!isMenuOpen);
     if (!isMenuOpen) {
-      onOpen(); // Open the Drawer when the hamburger icon is clicked
+      onOpen(); 
     } else {
-      onClose(); // Close the Drawer when the hamburger icon is clicked again
+      onClose(); 
     }
   };
 
@@ -297,9 +349,13 @@ export default function Nav() {
   const spacingSize = useBreakpointValue({ base: 'small', sm: '2px', md: 'large', lg: "lg", xl: "xl" });
   const bgColor = useColorModeValue('white', 'gray.900');
   const breakpoint = useBreakpointValue({ base: "base", sm: "sm", md: "md" });
+  const auth = getAuth();
+  // const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {});
+  const user = auth.currentUser;
   return (
 
     <>
+    
       <ColorModeScript />
       {breakpoint === "md" && (
         <ColorModeProvider>
@@ -521,7 +577,7 @@ export default function Nav() {
                       cursor={'pointer'}
                       minW={0}>
                       <Box borderRadius="50%" bg="gray.200" p={1}>
-                        <Icon as={FaFacebookMessenger} boxSize={6} color="black" fontWeight="bold" />
+                        <Icon as={FaFacebookMessenger} boxSize={7} color="black" fontWeight="bold" />
                       </Box>
                     </MenuButton>
                     <MenuList alignItems={'center'}>
@@ -539,30 +595,32 @@ export default function Nav() {
                   </Menu>
 
 
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rounded={'full'}
-                      variant={'link'}
-                      cursor={'pointer'}
-                      minW={0}>
-                      <Box borderRadius="50%" bg="gray.200" p={1}>
-                        <Icon as={IoNotifications} boxSize={6} color="black" fontWeight="bold" />
-                      </Box>
-                    </MenuButton>
-                    <MenuList alignItems={'center'}>
-                      <Center>
-                        <Tooltip label='Notifications'>
-                          <p >Notifications</p>
-                        </Tooltip>
-                      </Center>
-                      <br />
-                      <MenuDivider />
-                      <MenuItem>Your Servers</MenuItem>
-                      <MenuItem>Account Settings</MenuItem>
-                      <MenuItem>Logout</MenuItem>
-                    </MenuList>
-                  </Menu>
+                  <Box >
+                    <Menu isOpen={isntMenuOpen} onClose={() => setIsMenuOpen(false)}>
+                      <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0} onClick={() => setIsMenuOpen(!isntMenuOpen)}>
+                        <Box borderRadius="50%" bg="gray.100" p={1}>
+                          <Icon as={IoNotificationsOutline} boxSize={8} color={isntMenuOpen ? "blue" : "grey"} fontWeight="bold" />
+                        </Box>
+                      </MenuButton>
+                      <MenuList alignItems={'center'}>
+                        <Center>
+                          <Tooltip label='Notifications'>
+                            <p>Notifications</p>
+                          </Tooltip>
+                        </Center>
+                        <br />
+                        <MenuDivider />
+                        {notifications.length === 0 ? (
+                          <MenuItem>No notification yet</MenuItem>
+                        ) : (
+                          notifications.map(notification => (
+                            <MenuItem key={notification.id}>{notification.content}</MenuItem>
+                          ))
+                        )}
+                      
+                      </MenuList>
+                    </Menu>
+                  </Box>
 
 
                   <Menu>
@@ -573,17 +631,17 @@ export default function Nav() {
                       cursor={'pointer'}
                       minW={0}>
                       {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
-                      <Avatar size="sm">
+                      <Avatar size="sm" src={user?.photoURL as string}>
                         <AvatarBadge boxSize='1.25em' bg='green.500' />
                       </Avatar>
                     </MenuButton>
                     <MenuList alignItems={'center'}>
                       <Flex p={4}>
                         <Center>
-                          <Avatar size="sm" src='https://bit.ly/broken-link' />
+                          <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                          <p>Username</p>
+                          <p>{user?.displayName}</p>
                         </Center>
                       </Flex>
                       <MenuDivider />
