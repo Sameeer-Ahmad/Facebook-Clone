@@ -1,6 +1,8 @@
 
 // import { Flex } from "@chakra-ui/layout";
 import "./App.css";
+import AddFriends from "./pages/Friends/Addfriend";
+import Login from "./pages/Login/Login";
 // import { useContext, useEffect, useState } from "react";
  // Import the core Firebase module
  // Import the Firebase authentication module
@@ -18,9 +20,10 @@ function App() {
   return (
 
 
-    <div>
-      <AllRoutes />
-    </div>
+    // <div>
+    //   <AllRoutes />
+    // </div>
+   <AddFriends/>
   )
 }
 
