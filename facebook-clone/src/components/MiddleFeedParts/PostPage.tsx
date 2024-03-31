@@ -2,6 +2,11 @@ import { User } from "firebase/auth";
 import { FC, useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
+import Sidebar from "../Sidebar";
+import { Flex } from "@chakra-ui/layout";
+import { Story } from "./FeedSections/Story";
+import { Feed } from "./FeedSections/Feed";
+import RightBar from "../Rightbar";
 
 interface Post{
 
@@ -38,10 +43,17 @@ export const PostPage:FC<Post>=({postId,user,username,caption,imageURL,noOfLikes
   console.log( "postuser", postuser);
   
     return(
-        <>
-        
-       
-        {/* <Post/> */}
+        < >
+     <Flex>
+               
+            <Sidebar />
+             <Flex direction={"column"} width={"60%"}>
+                    <Story/>
+                    <Feed/>
+            </Flex>
+                <RightBar />
+            {/* <Post/> */}
+        </Flex>
         </>
     );
 }
