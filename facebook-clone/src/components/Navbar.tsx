@@ -226,9 +226,8 @@ export default function Nav() {
     setSearchResults([]);
   };
 
-
-
   // search functionality ends----------------
+
 
   // ---------notification functionality starts here-------
 
@@ -281,11 +280,11 @@ export default function Nav() {
 
 
   const toggleMenu = () => {
-    setMenuOpen(!isMenuOpen); // Toggle isMenuOpen state
+    setMenuOpen(!isMenuOpen);
     if (!isMenuOpen) {
-      onOpen(); // Open the Drawer when the hamburger icon is clicked
+      onOpen(); 
     } else {
-      onClose(); // Close the Drawer when the hamburger icon is clicked again
+      onClose(); 
     }
   };
 
