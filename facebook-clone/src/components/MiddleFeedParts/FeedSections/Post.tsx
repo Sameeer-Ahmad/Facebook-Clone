@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react";
+import { Flex, Heading } from "@chakra-ui/react";
 import { Feed } from "./Feed";
 import { PostPage } from "../PostPage";
 import { Story } from "./Story";
@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { db } from "../../../firebase";
 import { collection, doc, getDocs } from "firebase/firestore";
+import Sidebar from "../../Sidebar";
+import RightBar from "../../Rightbar";
 interface Post {
   id: string;
   caption: string;
@@ -45,21 +47,33 @@ export const Post = () => {
 
   return (
     <>
+      <Flex>
+
+        <Sidebar />
+        <Flex direction={"column"} width={"60%"}>
+          <Story />
+          <Feed />
+          {posts.map(({ id, caption, imageUrl, userName, likes, uid }) => (
+            <PostPage
+              key={id}
+              postId={id}
+              user={user}
+              username={userName}
+              caption={caption}
+              imageURL={imageUrl}
+              noOfLikes={likes}
+              postUserId={uid}
+            />
+          ))}
+        </Flex>
+        <RightBar />
+        {/* <Post/> */}
+      </Flex>
       {/* <Story />
       <PostPage/> */}
-      {posts.map(({ id, caption, imageUrl, userName, likes, uid }) => (
-        <PostPage
-          key={id}
-          postId={id}
-          user={user}
-          username={userName}
-          caption={caption}
-          imageURL={imageUrl}
-          noOfLikes={likes}
-          postUserId={uid}
-        />
-      ))}
+
       {/* <Feed /> */}
+
     </>
   );
 };
