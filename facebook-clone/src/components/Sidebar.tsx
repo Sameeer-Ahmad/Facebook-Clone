@@ -16,7 +16,6 @@ import Fund from "../Images/13.png";
 // import { useContext } from "react";
 
 const Sidebar = () => {
-
   // const { currentUser } = useContext(AuthContext);
 
   return (
