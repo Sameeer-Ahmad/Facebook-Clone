@@ -89,6 +89,7 @@ import { element } from "prop-types";
 import Sidebar from "./Sidebar";
 import { db } from "../firebase"; // Import Firebase configuration
 import { collection, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 interface NavLinkProps {
   children: React.ReactNode;
@@ -297,6 +298,9 @@ export default function Nav() {
   const spacingSize = useBreakpointValue({ base: 'small', sm: '2px', md: 'large', lg: "lg", xl: "xl" });
   const bgColor = useColorModeValue('white', 'gray.900');
   const breakpoint = useBreakpointValue({ base: "base", sm: "sm", md: "md" });
+  const auth = getAuth();
+  // const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {});
+  const user = auth.currentUser;
   return (
 
     <>
@@ -573,17 +577,17 @@ export default function Nav() {
                       cursor={'pointer'}
                       minW={0}>
                       {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
-                      <Avatar size="sm">
+                      <Avatar size="sm" src={user?.photoURL as string}>
                         <AvatarBadge boxSize='1.25em' bg='green.500' />
                       </Avatar>
                     </MenuButton>
                     <MenuList alignItems={'center'}>
                       <Flex p={4}>
                         <Center>
-                          <Avatar size="sm" src='https://bit.ly/broken-link' />
+                          <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                          <p>Username</p>
+                          <p>{user?.displayName}</p>
                         </Center>
                       </Flex>
                       <MenuDivider />
