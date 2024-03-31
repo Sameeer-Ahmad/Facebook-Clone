@@ -13,6 +13,7 @@ import { getAuth, createUserWithEmailAndPassword,updateProfile } from "firebase/
 import { app, db } from "../firebase";
 import { FC, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 // import useInputChange from "../utils/signup";
 
 const Days: number[] = [];
@@ -43,6 +44,7 @@ for (let year = 2024; year >= 1905; year--) {
 const auth = getAuth(app);
 
 const Signup: FC = () => {
+  const navigate=useNavigate()
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -100,7 +102,7 @@ const handleSubmitSignupUser = (e: React.FormEvent) => {
            bio:""
           });
         }).then(() => {
-          console.log("User signed up and profile updated successfully.");
+         navigate("/login")
         }).catch((error) => {
           console.error("Error updating profile: ", error);
         });
