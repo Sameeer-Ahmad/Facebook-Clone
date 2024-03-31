@@ -44,16 +44,7 @@ export const PostPage:FC<Post>=({postId,user,username,caption,imageURL,noOfLikes
   
     return(
         < >
-     <Flex>
-               
-            <Sidebar />
-             <Flex direction={"column"} width={"60%"}>
-                    <Story/>
-                    <Feed/>
-            </Flex>
-                <RightBar />
-            {/* <Post/> */}
-        </Flex>
+     
         </>
     );
 }
