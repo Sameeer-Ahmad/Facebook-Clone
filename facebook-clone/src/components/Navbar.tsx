@@ -1,3 +1,4 @@
+import '../App.css';
 import React, { useState } from "react";
 import {
   Box,
@@ -54,7 +55,8 @@ import { HiSpeakerphone } from "react-icons/hi";
 import { MdGroups } from "react-icons/md";
 import { HiShoppingBag } from "react-icons/hi2";
 import { MdOutlineEventAvailable } from "react-icons/md";
-import '../App.css';
+
+
 
 
 interface NavLinkProps {
@@ -172,6 +174,7 @@ export default function Nav() {
 
   return (
     <>
+    
       <ColorModeScript />
       <ColorModeProvider>
         <Box bg={useColorModeValue('white', 'gray.900')} px={3} boxShadow={"lg"} maxWidth="auto">
@@ -436,6 +439,7 @@ export default function Nav() {
           </Flex>
         </Box>
       </ColorModeProvider>
+      
     </>
   );
 }
