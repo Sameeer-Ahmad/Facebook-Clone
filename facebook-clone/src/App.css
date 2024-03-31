@@ -13,7 +13,7 @@
   text-decoration: underline;
 }
 
-.mainbody > .leftBar {
+.leftBar {
   flex: 2;
   position: sticky;
   top: 70px;
@@ -21,7 +21,7 @@
   overflow: scroll;
   background-color: var(--themed-bg);
   color: var(--themed-textColor);
-  width: 20%;
+  max-width: 25%;
   border: 1px solid red;
 }
 
@@ -101,18 +101,20 @@
 
 /* -------------------rightbar */
 /* Assuming the import path is correct */
- .rightBar {
+.rightBar {
   flex: 3;
   position: sticky;
   top: 70px;
   height: calc(100vh - 70px);
   overflow: scroll;
-  background-color: var(--bgSoft);
-  width: 30%;
-  border: 1px solid red;
+  /* background-color: var(--bgSoft); */
+  /* width: 200px; */
+  max-width:25%;
+  /* border: 1px solid red; */
+  /* background-color: #5271ff; */
 }
 
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .rightBar {
     display: none;
   }
@@ -122,7 +124,7 @@
   .rightBar {
     display: none;
   }
-}
+} */
 
 .rightBar::-webkit-scrollbar {
   display: none;
@@ -139,6 +141,8 @@
   padding: 20px;
   margin-bottom: 20px;
   background-color: var(--bg);
+  /* border: 1px solid green; */
+  /* width: 50%; */
 }
 
 .rightBar .container .item span {

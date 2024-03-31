@@ -66,6 +66,7 @@ import { HiSpeakerphone } from "react-icons/hi";
 import { MdGroups } from "react-icons/md";
 import { HiShoppingBag } from "react-icons/hi2";
 import { MdOutlineEventAvailable } from "react-icons/md";
+
 import '../App.css';
 import facebook from "../Images/Facebook.png"
 import { IoNotificationsOutline } from "react-icons/io5";
@@ -354,6 +355,7 @@ export default function Nav() {
   return (
 
     <>
+    
       <ColorModeScript />
       {breakpoint === "md" && (
         <ColorModeProvider>
