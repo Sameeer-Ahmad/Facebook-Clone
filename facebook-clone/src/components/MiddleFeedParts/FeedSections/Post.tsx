@@ -1,9 +1,9 @@
-import { Heading } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 
 export const Post = ()=>{
     return(
         <>
-      <Heading>Post</Heading>
+      <Box></Box>
         </>
     );
 }
