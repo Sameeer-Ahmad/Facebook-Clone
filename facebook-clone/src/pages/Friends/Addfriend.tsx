@@ -90,6 +90,7 @@ const AddFriends: React.FC = () => {
     { imageSrc: 'https://img.freepik.com/free-photo/smiling-young-lady-designed-t-shirt-good-mood-dreaming-with-long-hair-white_140725-14615.jpg?t=st=1711836332~exp=1711839932~hmac=c60c1162c714395986b49e896be90a71e12ac41d6585934489b4f7a58db21adb&w=740', name: 'Anjali' },
     { imageSrc: 'https://images.pexels.com/photos/730055/pexels-photo-730055.jpeg?auto=compress&cs=tinysrgb&w=600', name: 'Punam Pandey' },
     { imageSrc: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600', name: 'Jannat Sagar' },
+    
   ];
    
   const handleButtonClick = (cardName: string) => {
