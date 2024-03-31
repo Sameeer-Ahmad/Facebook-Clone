@@ -1,3 +1,8 @@
+
+import { Box, Heading } from "@chakra-ui/react";
+
+
+
 import { Flex, Heading } from "@chakra-ui/react";
 import { Feed } from "./Feed";
 import { PostPage } from "../PostPage";
@@ -77,3 +82,4 @@ export const Post = () => {
     </>
   );
 };
+

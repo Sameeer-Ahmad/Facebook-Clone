@@ -24,7 +24,15 @@ import {
 } from "@chakra-ui/modal";
 
 import { useEffect, useRef, useState } from "react";
-import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+
 import { db, storage } from "../../../firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -40,7 +48,9 @@ export const Feed = () => {
   const [caption, setCaption] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [likes, setLikes] = useState<number>(0);
-  const fileInputRef = useRef<HTMLInputElement|any>(null);
+
+  const fileInputRef = useRef<HTMLInputElement | any>(null);
+
 
   const auth = getAuth();
   // const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {});
@@ -63,6 +73,7 @@ export const Feed = () => {
   const handleUpload = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setCaption("");
     // setImage("");
+
    setImageUrl("")
     if (caption === "" && imageUrl === "") {
         console.log("Prevented access to photo and caption submission ");
@@ -138,6 +149,7 @@ const handleCloseModal = () => {
     <>
       <Center>
         <Modal isOpen={isOpen} onClose={()=>{onClose(); handleCloseModal();}} size={sizes}>
+
           <ModalOverlay />
           <ModalContent>
             <ModalHeader alignSelf={"center"} fontWeight={"700"}>
@@ -147,9 +159,10 @@ const handleCloseModal = () => {
             <ModalBody borderTop={"2px solid #e4e6eb"}>
               {/* Your modal content */}
               <Flex align={"center"} gap={1}>
-                
+
                 <Image
-                  src ={user?.photoURL as string}
+                  src={user?.photoURL as string}
+
                   width={"50px"}
                   height={"50px"}
                   borderRadius={"50%"}
@@ -158,7 +171,9 @@ const handleCloseModal = () => {
                 />
                 <Box>
                   <Text fontWeight={"700"} marginBottom={1}>
-                  {user?.displayName}
+
+                    {user?.displayName}
+
                   </Text>
                   <Text
                     display={"flex"}
@@ -181,10 +196,20 @@ const handleCloseModal = () => {
               <Textarea
                 height={"60px"}
                 marginTop={2}
-                value={caption} onChange={(e:React.ChangeEvent<HTMLTextAreaElement>)=>setCaption(e.target.value)}
+
+                value={caption}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  setCaption(e.target.value)
+                }
                 placeholder={`What's in your mind, ${user?.displayName}`}
               />
-                <Image w={"250px"} borderRadius={"7px"}  src={imageUrl as string} alt="" />
+              <Image
+                w={"250px"}
+                borderRadius={"7px"}
+                src={imageUrl as string}
+                alt=""
+              />
+
               <Flex justifyContent={"space-between"} p={1}>
                 <Image
                   src="https://www.facebook.com/images/composer/SATP_Aa_square-2x.png"
@@ -217,7 +242,6 @@ const handleCloseModal = () => {
                     display={"none"}
                     ref={fileInputRef}
                     accept="image/*"
-                    
                     onChange={handleChange}
                   />
                   <Image
@@ -258,43 +282,51 @@ const handleCloseModal = () => {
       </Center>
       <Center>
         <Box
-          marginTop={6}
+
+          marginTop={[4, 6]}
           boxShadow={
             "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px"
           }
-          width={["90%", "80%", "70%", "60%", "40%", "40%"]}
-          m={3}
+          // width={["90%", "80%", "70%", "60%", "50%"]}
+          width={"auto"}
+          m={[2, 3]}
+
           p={4}
           borderRadius={"10px"}
         >
           <Flex gap={5} p={2} borderBottom={"3px solid #e4e6eb"}>
             <Image
               src={user?.photoURL as string}
-              width={"40px"}
-              height={"40px"}
+
+              width={["30px", "40px", "50px"]}
+              height={["30px", "40px", "50px"]}
+
               borderRadius={"50%"}
               border={"2px solid white"}
               objectFit={"cover"}
             />
             <Button
-           
+
               borderRadius={"25px"}
               bg={"#e4e6eb"}
               marginRight={"5px"}
               color={"#818285"}
-              p={"6px 220px"}
+
+              width={["auto", "100%", "100%"]}
               textAlign={"start"}
               onClick={onOpen}
             >
-            {`What's in your mind, ${user?.displayName}`}
+              {`What's in your mind, ${user?.displayName}?`}
             </Button>
-          
+
           </Flex>
 
           <Flex justifyContent={"space-around"} p={1}>
             <Flex
-              gap={2}
-              p={"8px 20px"}
+
+              gap={[1, 2, 3]}
+              p={["6px 10px", "8px 20px"]}
+
               cursor="pointer"
               _hover={{
                 bg: "#e4e6eb",
@@ -302,17 +334,24 @@ const handleCloseModal = () => {
             >
               <Image
                 src="https://static.xx.fbcdn.net/rsrc.php/v3/yF/r/v1iF2605Cb5.png"
-                width={"20px"}
+
+                width={["16px", "20px", "24px"]}
               />
-              <Text fontSize={"14px"} fontWeight={"500"} color={"#818285"}>
-                {" "}
+              <Text
+                fontSize={["12px", "14px", "16px"]}
+                fontWeight={"500"}
+                color={"#818285"}
+              >
+
                 Live video
               </Text>
             </Flex>
 
             <Flex
-              gap={2}
-              p={"8px 20px"}
+
+              gap={[1, 2, 3]}
+              p={["6px 10px", "8px 20px"]}
+
               cursor="pointer"
               _hover={{
                 bg: "#e4e6eb",
@@ -320,16 +359,24 @@ const handleCloseModal = () => {
             >
               <Image
                 src="https://static.xx.fbcdn.net/rsrc.php/v3/yC/r/a6OjkIIE-R0.png"
-                width={"20px"}
+
+                width={["16px", "20px", "24px"]}
               />
-              <Text fontSize={"14px"} fontWeight={"500"} color={"#818285"}>
+              <Text
+                fontSize={["12px", "14px", "16px"]}
+                fontWeight={"500"}
+                color={"#818285"}
+              >
+
                 {" "}
                 Photo/video
               </Text>
             </Flex>
             <Flex
-              gap={2}
-              p={"8px 20px"}
+
+              gap={[1, 2, 3]}
+              p={["6px 10px", "8px 20px"]}
+
               cursor="pointer"
               _hover={{
                 bg: "#e4e6eb",
@@ -337,9 +384,15 @@ const handleCloseModal = () => {
             >
               <Image
                 src="https://static.xx.fbcdn.net/rsrc.php/v3/yk/r/yMDS19UDsWe.png"
-                width={"20px"}
+
+                width={["16px", "20px", "24px"]}
               />
-              <Text fontSize={"14px"} fontWeight={"500"} color={"#818285"}>
+              <Text
+                fontSize={["12px", "14px", "16px"]}
+                fontWeight={"500"}
+                color={"#818285"}
+              >
+
                 {" "}
                 Feeling/activity
               </Text>
