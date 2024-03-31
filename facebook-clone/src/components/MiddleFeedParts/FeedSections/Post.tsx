@@ -45,8 +45,8 @@ export const Post = () => {
 
   return (
     <>
-      <Story />
-      {/* <PostPage/> */}
+      {/* <Story />
+      <PostPage/> */}
       {posts.map(({ id, caption, imageUrl, userName, likes, uid }) => (
         <PostPage
           key={id}
@@ -59,7 +59,7 @@ export const Post = () => {
           postUserId={uid}
         />
       ))}
-      <Feed />
+      {/* <Feed /> */}
     </>
   );
 };
