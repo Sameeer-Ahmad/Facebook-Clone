@@ -7,6 +7,8 @@ import reportWebVitals from "./reportWebVitals";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import AuthProvider from "./Context/AuthContextProvider";
+import { Provider } from "react-redux";
+import store from "./redux/ProductReducer/store";
 
 
 const root = ReactDOM.createRoot(
@@ -16,10 +18,11 @@ root.render(
   
   <BrowserRouter>
   <ChakraProvider>
-   <AuthProvider>
+    <Provider store={store}>
+    <AuthProvider>
       <App />
       </AuthProvider>
-
+    </Provider>
   </ChakraProvider>
   </BrowserRouter>
 
