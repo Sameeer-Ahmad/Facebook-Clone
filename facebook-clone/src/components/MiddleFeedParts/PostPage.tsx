@@ -1,50 +1,463 @@
-import { User } from "firebase/auth";
-import { FC, useEffect, useState } from "react";
+import { User, getAuth } from "firebase/auth";
+import React, { FC, useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { collection, getDocs } from "firebase/firestore";
-import Sidebar from "../Sidebar";
-import { Flex } from "@chakra-ui/layout";
-import { Story } from "./FeedSections/Story";
-import { Feed } from "./FeedSections/Feed";
-import RightBar from "../Rightbar";
+import {
+  Timestamp,
+  collection,
+  doc,
+ 
+  getDocs,
+ 
+  onSnapshot,
+  query,
+  setDoc,
+} from "firebase/firestore";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardHeader,
+  CardFooter,
+  Center,
+  Flex,
+  Heading,
+  Image,
+  Input,
+  Text,
+  IconButton,
+} from "@chakra-ui/react";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { BiChat, BiLike, BiShare } from "react-icons/bi";
+import TimeAgo from 'react-timeago'
+const auth = getAuth();
 
-interface Post{
-
-    postId:string;
-    user:User|null;
-    username:string;
-    caption:string;
-    imageURL:string;
-    noOfLikes:number;
-    postUserId:string;
-}
-export const PostPage:FC<Post>=({postId,user,username,caption,imageURL,noOfLikes,postUserId})=>{
-
-    const [comments,setComments]=useState<string[]>([]);
-    const [comment,setComment]=useState<string>("");
-    const [show,setShow]=useState<boolean>(false);
-    const [liked,setLiked]=useState<string>("textForLike");
-    const [posterImage,setPosterImage]=useState<string>("");
-  const[postuser,setPostUser]=useState<User|null>()
-
-  useEffect(()=>{
-    if(postUserId){
-       const fetchData=async()=>{
-        const querySnapshot=await getDocs(collection(db,"users"));
-        querySnapshot.forEach((doc)=>{
-            if(doc.id===postUserId){
-                setPostUser(doc.data() as User)
-            }
-        })
-       } 
-       fetchData()
-    }
-  },[postUserId])
-  console.log( "postuser", postuser);
+interface Post {
+  postId: string |any;
+  user: User | null;
+  username: string;
+  caption: string;
+  imageURL: string;
+  noOfLikes: number;
+  postUserId: string;
+  timestamp: Timestamp | null;
   
-    return(
-        < >
-     
-        </>
-    );
 }
+
+export const PostPage: FC<Post> = ({
+  postId,
+  user,
+  username,
+  caption,
+  imageURL,
+  noOfLikes,
+  postUserId,
+  timestamp,
+}) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>("");
+  const [showComments, setShowComments] = useState<boolean>(false);
+  const [likes, setLikes] = useState<Like[]>([]);
+const[posts,setPosts]=useState<Post[]>([]);
+  const[show,setShow]=useState<string>("like")
+console.log("postinfo", username, caption, imageURL, noOfLikes, postUserId, timestamp);
+
+console.log(typeof timestamp);
+
+console.log(timestamp);
+
+useEffect(() => {
+  if (timestamp && timestamp.seconds) {
+    const date = new Date(timestamp.seconds * 1000);
+    console.log("Date: ", date);
+  }
+}, [timestamp]);
+
+const addPost = async (post: Post) => {
+  try {
+    const postRef = doc(collection(db, "posts"), post.postId);
+    await setDoc(postRef, { ...post, timestamp: new Date() });
+    console.log("Post added successfully!");
+    setPosts((prevPosts: Post[]) => [post, ...prevPosts]);
+  } catch (error) {
+    console.error("Error adding post: ", error);
+  }
+};
+
+
+useEffect(() => {
+  const fetchComments = async () => {
+    const commentsRef = collection(db, "posts", postId, "comments");
+    const querySnapshot = await getDocs(query(commentsRef));
+    const commentsData = querySnapshot.docs.map((doc: any) => doc.data());
+    setComments(commentsData.reverse());
+
+    const unsubscribe = onSnapshot(query(commentsRef), (snapshot) => {
+      const newCommentsData: Comment[] = snapshot.docs.map(
+        (doc) => doc.data() as Comment
+      );
+      setComments(newCommentsData.reverse());
+    });
+
+    return unsubscribe;
+  };
+
+  fetchComments();
+}, [postId]);
+
+const addComment = async (comment: {
+  id: string;
+  comment: string;
+  timestamp: Date;
+  username: string;
+  photoURL: string;
+}) => {
+  try {
+    const commentRef = doc(
+      collection(db, "posts", postId, "comments"),
+      comment.id
+    );
+    await setDoc(commentRef, comment);
+    console.log("Comment added successfully!");
+  } catch (error) {
+    console.error("Error adding comment: ", error);
+  }
+};
+
+
+useEffect(() => {
+  const fetchLikes = async () => {
+    const likesRef = collection(db, "posts", postId, "likes");
+    const querySnapshot = await getDocs(query(likesRef));
+    const likesData = querySnapshot.docs.map((doc: any) => doc.data());
+    setLikes(likesData);
+
+    const unsubscribe = onSnapshot(query(likesRef), (snapshot) => {
+      const newLikesData: Like[] = snapshot.docs.map(
+        (doc) => doc.data() as Like
+      );
+      setLikes(newLikesData);
+    });
+
+    return unsubscribe;
+  };
+
+  fetchLikes();
+}, [postId]);
+
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (newComment.trim() !== "") {
+    const commentId = Date.now().toString();
+    const comment = {
+      id: commentId,
+      comment: newComment,
+      timestamp: new Date(),
+      username: user?.displayName || "",
+      photoURL: user?.photoURL || "",
+    };
+    setComments((prevComments) => [comment, ...prevComments]);
+    await addComment(comment);
+    setNewComment("");
+  }
+};
+
+
+  return (
+    <>
+     
+
+<Center>
+        <Card
+          mb={6}
+          maxW="350px"
+          minW="500px"
+          borderRadius="lg"
+          overflow="hidden"
+        >
+          <CardHeader>
+           <Flex justify={"space-between"} >
+           <Flex  gap={'18px'}>
+              <Avatar src={user?.photoURL || ""} />
+             <Flex flexDir={"column"}>
+             <Heading mt={"15px"} size="sm">{username}</Heading> 
+             {/* <TimeAgo date={timestamp ? new Date(timestamp.toDate()).toLocaleString() : ''} /> */}
+             <Text>{timestamp ? new Date(timestamp.toDate()).toLocaleString() : ''}</Text>
+             </Flex>
+
+            </Flex>
+            <IconButton
+              variant="ghost"
+              colorScheme="gray"
+              aria-label="See menu"
+              icon={<BsThreeDotsVertical />}
+            /></Flex>
+          </CardHeader>
+          <Text ml={"24px"} mb={"10px"}>
+            {caption}
+          </Text>
+          <Image
+            h="300px"
+            borderTop={"1px solid gray"}
+            objectFit="contain"
+            src={imageURL}
+            alt=""
+          />
+          <CardFooter flexDir="column" borderTop={"1px solid gray"}>
+            <Flex justify="space-between">
+              <Button flex="1" variant="ghost" leftIcon={<BiLike />}>
+                Like
+              </Button>
+              <Button
+                flex="1"
+                variant="ghost"
+                leftIcon={<BiChat />}
+                onClick={() => setShowComments(!showComments)}
+              >
+                Comment
+              </Button>
+              <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
+                Share
+              </Button>
+            </Flex>
+            {showComments && (
+              <>
+                <Box as="form" onSubmit={handleSubmit} >
+                  <Flex mb={"5px"} mt={"5px"} gap={"10px"}>
+                    <Avatar src={user?.photoURL as any} />
+                    <Input
+                      type="text"
+                      placeholder="Add a comment..."
+                      value={newComment}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setNewComment(e.target.value)
+                      }
+                    />
+                  </Flex>
+                </Box>
+                {comments.map((comment: Comment) => (
+                  <Flex key={comment.id} mb={"3px"} mt={"3px"} gap={"10px"}>
+                    <Avatar src={comment.photoURL} />
+                    <Flex
+                      bg={"rgb(240,242,245)"}
+                      p={"10px"}
+                      borderRadius={"10px"}
+                      w={"auto"}
+                      flexDir={"column"}
+                    >
+                      <Text fontWeight={"600"}>{comment.username}</Text>
+                      <Text>{comment.comment}</Text>
+                    </Flex>
+                  </Flex>
+                ))}
+              </>
+            )}
+          </CardFooter>
+          
+        </Card>
+      </Center>   
+    </>
+  );
+};
+
+interface Comment {
+  id: string;
+  comment: string;
+  timestamp: Date;
+  username: string;
+  photoURL: string;
+}
+interface Like {
+  id: string;
+  like: string;
+  timestamp: Date;
+  username: string;
+  photoURL: string;
+}
+
+export default PostPage;
+
+
+/*
+   {/* <Center>
+        <Card
+          mb={6}
+          maxW="350px"
+          minW="500px"
+          borderRadius="lg"
+          overflow="hidden"
+        >
+          <CardHeader>
+           <Flex justify={"space-between"} >
+           <Flex  gap={'18px'}>
+              <Avatar src={user?.photoURL || ""} />
+              <Heading mt={"15px"} size="sm">{username}</Heading>
+            </Flex>
+            <IconButton
+              variant="ghost"
+              colorScheme="gray"
+              aria-label="See menu"
+              icon={<BsThreeDotsVertical />}
+            /></Flex>
+          </CardHeader>
+          <Text ml={"24px"} mb={"10px"}>
+            {caption}
+          </Text>
+          <Image
+            h="300px"
+            borderTop={"1px solid gray"}
+            objectFit="contain"
+            src={imageURL}
+            alt=""
+          />
+          <CardFooter flexDir="column" borderTop={"1px solid gray"}>
+            <Flex justify="space-between">
+              <Button flex="1" variant="ghost" leftIcon={<BiLike />}>
+                Like
+              </Button>
+              <Button
+                flex="1"
+                variant="ghost"
+                leftIcon={<BiChat />}
+                onClick={() => setShowComments(!showComments)}
+              >
+                Comment
+              </Button>
+              <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
+                Share
+              </Button>
+            </Flex>
+            {showComments && (
+              <>
+                <Box as="form" >
+                  <Flex mb={"5px"} mt={"5px"} gap={"10px"}>
+                    <Avatar src={user?.photoURL as any} />
+                    <Input
+                      type="text"
+                      placeholder="Add a comment..."
+                      value={newComment}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setNewComment(e.target.value)
+                      }
+                    />
+                  </Flex>
+                </Box>
+                {comments.map((comment: Comment) => (
+                  <Flex key={comment.id} mb={"3px"} mt={"3px"} gap={"10px"}>
+                    <Avatar src={comment.photoURL} />
+                    <Flex
+                      bg={"rgb(240,242,245)"}
+                      p={"10px"}
+                      borderRadius={"10px"}
+                      w={"auto"}
+                      flexDir={"column"}
+                    >
+                      <Text fontWeight={"600"}>{comment.username}</Text>
+                      <Text>{comment.comment}</Text>
+                    </Flex>
+                  </Flex>
+                ))}
+              </>
+            )}
+          </CardFooter>
+          
+        </Card>
+      </Center> */
+
+
+/**
+ * 
+ * 
+  const addPost = async (post: Post) => {
+    try {
+      const postRef = doc(collection(db, "posts"), post.postId);
+      await setDoc(postRef, { ...post, timestamp: new Date() });
+      console.log("Post added successfully!");
+      setPosts((prevPosts: Post[]) => [post, ...prevPosts]);
+    } catch (error) {
+      console.error("Error adding post: ", error);
+    }
+  };
+  
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const commentsRef = collection(db, "posts", postId, "comments");
+      const querySnapshot = await getDocs(query(commentsRef));
+      const commentsData = querySnapshot.docs.map((doc: any) => doc.data());
+      setComments(commentsData.reverse());
+
+      const unsubscribe = onSnapshot(query(commentsRef), (snapshot) => {
+        const newCommentsData: Comment[] = snapshot.docs.map(
+          (doc) => doc.data() as Comment
+        );
+        setComments(newCommentsData.reverse());
+      });
+
+      return unsubscribe;
+    };
+
+    fetchComments();
+  }, [postId]);
+
+  const addComment = async (comment: {
+    id: string;
+    comment: string;
+    timestamp: Date;
+    username: string;
+    photoURL: string;
+  }) => {
+    try {
+      const commentRef = doc(
+        collection(db, "posts", postId, "comments"),
+        comment.id
+      );
+      await setDoc(commentRef, comment);
+      console.log("Comment added successfully!");
+    } catch (error) {
+      console.error("Error adding comment: ", error);
+    }
+  };
+
+
+  useEffect(() => {
+    const fetchLikes = async () => {
+      const likesRef = collection(db, "posts", postId, "likes");
+      const querySnapshot = await getDocs(query(likesRef));
+      const likesData = querySnapshot.docs.map((doc: any) => doc.data());
+      setLikes(likesData);
+  
+      const unsubscribe = onSnapshot(query(likesRef), (snapshot) => {
+        const newLikesData: Like[] = snapshot.docs.map(
+          (doc) => doc.data() as Like
+        );
+        setLikes(newLikesData);
+      });
+  
+      return unsubscribe;
+    };
+  
+    fetchLikes();
+  }, [postId]);
+  
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newComment.trim() !== "") {
+      const commentId = Date.now().toString();
+      const comment = {
+        id: commentId,
+        comment: newComment,
+        timestamp: new Date(),
+        username: user?.displayName || "",
+        photoURL: user?.photoURL || "",
+      };
+      setComments((prevComments) => [comment, ...prevComments]);
+      await addComment(comment);
+      setNewComment("");
+    }
+  };
+
+ * 
+ */
