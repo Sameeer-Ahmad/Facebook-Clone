@@ -132,7 +132,7 @@ const handleCloseModal = () => {
 
 
 
-  const sizes = ["xs", "sm", "md", "lg", "xl", "full"];
+  const sizes = ["xs", "sm", "md", "lg", "xl", "xl"];
   
   return (
     <>

@@ -52,7 +52,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { MdOutlineOndemandVideo } from "react-icons/md";
 import { LuStore } from "react-icons/lu";
 import { HiOutlineUserGroup } from "react-icons/hi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CgMenuGridO } from "react-icons/cg";
 import { FaFacebookMessenger } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
@@ -66,6 +66,12 @@ import { HiSpeakerphone } from "react-icons/hi";
 import { MdGroups } from "react-icons/md";
 import { HiShoppingBag } from "react-icons/hi2";
 import { MdOutlineEventAvailable } from "react-icons/md";
+import { IoIosSettings } from "react-icons/io";
+import { IoMdHelpCircle } from "react-icons/io";
+import { IoMdMoon } from "react-icons/io";
+import { RiFeedbackFill } from "react-icons/ri";
+
+
 
 import '../App.css';
 import facebook from "../Images/Facebook.png"
@@ -88,9 +94,10 @@ import Fund from "../Images/13.png";
 
 import { element } from "prop-types";
 import Sidebar from "./Sidebar";
-import { db } from "../firebase"; // Import Firebase configuration
+import { app, db } from "../firebase"; // Import Firebase configuration
 import { QueryDocumentSnapshot, collection, getDocs, onSnapshot } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
+
 
 interface NavLinkProps {
   children: React.ReactNode;
@@ -179,9 +186,29 @@ export default function Nav() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSearchOpen, setSearchOpen] = useState(false);
   const { pathname } = useLocation();
-  const { toggleColorMode, colorMode } = useColorMode(); // Extract colorMode
+  //  const { toggleColorMode, colorMode } = useColorMode(); // Extract colorMode
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isntMenuOpen, setIsMenuOpen] = useState(false);
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  // ----logout-------
+  const navigate = useNavigate();
+  const auth = getAuth(app);
+
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Redirect to login page after successful logout
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
+  };
+
+  // ------logout ends------------
+
 
   // search starts------------------------
   const [searchTerm, setSearchTerm] = useState("");
@@ -264,11 +291,11 @@ export default function Nav() {
       });
       setNotifications(fetchedNotifications);
     });
-  
+
     // Clean up the subscription when the component unmounts
     return () => unsubscribe();
   }, []);
-  
+
 
 
 
@@ -283,9 +310,9 @@ export default function Nav() {
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
     if (!isMenuOpen) {
-      onOpen(); 
+      onOpen();
     } else {
-      onClose(); 
+      onClose();
     }
   };
 
@@ -346,16 +373,33 @@ export default function Nav() {
     }
   ];
 
+  const handleToggleColorMode = () => {
+    if (colorMode === 'light') {
+      document.body.style.backgroundColor = 'black';
+      document.body.style.color = "white";
+      toggleColorMode();
+    } else {
+      document.body.style.backgroundColor = '#e4e6eb';
+      document.body.style.color = "black";
+      toggleColorMode();
+    }
+  };
+
+
+
+
+
   const spacingSize = useBreakpointValue({ base: 'small', sm: '2px', md: 'large', lg: "lg", xl: "xl" });
   const bgColor = useColorModeValue('white', 'gray.900');
   const breakpoint = useBreakpointValue({ base: "base", sm: "sm", md: "md" });
-  const auth = getAuth();
+  const buttonText = colorMode === 'light' ? 'Light Mode' : 'Dark Mode';
+  // const auth = getAuth();
   // const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {});
   const user = auth.currentUser;
   return (
 
     <>
-    
+
       <ColorModeScript />
       {breakpoint === "md" && (
         <ColorModeProvider>
@@ -379,6 +423,7 @@ export default function Nav() {
                         zIndex={10}
                         bg="white"
                         boxShadow="lg"
+                        color="gray"
                         borderRadius={20}
                         mt={2}
                       >
@@ -386,6 +431,7 @@ export default function Nav() {
                           type="text"
                           placeholder="Search Facebook"
                           borderRadius={20}
+                          color="gray"
                           value={searchTerm}
                           onChange={handleSearchChange}
                           width="200px"
@@ -423,7 +469,7 @@ export default function Nav() {
                 <Box position="relative">
                   <InputGroup ml={4} display={{ base: "none", md: "none", lg: "block" }}>
                     <InputLeftElement pointerEvents="none" children={<FaSearch color="gray" />} />
-                    <Input type="text" placeholder="Search Facebook" bg="gray.100" borderRadius={20} value={searchTerm} onChange={handleSearchChange} width="200px" />
+                    <Input type="text" placeholder="Search Facebook" bg="gray.100" color="gray" borderRadius={20} value={searchTerm} onChange={handleSearchChange} width="200px" />
                   </InputGroup>
                   {searchTerm && (
                     <Box
@@ -442,8 +488,8 @@ export default function Nav() {
                         <Text>No results found</Text>
                       ) : (
                         searchResults.map((result, index) => (
-                          <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
-                            <Box p={3} borderBottomWidth="1px">
+                          <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch} color="gray">
+                            <Box p={3} borderBottomWidth="1px" color="gray">
                               <Text>{result.displayName}</Text>
                             </Box>
                           </Link>
@@ -617,7 +663,7 @@ export default function Nav() {
                             <MenuItem key={notification.id}>{notification.content}</MenuItem>
                           ))
                         )}
-                      
+
                       </MenuList>
                     </Menu>
                   </Box>
@@ -629,11 +675,15 @@ export default function Nav() {
                       rounded={'full'}
                       variant={'link'}
                       cursor={'pointer'}
-                      minW={0}>
+                      minW={0}
+                    >
+
                       {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
+
                       <Avatar size="sm" src={user?.photoURL as string}>
                         <AvatarBadge boxSize='1.25em' bg='green.500' />
                       </Avatar>
+
                     </MenuButton>
                     <MenuList alignItems={'center'}>
                       <Flex p={4}>
@@ -641,17 +691,38 @@ export default function Nav() {
                           <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                          <p>{user?.displayName}</p>
+                          <Link to={`/profile/${user?.uid}`}>
+                            <p>{user?.displayName}</p>
+                          </Link>
                         </Center>
                       </Flex>
                       <MenuDivider />
-                      <MenuItem>Your Servers</MenuItem>
+                      <MenuItem>
+                        <Box borderRadius="50%" bg="gray.200" p={2}>
+                          <Icon as={IoIosSettings} boxSize={5} color="black" fontWeight="bold" />
+
+                        </Box>
+                        <Box p={3}>Setting & privacy</Box>
+                      </MenuItem>
+
+                      <MenuItem>
+                        <Box borderRadius="50%" bg="gray.200" p={2}>
+                          <Icon as={IoMdHelpCircle} boxSize={5} color="black" fontWeight="bold" />
+
+                        </Box>
+                        <Box p={3}>Help & support</Box>
+                      </MenuItem>
                       <Accordion defaultIndex={[0]} allowMultiple>
                         <AccordionItem>
                           <h2>
                             <AccordionButton>
-                              <Box as="span" flex='1' textAlign='left'>
-                                Account Settings
+                              <Box borderRadius="50%" bg="gray.200" p={2}>
+                                <Icon as={IoMdMoon} boxSize={5} color="black" fontWeight="bold" />
+
+                              </Box>
+                              <Box as="span" flex='1' textAlign='left' ml={1}>
+
+                                Display
                               </Box>
                               <AccordionIcon />
                             </AccordionButton>
@@ -659,24 +730,26 @@ export default function Nav() {
                           <AccordionPanel pb={4}>
                             <FormControl display='flex' alignItems='center'>
                               <FormLabel htmlFor='dark-mode' mb='0'>
-                                Dark mode
+                                {buttonText}
                               </FormLabel>
-                              <Switch id='dark-mode' isChecked={colorMode === 'dark'} onChange={toggleColorMode} />
+                              <Switch id='dark-mode' isChecked={colorMode === 'dark'} onChange={handleToggleColorMode} />
                             </FormControl>
                           </AccordionPanel>
                           <Divider />
-                          <AccordionPanel pb={4}>
-                            <FormControl display='flex' alignItems='center'>
-                              <FormLabel htmlFor='light-mode' mb='0'>
-                                Light mode
-                              </FormLabel>
-                              <Switch id='light-mode' isChecked={colorMode === 'light'} onChange={toggleColorMode} />
-                            </FormControl>
-                          </AccordionPanel>
+                          
                         </AccordionItem>
                       </Accordion>
-                      <MenuItem>Logout</MenuItem>
+                      <MenuItem>
+                        <Box borderRadius="50%" bg="gray.200" p={2}>
+                          <Icon as={RiFeedbackFill} boxSize={5} color="black" fontWeight="bold" />
+
+                        </Box>
+                        <Box p={3}>Give feedback</Box>
+                      </MenuItem>
+
+                      <MenuItem fontWeight={"bold"} onClick={handleLogout}>Log out</MenuItem>
                     </MenuList>
+
                   </Menu>
                 </Stack>
               </Flex>
