@@ -1,5 +1,7 @@
 
+
 import { Flex, Heading } from "@chakra-ui/react";
+
 import { Feed } from "./Feed";
 import { PostPage } from "../PostPage";
 import { Story } from "./Story";
@@ -7,16 +9,25 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { db } from "../../../firebase";
-import { collection, doc, getDocs } from "firebase/firestore";
+
+import { Timestamp, collection,onSnapshot } from "firebase/firestore";
 import Sidebar from "../../Sidebar";
 import RightBar from "../../Rightbar";
+
+import 'firebase/compat/firestore';
+
+import {  doc, getDocs } from "firebase/firestore";
+
 interface Post {
   id: string;
   caption: string;
   imageUrl: string;
   likes: number;
+  postUserId: string;
   userName: string;
-  uid: string;
+  timestamp: Timestamp;
+  uid: string; 
+  // postUserId: string;
 }
 
 export const Post = () => {
@@ -24,27 +35,33 @@ export const Post = () => {
   const user = auth.currentUser;
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
-  document.title = "facebook";
+  useEffect(() => {
+    if (user?.displayName) {
+        document.title = `Facebook - ${user.displayName}`;
+    }
+}, [user?.displayName]);
   if (user === undefined) {
     navigate("/login");
   }
+ 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "posts"));
-        const fetchedPosts = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as any;
-        setPosts(fetchedPosts);
-      } catch (error) {
-        console.error("Error fetching documents: ", error);
-      }
-    };
-
-    fetchPosts();
+    const unsubscribe = onSnapshot(collection(db, "posts"), (snapshot) => {
+      const postData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setPosts(postData as Post[]);
+      console.log("postdata", postData); 
+      
+    });
+    
+    return unsubscribe; // Unsubscribe from snapshot listener when component unmounts or re-renders
   }, []);
-  console.log(posts);
+
+  // This console.log won't show the updated posts immediately after the state is set
+  // console.log("post ", posts);
+
+  console.log("post " ,posts);
+  // console.log(timestamp);
+  
+  // console.log("pso ", posts);
 
   return (
     <>
@@ -54,26 +71,24 @@ export const Post = () => {
         <Flex direction={"column"} width={"60%"}>
           <Story />
           <Feed />
-          {posts.map(({ id, caption, imageUrl, userName, likes, uid }) => (
-            <PostPage
-              key={id}
-              postId={id}
-              user={user}
-              username={userName}
-              caption={caption}
-              imageURL={imageUrl}
-              noOfLikes={likes}
-              postUserId={uid}
-            />
-          ))}
+
+          {posts.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds).map(post => (
+  <PostPage 
+    key={post.id}
+    postId={post.id}
+    user={user}
+    username={post.userName}
+    caption={post.caption}
+    imageURL={post.imageUrl}
+    noOfLikes={post.likes}
+    postUserId={post.uid}
+    timestamp={post.timestamp}
+  />
+))}
+
         </Flex>
         <RightBar />
-        {/* <Post/> */}
       </Flex>
-      {/* <Story />
-      <PostPage/> */}
-
-      {/* <Feed /> */}
 
     </>
   );

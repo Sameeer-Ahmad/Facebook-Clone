@@ -1,7 +1,5 @@
-
 import './App.css';
 import AllRoutes from './routes/Allroutes';
-
 function App() {
   return (
 
@@ -9,8 +7,7 @@ function App() {
 
    
       <AllRoutes />
-    
-
+   
   </div>
 
   );

@@ -25,22 +25,16 @@ import {
 
 import { useEffect, useRef, useState } from "react";
 
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
+import { Timestamp, addDoc, collection, doc, getDocs, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
 
-import { db, storage } from "../../../firebase";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 // import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export const Feed = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  
   const [loading, setLoading] = useState<boolean>(true);
   // const [useName, setUserName] = useState<string>("");
   const [image, setImage] = useState<any>("");
@@ -49,18 +43,45 @@ export const Feed = () => {
   const [progress, setProgress] = useState<number>(0);
   const [likes, setLikes] = useState<number>(0);
 
-  const fileInputRef = useRef<HTMLInputElement | any>(null);
+  const fileInputRef = useRef<HTMLInputElement|any>(null);
+  const[posts,setPosts]=useState<any>([]);
+
 
 
   const auth = getAuth();
-  // const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {});
+
   const user = auth.currentUser;
   const handleImageClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
-
+  
+  
+  
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const postsRef = collection(db, "posts");
+        const querySnapshot = await getDocs(postsRef);
+        const postsData = querySnapshot.docs.map((doc) => doc.data() as Post);
+        setPosts(postsData.reverse()); // Reverse the array to show newest posts first
+  
+        const unsubscribe = onSnapshot(postsRef, (snapshot) => {
+          const updatedPostsData = snapshot.docs.map((doc) => doc.data() as Post);
+          setPosts(updatedPostsData.reverse()); // Reverse the array to show newest posts first
+        });
+  
+        return unsubscribe;
+      } catch (error) {
+        console.error("Error fetching posts: ", error);
+      }
+    };
+  
+    fetchPosts();
+  }, []);
+  
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (fileList && fileList.length > 0) {
@@ -69,71 +90,66 @@ export const Feed = () => {
       setImageUrl(URL.createObjectURL(selectedFile));
     }
   };
+  interface Post {
+    caption: string;
+    imageUrl: string;
+    likes: number;
+    userName: string;
+    uid: string;
+    timestamp: Timestamp;
+  }
 
-  const handleUpload = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleUpload = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setCaption("");
-    // setImage("");
 
-   setImageUrl("")
+    setImageUrl("");
+
     if (caption === "" && imageUrl === "") {
-        console.log("Prevented access to photo and caption submission ");
+      console.log("Prevented access to photo and caption submission ");
     } else {
-        e.preventDefault();
+      e.preventDefault();
+      try {
         if (imageUrl === "") {
-            // If imageUrl is empty, create a new post with a unique ID as the document name
-            addDoc(collection(db, "posts"), {
-                caption: caption,
-                imageUrl: "",
-                likes: likes,
-                userName: user?.displayName,
-                uid: user?.uid,
-            }).then(() => {
-                // After adding the document, reset caption and image states
-                setCaption("");
-                // setImage("");
-                setImageUrl("")
-            }).catch((error) => {
-                // Handle errors
-                console.log(error);
-                alert(error.message);
-            });
+          // If imageUrl is empty, create a new post with a unique ID as the document name
+          await addDoc(collection(db, "posts"), {
+            caption: caption,
+            imageUrl: "",
+            likes: likes,
+            userName: user?.displayName,
+            uid: user?.uid,
+            timestamp: serverTimestamp(),
+          });
         } else {
-            const storage = getStorage();
-            const storageRef = ref(storage, `images/${image.name}`);
-            const uploadTask = uploadBytes(storageRef, image);
-
-            uploadTask.then((snapshot) => {
-                // Upload completed successfully, get the download URL
-                getDownloadURL(storageRef).then((url: string) => {
-                    // Add a new document to the "posts" collection
-                    addDoc(collection(db, "posts"), {
-                        caption: caption,
-                        imageUrl: url,
-                        likes: likes,
-                        userName: user?.displayName,
-                        uid: user?.uid,
-
-                    }).then(() => {
-                        // After adding the document, reset caption and image states
-                      console.log("Uploaded successfully");
-                      
-                        setCaption("");
-                        // setImage("");
-                        setImageUrl("")
-                    }).catch((error) => {
-                        // Handle errors
-                        console.log(error);
-                        alert(error.message);
-                    });
-                });
-            }).catch((error) => {
-                // Handle errors
-                console.log(error);
-                alert(error.message);
-            });
+          const storage = getStorage();
+          const storageRef = ref(storage, `images/${image.name}`);
+          await uploadBytes(storageRef, image);
+          const url = await getDownloadURL(storageRef);
+  
+          // Add a new document to the "posts" collection
+          await addDoc(collection(db, "posts"), {
+            caption: caption,
+            imageUrl: url,
+            likes: likes,
+            userName: user?.displayName,
+            uid: user?.uid,
+            timestamp: serverTimestamp(),
+          });
         }
+        // Fetch the updated list of posts after adding a new post
+        const postsRef = collection(db, "posts");
+        const querySnapshot = await getDocs(postsRef);
+        const postsData = querySnapshot.docs.map((doc) => doc.data() as Post);
+        setPosts(postsData);
+        onClose();
+      } catch (error) {
+        // Handle errors
+        console.log(error);
+        // alert(error.message);
+      }
     }
-};
+  };
+  
+// console.log();
 
 const handleCloseModal = () => {
   setCaption("");
@@ -175,7 +191,7 @@ const handleCloseModal = () => {
                     {user?.displayName}
 
                   </Text>
-                  <Text
+                  <Box
                     display={"flex"}
                     gap={1}
                     textAlign={"center"}
@@ -190,7 +206,7 @@ const handleCloseModal = () => {
                       marginTop={"4px"}
                     />
                     Friends
-                  </Text>
+                  </Box>
                 </Box>
               </Flex>
               <Textarea
@@ -203,12 +219,8 @@ const handleCloseModal = () => {
                 }
                 placeholder={`What's in your mind, ${user?.displayName}`}
               />
-              <Image
-                w={"250px"}
-                borderRadius={"7px"}
-                src={imageUrl as string}
-                alt=""
-              />
+
+                <Image w={"30%"}  borderRadius={"7px"}  src={imageUrl as string} alt="" />
 
               <Flex justifyContent={"space-between"} p={1}>
                 <Image
@@ -273,6 +285,7 @@ const handleCloseModal = () => {
                 _hover={{ bg: "blue" }}
                 onClick={handleUpload}
                 isDisabled={!caption.trim() || !imageUrl}
+                loadingText="Uploading..."
               >
                 Post
               </Button>

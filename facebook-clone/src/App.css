@@ -21,8 +21,8 @@
   overflow: scroll;
   background-color: var(--themed-bg);
   color: var(--themed-textColor);
-  max-width: 25%;
-  border: 1px solid red;
+  width: 35%;
+  /* border: 1px solid red; */
 }
 
 .leftBar::-webkit-scrollbar {
@@ -93,10 +93,35 @@
   font-size: 14px;
 }
 
+
 @media screen and (max-width: 768px) {
   .leftBar {
     display: none;
   }
+  .rightBar{
+    display: none;
+  }
+}
+@media screen and (max-width: 767px) {
+  /* Add your styles here */
+  .leftBar {
+    display: none;
+  }
+  .rightBar{
+    display: none;
+  }
+}
+
+/* Styles for screens smaller than 480px (mobile devices) */
+@media screen and (max-width: 479px) {
+  /* Add your styles here */
+  .leftBar {
+    display: none;
+  }
+  .rightBar{
+    display: none;
+  }
+
 }
 
 /* -------------------rightbar */
@@ -109,7 +134,7 @@
   overflow: scroll;
   /* background-color: var(--bgSoft); */
   /* width: 200px; */
-  max-width:25%;
+  max-width:35%;
   /* border: 1px solid red; */
   /* background-color: #5271ff; */
 }

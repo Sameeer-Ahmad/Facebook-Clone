@@ -12,22 +12,26 @@ import Messages from "../Images/10.png";
 import Tutorials from "../Images/11.png";
 import Courses from "../Images/12.png";
 import Fund from "../Images/13.png";
-// import { AuthContext } from "../../context/authContext";
-// import { useContext } from "react";
+import { getAuth } from "firebase/auth";
+
+
 
 const Sidebar = () => {
-  // const { currentUser } = useContext(AuthContext);
+  const auth = getAuth();
 
+
+  const user = auth.currentUser;
+ 
   return (
     <div className="leftBar">
       <div className="container">
         <div className="menu">
           <div className="user">
             <img
-              // src={currentUser.profilePic}
+              src={user?.photoURL as any}
               alt=""
             />
-            {/* <span>{currentUser.name}</span> */}
+            <span>{user?.displayName}</span>
           </div>
           <div className="item">
             <img src={Friends} alt="" />
