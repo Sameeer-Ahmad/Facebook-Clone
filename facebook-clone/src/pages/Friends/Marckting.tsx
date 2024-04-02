@@ -2,7 +2,7 @@ import { Alert, AlertIcon, Button, Flex, Input, Spinner } from "@chakra-ui/react
 import ProductCard, { Product } from "./ProductCard";
 import { fetchProductsSuccess, setError, setLoading } from "../../redux/ProductReducer/action";
 import axios from "axios";
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -17,13 +17,21 @@ const Marcketing = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [sortAscending, setSortAscending] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 10;
+    const allProducts: Product[] = useSelector((state: { products: Product[] }) => state.products);
+    const productsPerPage = 12;
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
-    const fetchProducts = async (query: string) => {
+
+    useEffect(() => {
+      fetchAllProducts();
+    }, []);
+  
+    const fetchAllProducts = async () => {
       try {
         dispatch(setLoading(true));
-        const response = await axios.get(`https://dummyjson.com/products?q=${query}`);
+        const response = await axios.get(`https://dummyjson.com/products`);
         dispatch(fetchProductsSuccess(response.data.products));
+        setFilteredProducts(response.data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
         dispatch(setError("Error fetching products: " + error));
@@ -32,18 +40,24 @@ const Marcketing = () => {
       }
     };
 
+    const fetchFilteredProducts = () => {
+      const filtered = allProducts.filter(product => product.title.toLowerCase().includes(searchQuery.toLowerCase()));
+      setFilteredProducts(filtered);
+      setCurrentPage(1);
+    };
+  
     const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.target;
       setSearchQuery(value);
     };
 
     const handleSearchButtonClick = () => {
-      fetchProducts(searchQuery);
+      fetchFilteredProducts();
     };
 
     const handleSort = () => {
       setSortAscending(!sortAscending);
-      const sortedProducts = [...products].sort((a, b) => {
+      const sortedProducts = [...filteredProducts].sort((a, b) => {
         return sortAscending ? a.price - b.price : b.price - a.price;
       });
       dispatch(fetchProductsSuccess(sortedProducts));
@@ -79,8 +93,10 @@ const Marcketing = () => {
         <Flex alignItems="center" justify="space-between" p={4} borderWidth="1px" borderRadius="lg">
           <Input 
             placeholder="Search...." 
+            maxWidth={"250px"}
             flex="1" 
             mr={2} 
+            marginLeft={"auto"}
             value={searchQuery} 
             onChange={handleSearchInputChange} 
           />
@@ -96,7 +112,7 @@ const Marcketing = () => {
             <p>No result found</p>
           </Flex>
         )}
-        <Flex flexWrap="wrap" justifyContent="space-around" p={4} gap={"10px"}>
+        <Flex flexWrap="wrap" justifyContent="space-around" p={4} gap={"20px"}>
           {currentProducts.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
