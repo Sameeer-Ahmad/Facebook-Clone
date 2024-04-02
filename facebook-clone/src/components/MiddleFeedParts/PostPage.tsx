@@ -211,8 +211,8 @@ export const PostPage: FC<Post> = ({
       <Center>
         <Card
           mb={6}
-          maxW="350px"
-          minW="500px"
+          maxW={[ "200px","300px","300px","350px","350px","350px"]}
+          minW={["373px","529px","765px", "550px","500px"]}
           borderRadius="lg"
           overflow="hidden"
         >
@@ -221,10 +221,9 @@ export const PostPage: FC<Post> = ({
               <Flex gap={"18px"}>
                 <Avatar src={user?.photoURL || ""} />
                 <Flex flexDir={"column"}>
-                  <Heading mt={"15px"} size="sm">
+                  <Heading mt={"10px"} size="sm">
                     {username}
                   </Heading>
-                  {/* <TimeAgo date={timestamp ? new Date(timestamp.toDate()).toLocaleString() : ''} /> */}
                   <Text>
                     {timestamp
                       ? new Date(timestamp.toDate()).toLocaleString()

@@ -21,11 +21,9 @@ const AllRoutes=()=>{
   
     useEffect(() => {
         const auth = getAuth(app);
-    
         const unsubscribe = onAuthStateChanged(auth, (user) => {
           setIsLoggedIn(!!user); // Set isLoggedIn to true if user is authenticated, otherwise false
         });
-    
         return () => unsubscribe(); // Cleanup function
       }, []);
 

@@ -182,7 +182,6 @@ const handleCloseModal = () => {
                   width={"50px"}
                   height={"50px"}
                   borderRadius={"50%"}
-                  border={"2px solid white"}
                   objectFit={"cover"}
                 />
                 <Box>
@@ -300,22 +299,19 @@ const handleCloseModal = () => {
           boxShadow={
             "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px"
           }
-          // width={["90%", "80%", "70%", "60%", "50%"]}
-          width={"auto"}
-          m={[2, 3]}
-
-          p={4}
+          width={["373px","525px","765px", "550px","500px"]}
+          // width={"auto"}
+          mb={[3, 4]}
+          p={5}
           borderRadius={"10px"}
         >
           <Flex gap={5} p={2} borderBottom={"3px solid #e4e6eb"}>
             <Image
               src={user?.photoURL as string}
-
               width={["30px", "40px", "50px"]}
               height={["30px", "40px", "50px"]}
-
               borderRadius={"50%"}
-              border={"2px solid white"}
+              border={"1px solid"}
               objectFit={"cover"}
             />
             <Button
@@ -324,8 +320,8 @@ const handleCloseModal = () => {
               bg={"#e4e6eb"}
               marginRight={"5px"}
               color={"#818285"}
-
-              width={["auto", "100%", "100%"]}
+            fontSize={["12px", "14px", "16px"]}
+              width={["100%", "100%","90%", "100%", "100%"]}
               textAlign={"start"}
               onClick={onOpen}
             >
@@ -349,6 +345,8 @@ const handleCloseModal = () => {
                 src="https://static.xx.fbcdn.net/rsrc.php/v3/yF/r/v1iF2605Cb5.png"
 
                 width={["16px", "20px", "24px"]}
+
+                h={["16px", "20px", "24px"]}
               />
               <Text
                 fontSize={["12px", "14px", "16px"]}
@@ -374,6 +372,7 @@ const handleCloseModal = () => {
                 src="https://static.xx.fbcdn.net/rsrc.php/v3/yC/r/a6OjkIIE-R0.png"
 
                 width={["16px", "20px", "24px"]}
+                h={["16px", "20px", "24px"]}
               />
               <Text
                 fontSize={["12px", "14px", "16px"]}
@@ -399,6 +398,7 @@ const handleCloseModal = () => {
                 src="https://static.xx.fbcdn.net/rsrc.php/v3/yk/r/yMDS19UDsWe.png"
 
                 width={["16px", "20px", "24px"]}
+                h={["16px", "20px", "24px"]}
               />
               <Text
                 fontSize={["12px", "14px", "16px"]}

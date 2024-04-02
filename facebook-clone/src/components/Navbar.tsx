@@ -858,7 +858,7 @@ export default function Nav() {
 
                 {/* Hamburger icon with dropdown menu */}
 
-                <Menu>
+                <Menu placement="left-start">
                   <MenuButton
                     as={IconButton}
                     icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -986,7 +986,6 @@ export default function Nav() {
                 </Menu>
                 <Box>
                   <Menu>
-
 
                     <MenuButton
                       as={Button}
@@ -1142,7 +1141,7 @@ export default function Nav() {
                   )}
                   {/* </Flex> */}
 
-                  <Menu>
+                  <Menu placement="left-start">
                     <MenuButton
                       as={IconButton}
                       icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
