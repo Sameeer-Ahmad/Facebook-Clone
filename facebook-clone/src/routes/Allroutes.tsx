@@ -11,13 +11,29 @@ import Login from "../pages/Login/Login"
 import Profile from "../pages/profile/Profile"
 import Nav from "../components/Navbar"
 import PrivateRoute from "./PrivateRoutes"
+import { useEffect, useState } from "react"
+import { getAuth, onAuthStateChanged } from "@firebase/auth"
+import { app } from "../firebase"
 
 
 const AllRoutes=()=>{
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+    useEffect(() => {
+        const auth = getAuth(app);
+    
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          setIsLoggedIn(!!user); // Set isLoggedIn to true if user is authenticated, otherwise false
+        });
+    
+        return () => unsubscribe(); // Cleanup function
+      }, []);
+
+
     return(
         <div>
 
-           <Nav/>
+{isLoggedIn && <Nav />}
 
             <Routes>
 

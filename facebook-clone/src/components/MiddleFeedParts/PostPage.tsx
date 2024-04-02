@@ -330,6 +330,8 @@ interface Comment {
   timestamp: Date;
   username: string;
   photoURL: string;
+
+
 }
 interface Like {
   id: string;

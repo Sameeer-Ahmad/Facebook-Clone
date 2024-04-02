@@ -15,8 +15,10 @@ import Fund from "../Images/13.png";
 import { getAuth } from "firebase/auth";
 
 
+
 const Sidebar = () => {
   const auth = getAuth();
+
 
   const user = auth.currentUser;
  

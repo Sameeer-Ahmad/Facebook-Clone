@@ -14,6 +14,8 @@ import { app, db } from "../firebase";
 import { FC, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+
+
 // import useInputChange from "../utils/signup";
 
 const Days: number[] = [];
@@ -51,6 +53,9 @@ const Signup: FC = () => {
   const [password, setPassword] = useState<string>("");
 const [birthday, setBirthday] = useState<{ day: string; month: string; year: string }>({ day: "", month: "", year: "" });
   const [gender, setGender] = useState<string>("");
+  const [signupSuccess, setSignupSuccess] = useState<boolean>(false);
+
+
 
   const handleonChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFirstName(e.target.value);
@@ -64,6 +69,8 @@ const [birthday, setBirthday] = useState<{ day: string; month: string; year: str
   const handleonChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
+// ----------------------------------------------------------------
 
   const handleonChangeBirthday = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -102,7 +109,9 @@ const handleSubmitSignupUser = (e: React.FormEvent) => {
            bio:""
           });
         }).then(() => {
-         navigate("/login")
+          navigate("/login")
+        //  setSignupSuccess(true);
+         console.log("User signed up successfully!");
         }).catch((error) => {
           console.error("Error updating profile: ", error);
         });
@@ -143,6 +152,30 @@ const handleSubmitSignupUser = (e: React.FormEvent) => {
           </Text>
         </Box>
         <hr />
+        {signupSuccess ? ( 
+          <Box>
+            <Text fontSize="16px" fontWeight="600" textAlign="center" mb="4">
+              Signup successful! Please proceed to login.
+            </Text>
+            <Flex justifyContent="center">
+              <Button
+                onClick={() => navigate("/login")} // Navigate to login page
+                bg={"rgb(0,164,0)"}
+                w={"50%"}
+                color={"white"}
+                fontSize={"18px"}
+                lineHeight={"23px"}
+                fontWeight={"600"}
+                _hover={{
+                  bgGradient:
+                    "linear(green.500 0%, green.600 25%, green.600 50%)",
+                }}
+              >
+                Go to Login
+              </Button>
+            </Flex>
+          </Box>
+        ) : (
         <Box as="form" onSubmit={handleSubmitSignupUser}>
           <Box display={"flex"} gap={4}>
             <Input
@@ -328,6 +361,7 @@ const handleSubmitSignupUser = (e: React.FormEvent) => {
             </Button>
           </Flex>
         </Box>
+        )}
       </Box>
     </Box>
   );

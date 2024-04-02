@@ -1,4 +1,7 @@
-import { Flex } from "@chakra-ui/react";
+
+
+import { Flex, Heading } from "@chakra-ui/react";
+
 import { Feed } from "./Feed";
 import { PostPage } from "../PostPage";
 import { Story } from "./Story";
@@ -6,11 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { db } from "../../../firebase";
+
 import { Timestamp, collection,onSnapshot } from "firebase/firestore";
 import Sidebar from "../../Sidebar";
 import RightBar from "../../Rightbar";
 
 import 'firebase/compat/firestore';
+
+import {  doc, getDocs } from "firebase/firestore";
 
 interface Post {
   id: string;
@@ -60,10 +66,12 @@ export const Post = () => {
   return (
     <>
       <Flex>
+
         <Sidebar />
         <Flex direction={"column"} width={"60%"}>
           <Story />
           <Feed />
+
           {posts.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds).map(post => (
   <PostPage 
     key={post.id}
@@ -81,6 +89,8 @@ export const Post = () => {
         </Flex>
         <RightBar />
       </Flex>
+
     </>
   );
 };
+

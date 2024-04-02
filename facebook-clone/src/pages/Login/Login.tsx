@@ -12,8 +12,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Loginfooter from "./Loginfooter";
-import { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { app } from "../../firebase";
 
@@ -22,6 +22,9 @@ export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
+
+
+  
   const handleEmailchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -29,6 +32,17 @@ export default function Login() {
     setPassword(e.target.value);
   };
   const auth = getAuth(app);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
