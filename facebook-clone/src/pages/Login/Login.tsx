@@ -13,19 +13,20 @@ import {
 } from "@chakra-ui/react";
 import Loginfooter from "./Loginfooter";
 import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { app } from "../../firebase";
-import AllRoutes from "../../routes/Allroutes";
 
 export default function Login() {
-const[flag,setFlag]=useState(false)
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
   const toast = useToast();
 
-  
   const handleEmailchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -38,7 +39,7 @@ const[flag,setFlag]=useState(false)
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         navigate("/login");
-      } 
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -46,26 +47,27 @@ const[flag,setFlag]=useState(false)
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    signInWithEmailAndPassword(auth,email,password).then((res)=>{
-             navigate("/")
-             toast({
-              title: "Login Successful",
-              description: "Welcome back!",
-              status: "success",
-              duration: 3000,
-              isClosable: true,
-            });
-              
-    }).catch((err)=>{console.log(err);
-      toast({
-        title: "Login Failed",
-        description: "Please check your email and password.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
+    signInWithEmailAndPassword(auth, email, password)
+      .then((res) => {
+        navigate("/");
+        toast({
+          title: "Login Successful",
+          description: "Welcome back!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast({
+          title: "Login Failed",
+          description: "Please check your email and password.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       });
-    })
-
   };
 
   return (
@@ -110,7 +112,7 @@ const[flag,setFlag]=useState(false)
                 placeholder="Password"
                 onChange={handlePasswordchange}
               />
-              {/* {error && <Text color="red">{error}</Text>} */}
+
               <Button type="submit" colorScheme={"blue"} width={"100%"}>
                 Log in
               </Button>
@@ -128,7 +130,7 @@ const[flag,setFlag]=useState(false)
           </Box>
         </Flex>
       </Center>
-      <Loginfooter/>
+      <Loginfooter />
     </>
   );
 }

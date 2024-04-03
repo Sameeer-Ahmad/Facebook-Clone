@@ -226,10 +226,10 @@ export default function Nav() {
         const results: SearchResult[] = [];
         querySnapshot.forEach((doc) => {
           const userData = doc.data();
-          if (userData.displayName.toLowerCase().includes(searchTerm.toLowerCase())) {
+          if (userData.displayName?.toLowerCase().includes(searchTerm.toLowerCase())) {
             results.push({ uid: doc.id, displayName: userData.displayName });
           }
-        });
+        }); 
         setSearchResults(results);
       } catch (error) {
         console.error("Error searching Firestore:", error);
@@ -1338,29 +1338,9 @@ export default function Nav() {
               </Box>
             </Flex>
             <Divider borderWidth="1px" color={'black'} />
-
-
           </ColorModeProvider >
         )
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </>
   )
 
