@@ -23,6 +23,7 @@ const[flag,setFlag]=useState(false)
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
+  const toast = useToast();
 
   
   const handleEmailchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +48,22 @@ const[flag,setFlag]=useState(false)
 
     signInWithEmailAndPassword(auth,email,password).then((res)=>{
              navigate("/")
-       setFlag(true)
+             toast({
+              title: "Login Successful",
+              description: "Welcome back!",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
+              
     }).catch((err)=>{console.log(err);
+      toast({
+        title: "Login Failed",
+        description: "Please check your email and password.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     })
 
   };
