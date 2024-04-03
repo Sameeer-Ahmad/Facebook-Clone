@@ -9,6 +9,7 @@ const Home=()=>{
            {/* <Sidebar/> */}
             <Post/>
             {/* <Rightbar/> */}
+            
         </div>
     )
 
