@@ -1,6 +1,6 @@
 
 
-import { Flex, Heading } from "@chakra-ui/react";
+import { Center, Flex, Heading } from "@chakra-ui/react";
 
 import { Feed } from "./Feed";
 import { PostPage } from "../PostPage";
@@ -65,10 +65,11 @@ export const Post = () => {
 
   return (
     <>
+   
       <Flex>
 
         <Sidebar />
-        <Flex direction={"column"} width={"60%"}>
+        <Flex direction={"column"} >
           <Story />
           <Feed />
 
@@ -89,7 +90,7 @@ export const Post = () => {
         </Flex>
         <RightBar />
       </Flex>
-
+{/* </Center> */}
     </>
   );
 };

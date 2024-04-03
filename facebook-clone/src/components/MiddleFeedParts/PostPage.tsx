@@ -39,7 +39,16 @@ import {
 } from "@chakra-ui/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiChat, BiLike, BiShare } from "react-icons/bi";
-// import TimeAgo from "react-timeago";
+
+
+import { ImEmbed2 } from "react-icons/im";
+import { MdDeleteForever } from "react-icons/md";
+import { IoIosNotifications } from "react-icons/io";
+import { HiSaveAs } from "react-icons/hi";
+import { AiFillLike } from "react-icons/ai";
+import { FaComment } from "react-icons/fa";
+
+
 const auth = getAuth();
 const user = auth.currentUser;
 interface Post {
@@ -67,8 +76,9 @@ export const PostPage: FC<Post> = ({
   const [newComment, setNewComment] = useState<string>("");
   const [showComments, setShowComments] = useState<boolean>(false);
   const [likes, setLikes] = useState<Like[]>([]);
+  const [liked, setLiked] = useState<boolean>(false);
   const [posts, setPosts] = useState<Post[]>([]);
-  const [show, setShow] = useState<string>("like");
+
   console.log(
     "postinfo",
     username,
@@ -183,36 +193,37 @@ export const PostPage: FC<Post> = ({
     }
   };
   const handleLike = async () => {
-    try {
-      // Check if the user has already liked the post
-      const alreadyLiked = likes.some((like) => like.id === user?.uid);
-
-      if (alreadyLiked) {
-        // If the user has already liked the post, remove the like
-        const likeIndex = likes.findIndex((like) => like.id === user?.uid);
-        const likeId = likes[likeIndex].id;
-        await deleteDoc(doc(db, "posts", postId, "likes", likeId));
-      } else {
-        // If the user has not liked the post, add the like
-        const like = {
-          userId: user?.uid,
-          // Add any other relevant information about the like
-          timestamp: new Date(),
-        };
-        await addDoc(collection(db, "posts", postId, "likes"), like);
-      }
-    } catch (error) {
-      console.error("Error liking post:", error);
+    const likeRef = doc(collection(db, "posts", postId, "likes"), user?.uid);
+    if (liked) {
+      await deleteDoc(likeRef);
+    } else {
+      await setDoc(likeRef, {
+        userId: user?.uid,
+      });
     }
+    setLiked(!liked);
   };
-
+  useEffect(() => {
+    const unSub = onSnapshot(
+      collection(db, "posts", postId, "likes"),
+      (snapshot) => {
+        setLikes(snapshot.docs as any);
+      }
+    );
+    return () => {
+      unSub();
+    };
+  }, [postId]);
+  useEffect(() => {
+    setLiked(likes.some((like) => like.id === user?.uid));
+  }, [likes, user?.uid]);
   return (
     <>
       <Center>
         <Card
           mb={6}
-          maxW="350px"
-          minW="500px"
+          maxW={["200px", "300px", "300px", "350px", "350px", "350px"]}
+          minW={["373px", "529px", "765px", "550px", "500px"]}
           borderRadius="lg"
           overflow="hidden"
         >
@@ -221,10 +232,9 @@ export const PostPage: FC<Post> = ({
               <Flex gap={"18px"}>
                 <Avatar src={user?.photoURL || ""} />
                 <Flex flexDir={"column"}>
-                  <Heading mt={"15px"} size="sm">
+                  <Heading mt={"10px"} fontWeight={"600"} size="sm">
                     {username}
                   </Heading>
-                  {/* <TimeAgo date={timestamp ? new Date(timestamp.toDate()).toLocaleString() : ''} /> */}
                   <Text>
                     {timestamp
                       ? new Date(timestamp.toDate()).toLocaleString()
@@ -239,16 +249,27 @@ export const PostPage: FC<Post> = ({
                   colorScheme="gray"
                   aria-label="See menu"
                   icon={<BsThreeDotsVertical />}
-                >
-                </MenuButton>
-                <MenuList>
-                  <MenuItem>Download</MenuItem>
-                  <MenuItem>Create a Copy</MenuItem>
-                  <MenuItem>Mark as Draft</MenuItem>
+                ></MenuButton>
+                <MenuList p={2}>
+                  <MenuItem gap={1}>
+                    <HiSaveAs />
+                    Save Post
+                  </MenuItem>
+                  <MenuItem gap={1}>
+                    <ImEmbed2 />
+                    Embeded
+                  </MenuItem>
                   {user && user.uid === postUserId && (
-                    <MenuItem onClick={handleDelete}>Delete Post</MenuItem>
+                    <MenuItem gap={1} onClick={handleDelete}>
+                      {" "}
+                      <MdDeleteForever />
+                      Delete the post
+                    </MenuItem>
                   )}
-                  <MenuItem>Attend a Workshop</MenuItem>
+                  <MenuItem gap={1}>
+                    <IoIosNotifications />
+                    turn on notifications for this post
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </Flex>
@@ -263,14 +284,22 @@ export const PostPage: FC<Post> = ({
             src={imageURL}
             alt=""
           />
-          <CardFooter flexDir="column" borderTop={"1px solid gray"}>
+          <Box display={"flex"}justifyContent={"space-between"}  >
+          <Box display={"flex"} ml={"15px"}  >
+          <Button bg={"none"} _hover={{ bg: "none" }} >
+              <AiFillLike />
+            </Button>
+            {likes.length > 0 && <Text mt={"7px"}>{likes.length}</Text>}</Box>
+          <Box display={"flex"} mr={"15px"}>  {comments.length > 0 && <Text mt={"7px"}>{comments.length}</Text>}
+            <Button bg={"none"} _hover={{ bg: "none" }}  onClick={() => setShowComments(!showComments)}>
+              <FaComment  />
+            </Button>
+           </Box>
+          </Box>
+          <CardFooter flexDir="column" borderTop={"1px solid gray"} p={1}>
             <Flex justify="space-between">
-              <Button
-                flex="1"
-                variant="ghost"
-                leftIcon={<BiLike />}
-                onClick={handleLike}
-              >
+              <Button flex="1" variant="ghost" gap={1} onClick={handleLike}>
+                {liked ? <AiFillLike /> : <BiLike />}
                 Like
               </Button>
               <Button
@@ -330,8 +359,6 @@ interface Comment {
   timestamp: Date;
   username: string;
   photoURL: string;
-
-
 }
 interface Like {
   id: string;

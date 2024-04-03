@@ -102,15 +102,6 @@
     display: none;
   }
 }
-@media screen and (max-width: 767px) {
-  /* Add your styles here */
-  .leftBar {
-    display: none;
-  }
-  .rightBar{
-    display: none;
-  }
-}
 
 /* Styles for screens smaller than 480px (mobile devices) */
 @media screen and (max-width: 479px) {
