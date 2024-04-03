@@ -42,6 +42,7 @@ import {
   DrawerBody,
 
   useColorMode,
+  Skeleton,
 
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
@@ -379,7 +380,7 @@ export default function Nav() {
       document.body.style.color = "white";
       toggleColorMode();
     } else {
-      document.body.style.backgroundColor = '#e4e6eb';
+      document.body.style.backgroundColor = 'rgb(240,242,245)';
       document.body.style.color = "black";
       toggleColorMode();
     }
@@ -391,6 +392,11 @@ export default function Nav() {
 
   const spacingSize = useBreakpointValue({ base: 'small', sm: '2px', md: 'large', lg: "lg", xl: "xl" });
   const bgColor = useColorModeValue('white', 'gray.900');
+  const searchBgColor = useColorModeValue("white", "gray.800");
+  const searchInputColor = useColorModeValue("gray.100", "gray.700");
+  const searchTextColor = useColorModeValue("gray.900", "white");
+
+
   const breakpoint = useBreakpointValue({ base: "base", sm: "sm", md: "md" });
   const buttonText = colorMode === 'light' ? 'Light Mode' : 'Dark Mode';
   // const auth = getAuth();
@@ -403,7 +409,7 @@ export default function Nav() {
       <ColorModeScript />
       {breakpoint === "md" && (
         <ColorModeProvider>
-          <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={0} zIndex={1000}>
+          <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={0} zIndex={1000} position={"sticky"} >
             <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
               <Flex alignItems="center">
                 <Avatar
@@ -478,12 +484,19 @@ export default function Nav() {
                       left="0"
                       right="0"
                       zIndex="999"
-                      bg="white"
+                      
+                      bg={searchBgColor}
                       boxShadow="lg"
                       borderRadius="md"
+                      overflowY="auto"
+                      maxHeight="300px" 
                     >
                       {searching ? (
-                        <Text>Loading...</Text>
+                         <Stack spacing={2} p={2}>
+                         <Skeleton height='20px' />
+                         <Skeleton height='20px' />
+                         <Skeleton height='20px' />
+                       </Stack>
                       ) : searchResults.length === 0 ? (
                         <Text>No results found</Text>
                       ) : (
@@ -736,7 +749,7 @@ export default function Nav() {
                             </FormControl>
                           </AccordionPanel>
                           <Divider />
-                          
+
                         </AccordionItem>
                       </Accordion>
                       <MenuItem>
@@ -762,7 +775,7 @@ export default function Nav() {
       {
         breakpoint === ("sm") && (
           <ColorModeProvider>
-            <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" position="fixed" top={0} zIndex={1000}>
+            <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" position="sticky" top={0} zIndex={1000}>
               <Flex h={16} alignItems={'center'} justifyContent={'space-between'} flexShrink={0}>
                 <Flex alignItems="center">
                   <Avatar
@@ -858,7 +871,7 @@ export default function Nav() {
 
                 {/* Hamburger icon with dropdown menu */}
 
-                <Menu>
+                <Menu placement="left-start">
                   <MenuButton
                     as={IconButton}
                     icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -1080,7 +1093,7 @@ export default function Nav() {
       {
         breakpoint === "base" && (
           <ColorModeProvider>
-            <Box>
+            <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={0} zIndex={1000} position={"sticky"}>
               <Flex alignItems="center" justifyContent="space-between">
                 <Image src={facebook} width={"40%"} height={"100px"} top={"0%"} />
 
@@ -1142,7 +1155,8 @@ export default function Nav() {
                   )}
                   {/* </Flex> */}
 
-                  <Menu>
+                  <Menu
+                    placement="left-start"  >
                     <MenuButton
                       as={IconButton}
                       icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -1249,7 +1263,7 @@ export default function Nav() {
             <Divider borderWidth="2px" color={'grey'} />
 
 
-            <Flex>
+            <Flex  bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={20} zIndex={1000} position={"sticky"}>
               <Center>
                 {Midlink.map((ele, index) => (
                   <React.Fragment key={index}>
