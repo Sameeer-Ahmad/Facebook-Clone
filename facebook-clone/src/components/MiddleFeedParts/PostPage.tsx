@@ -39,7 +39,7 @@ import {
 } from "@chakra-ui/react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiChat, BiLike, BiShare } from "react-icons/bi";
-import TimeAgo from "react-timeago";
+
 const auth = getAuth();
 const user = auth.currentUser;
 interface Post {
