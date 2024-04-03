@@ -22,7 +22,7 @@ export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-
+  const toast = useToast();
 
   
   const handleEmailchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,21 +36,33 @@ export default function Login() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        navigate("/");
-      }
+        navigate("/login");
+      } 
     });
-
     return () => unsubscribe();
   }, []);
-
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     signInWithEmailAndPassword(auth,email,password).then((res)=>{
              navigate("/")
+             toast({
+              title: "Login Successful",
+              description: "Welcome back!",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
               
     }).catch((err)=>{console.log(err);
+      toast({
+        title: "Login Failed",
+        description: "Please check your email and password.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     })
 
   };

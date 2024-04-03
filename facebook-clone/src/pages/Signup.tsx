@@ -8,6 +8,7 @@ import {
   RadioGroup,
   Select,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { getAuth, createUserWithEmailAndPassword,updateProfile } from "firebase/auth";
 import { app, db } from "../firebase";
@@ -54,8 +55,9 @@ const Signup: FC = () => {
 const [birthday, setBirthday] = useState<{ day: string; month: string; year: string }>({ day: "", month: "", year: "" });
   const [gender, setGender] = useState<string>("");
   const [signupSuccess, setSignupSuccess] = useState<boolean>(false);
-
-
+  const [passwordError, setPasswordError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const toast = useToast(); 
 
   const handleonChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFirstName(e.target.value);
@@ -63,11 +65,34 @@ const [birthday, setBirthday] = useState<{ day: string; month: string; year: str
   const handleonChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLastName(e.target.value);
   };
+  // const handleonChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setEmail(e.target.value);
+  // };
+  // const handleonChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setPassword(e.target.value);
+  // };
+      
   const handleonChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+    if (!e.target.value.includes("@") || !e.target.value.includes(".")) {
+      setEmailError("Please enter a valid email address.");
+    } else if (!e.target.value.endsWith("@gmail.com")) {
+      setEmailError("Please use a Gmail address.");
+    } else {
+      setEmailError("");
+    }
   };
+  
+
+
+
   const handleonChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    if (e.target.value.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+    } else {
+      setPasswordError("");
+    }
   };
 
 // ----------------------------------------------------------------
@@ -112,6 +137,13 @@ const handleSubmitSignupUser = (e: React.FormEvent) => {
           navigate("/login")
         //  setSignupSuccess(true);
          console.log("User signed up successfully!");
+         toast({
+          title: "Account created.",
+          description: "We've created your account for you.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
         }).catch((error) => {
           console.error("Error updating profile: ", error);
         });
@@ -203,7 +235,13 @@ const handleSubmitSignupUser = (e: React.FormEvent) => {
             placeholder="Email address"
             mt={4}
             onChange={handleonChangeEmail}
+            isInvalid={!!emailError} 
           />
+           {emailError && (
+        <Text color="red" fontSize="sm">
+          {emailError}
+        </Text>
+      )}
           <Input
             bg={"rgb(245,246,247)"}
             type="password"
@@ -211,7 +249,13 @@ const handleSubmitSignupUser = (e: React.FormEvent) => {
             placeholder="New password"
             mt={4}
             onChange={handleonChangePassword}
+            isInvalid={!!passwordError} 
           />
+          {passwordError && (
+        <Text color="red" fontSize="sm">
+          {passwordError}
+        </Text>
+      )}
 
           <Text fontSize={"13px"} mt={4}>
             Date of birth
