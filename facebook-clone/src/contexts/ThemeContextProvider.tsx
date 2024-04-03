@@ -5,7 +5,6 @@ export type ThemeContextType = {
   setTheme: React.Dispatch<React.SetStateAction<string>>;
 };
 
-// Create the context with the specified type
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeContextProvider = ({ children }: { children: React.ReactNode }) => {
