@@ -21,12 +21,14 @@ const AllRoutes=()=>{
   
     useEffect(() => {
         const auth = getAuth(app);
-    
         const unsubscribe = onAuthStateChanged(auth, (user) => {
           setIsLoggedIn(!!user); 
         });
+
+        return () => unsubscribe(); // Cleanup function
+
     
-        return () => unsubscribe(); 
+      
       }, []);
 
 

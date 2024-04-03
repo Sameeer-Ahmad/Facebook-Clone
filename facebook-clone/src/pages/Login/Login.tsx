@@ -36,13 +36,11 @@ export default function Login() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        navigate("/");
-      }
+        navigate("/login");
+      } 
     });
-
     return () => unsubscribe();
   }, []);
-
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
