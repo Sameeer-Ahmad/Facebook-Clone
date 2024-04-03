@@ -119,18 +119,7 @@ export const Story = () => {
             margin={3}
             borderRadius={"10px"}
           >
-            {/* <Image
-          src="https://imgs.search.brave.com/W0m65Ec8YpeLX-lOk5PobJNCAWt8p0U5UHz_3AwrS0A/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzFmL2Yz/L2MzLzFmZjNjMzVh/MzVjZTNmZjAzZWYx/OTAyMTJiZTIwZmU4/LmpwZw"
-          width={"30px"}
-          height={"30px"}
-          borderRadius={"50%"}
-          border={"3px solid blue"}
-          // display={"flex"}
-          position={"relative"}
-          left={["10px", "20px"]} 
-          top={"8px"}
-          objectFit={"cover"}
-        /> */}
+           
             <Image
               src="https://imgs.search.brave.com/W0m65Ec8YpeLX-lOk5PobJNCAWt8p0U5UHz_3AwrS0A/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzFmL2Yz/L2MzLzFmZjNjMzVh/MzVjZTNmZjAzZWYx/OTAyMTJiZTIwZmU4/LmpwZw"
               borderRadius={"10px"}

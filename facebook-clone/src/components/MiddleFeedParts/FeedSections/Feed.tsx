@@ -153,11 +153,8 @@ export const Feed = () => {
 
 const handleCloseModal = () => {
   setCaption("");
-  // setImage(null);
   setImageUrl("");
 };
-
-
 
   const sizes = ["xs", "sm", "md", "lg", "xl", "xl"];
   
@@ -311,7 +308,6 @@ const handleCloseModal = () => {
               width={["30px", "40px", "50px"]}
               height={["30px", "40px", "50px"]}
               borderRadius={"50%"}
-              border={"1px solid"}
               objectFit={"cover"}
             />
             <Button
@@ -353,8 +349,7 @@ const handleCloseModal = () => {
                 fontWeight={"500"}
                 color={"#818285"}
               >
-
-                Live video
+                Live 
               </Text>
             </Flex>
 
