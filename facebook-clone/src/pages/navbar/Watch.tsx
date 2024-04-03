@@ -1,7 +1,9 @@
+
+
 import { Avatar } from "@chakra-ui/avatar";
 import { Button, IconButton } from "@chakra-ui/button";
 import { Card, CardBody, CardFooter, CardHeader } from "@chakra-ui/card";
-import { Image } from "@chakra-ui/image";
+//import { Image } from "@chakra-ui/image";
 import {
   AspectRatio,
   Box,
@@ -92,55 +94,71 @@ const Watch = () => {
 
   return (
     <>
-      <Flex>
+      <Flex >
         <WatchSidebar />
-        <Center>
-        <Box border="1px solid red" width="100%"  >
-      {videos.map((el) => (
-        <Center>
-        <Card key={el.id} m={4}  maxW={{ base: '100%', md: 'md', lg: '150%' }}>
-          <CardHeader>
-            <Flex justifyContent="space-between" alignItems="center">
-              <Flex alignItems="center">
-                <Avatar src="https://bit.ly/sage-adebayo" />
-                <Box ml={2}>
-                  <Heading size="sm">{el.userName}</Heading>
-                </Box>
-              </Flex>
-              <IconButton
-                variant="ghost"
-                colorScheme="gray"
-                aria-label="See menu"
-                icon={<BsThreeDotsVertical />}
-              />
-            </Flex>
-          </CardHeader>
-          <CardBody>
-            <Text>{el.title}</Text>
-          </CardBody>
+        <Center width={"100%"} >
+          <Box   flexBasis={"100%"}  display={"flex"}  flexDir={"column"} justifyContent={"center"} alignItems={"center"}  >
+            {videos.map((el) => (
+              <Card width={"800px"}  maxW="xl" key={el.id} m={4} >
+                <CardHeader>
+                  <Flex>
+                    <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
+                      <Avatar
+                        // name="Segun Adebayo"
+                        src="https://bit.ly/sage-adebayo"
+                      />
 
-          <AspectRatio maxW="560px" ratio={16 / 9}>
-            <iframe src={el.video} title="YouTube video player"></iframe>
-          </AspectRatio>
+                      <Box>
+                        <Heading size="sm">{el.userName}</Heading>
+                        {/* <Text>{}</Text> */}
+                      </Box>
+                    </Flex>
+                    <IconButton
+                      variant="ghost"
+                      colorScheme="gray"
+                      aria-label="See menu"
+                      icon={<BsThreeDotsVertical />}
+                    />
+                  </Flex>
+                </CardHeader>
+                <CardBody>
+                  <Text>{el.title}</Text>
+                </CardBody>
 
-          <CardFooter justifyContent="space-between" flexWrap="wrap">
-            <Button flex="1" variant="ghost" leftIcon={<BiLike />}>
-              Like
-            </Button>
-            <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
-              Comment
-            </Button>
-            <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
-              Share
-            </Button>
-          </CardFooter>
-        </Card>
-        </Center>
-      ))}
-    </Box>
+                <AspectRatio maxW="560px" ratio={1}>
+                  <iframe
+                    width="560"
+                    height="315"
+                    src={el.video}
+                    title="YouTube video player"
+                  ></iframe>
+                </AspectRatio>
+
+                <CardFooter
+                  justify="space-between"
+                  flexWrap="wrap"
+                  sx={{
+                    "& > button": {
+                      minW: "136px",
+                    },
+                  }}
+                >
+                  <Button flex="1" variant="ghost" leftIcon={<BiLike />}>
+                    Like
+                  </Button>
+                  <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
+                    Comment
+                  </Button>
+                  <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
+                    Share
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </Box>
         </Center>
       </Flex>
     </>
   );
 };
-export default Watch;
+export default Watch;
