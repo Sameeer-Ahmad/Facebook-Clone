@@ -21,12 +21,15 @@ const AllRoutes = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsLoggedIn(!!user);
     });
+
     return () => unsubscribe();
+
   }, []);
 
   return (
     <div>
       {isLoggedIn && <Nav />}
+
       <Routes>
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Home />} />
