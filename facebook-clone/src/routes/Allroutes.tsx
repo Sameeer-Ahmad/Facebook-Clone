@@ -4,7 +4,6 @@ import Friends from "../pages/navbar/Friends";
 import Watch from "../pages/navbar/Watch";
 import Marketplace from "../pages/navbar/Marketplace";
 import Groups from "../pages/navbar/Groups";
-
 import Signup from "../pages/Signup";
 import Login from "../pages/Login/Login";
 import Profile from "../pages/profile/Profile";
@@ -23,7 +22,8 @@ const AllRoutes = () => {
       setIsLoggedIn(!!user);
     });
 
-    return () => unsubscribe(); // Cleanup function
+    return () => unsubscribe();
+
   }, []);
 
   return (
