@@ -16,13 +16,13 @@ import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { app } from "../../firebase";
+import AllRoutes from "../../routes/Allroutes";
 
 export default function Login() {
-
+const[flag,setFlag]=useState(false)
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-
 
   
   const handleEmailchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +47,7 @@ export default function Login() {
 
     signInWithEmailAndPassword(auth,email,password).then((res)=>{
              navigate("/")
-              
+       setFlag(true)
     }).catch((err)=>{console.log(err);
     })
 
@@ -113,7 +113,7 @@ export default function Login() {
           </Box>
         </Flex>
       </Center>
-      <Loginfooter />
+      <Loginfooter/>
     </>
   );
 }
