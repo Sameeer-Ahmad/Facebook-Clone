@@ -95,65 +95,49 @@ const Watch = () => {
       <Flex>
         <WatchSidebar />
         <Center>
-          <Box border={"1px solid red"} flexBasis={"100%"} >
-            {videos.map((el) => (
-              <Card maxW="md" key={el.id} m={4} width={"150%"}>
-                <CardHeader>
-                  <Flex>
-                    <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                      <Avatar
-                        // name="Segun Adebayo"
-                        src="https://bit.ly/sage-adebayo"
-                      />
+        <Box border="1px solid red"  width={['90%', '90%', '80%', '60%']} overflowX="auto">
+      {videos.map((el) => (
+        <Center>
+        <Card key={el.id} m={4}  maxW={{ base: '100%', md: 'md', lg: '150%' }}>
+          <CardHeader>
+            <Flex justifyContent="space-between" alignItems="center">
+              <Flex alignItems="center">
+                <Avatar src="https://bit.ly/sage-adebayo" />
+                <Box ml={2}>
+                  <Heading size="sm">{el.userName}</Heading>
+                </Box>
+              </Flex>
+              <IconButton
+                variant="ghost"
+                colorScheme="gray"
+                aria-label="See menu"
+                icon={<BsThreeDotsVertical />}
+              />
+            </Flex>
+          </CardHeader>
+          <CardBody>
+            <Text>{el.title}</Text>
+          </CardBody>
 
-                      <Box>
-                        <Heading size="sm">{el.userName}</Heading>
-                        {/* <Text>{}</Text> */}
-                      </Box>
-                    </Flex>
-                    <IconButton
-                      variant="ghost"
-                      colorScheme="gray"
-                      aria-label="See menu"
-                      icon={<BsThreeDotsVertical />}
-                    />
-                  </Flex>
-                </CardHeader>
-                <CardBody>
-                  <Text>{el.title}</Text>
-                </CardBody>
+          <AspectRatio maxW="560px" ratio={16 / 9}>
+            <iframe src={el.video} title="YouTube video player"></iframe>
+          </AspectRatio>
 
-                <AspectRatio maxW="560px" ratio={1}>
-                  <iframe
-                    width="560"
-                    height="315"
-                    src={el.video}
-                    title="YouTube video player"
-                  ></iframe>
-                </AspectRatio>
-
-                <CardFooter
-                  justify="space-between"
-                  flexWrap="wrap"
-                  sx={{
-                    "& > button": {
-                      minW: "136px",
-                    },
-                  }}
-                >
-                  <Button flex="1" variant="ghost" leftIcon={<BiLike />}>
-                    Like
-                  </Button>
-                  <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
-                    Comment
-                  </Button>
-                  <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
-                    Share
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </Box>
+          <CardFooter justifyContent="space-between" flexWrap="wrap">
+            <Button flex="1" variant="ghost" leftIcon={<BiLike />}>
+              Like
+            </Button>
+            <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
+              Comment
+            </Button>
+            <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
+              Share
+            </Button>
+          </CardFooter>
+        </Card>
+        </Center>
+      ))}
+    </Box>
         </Center>
       </Flex>
     </>
