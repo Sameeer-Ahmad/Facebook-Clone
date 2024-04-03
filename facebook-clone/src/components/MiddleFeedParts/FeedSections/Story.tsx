@@ -77,6 +77,7 @@ export const Story = () => {
               left={"-5px"}
               color={"white"}
             >
+              
               Sujeet Kumar
             </Text>
           </Box>
