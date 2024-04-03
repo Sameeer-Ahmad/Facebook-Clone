@@ -95,7 +95,7 @@ const Watch = () => {
       <Flex>
         <WatchSidebar />
         <Center>
-        <Box border="1px solid red"  width={['90%', '90%', '80%', '60%']} overflowX="auto">
+        <Box border="1px solid red" width="100%"  >
       {videos.map((el) => (
         <Center>
         <Card key={el.id} m={4}  maxW={{ base: '100%', md: 'md', lg: '150%' }}>
