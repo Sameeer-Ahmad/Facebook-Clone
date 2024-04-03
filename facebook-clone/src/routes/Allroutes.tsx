@@ -15,21 +15,17 @@ import { app } from "../firebase";
 
 const AllRoutes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   useEffect(() => {
     const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsLoggedIn(!!user);
     });
-
     return () => unsubscribe();
-
   }, []);
 
   return (
     <div>
       {isLoggedIn && <Nav />}
-
       <Routes>
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Home />} />

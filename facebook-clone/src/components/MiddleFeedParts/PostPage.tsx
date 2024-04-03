@@ -307,13 +307,14 @@ export const PostPage: FC<Post> = ({
                     <Avatar src={comment.photoURL} />
                     <Flex
                       bg={"rgb(240,242,245)"}
+                      color={"black"}
                       p={"10px"}
                       borderRadius={"10px"}
                       w={"auto"}
                       flexDir={"column"}
                     >
                       <Text fontWeight={"600"}>{comment.username}</Text>
-                      <Text>{comment.comment}</Text>
+                      <Text >{comment.comment}</Text>
                     </Flex>
                   </Flex>
                 ))}
