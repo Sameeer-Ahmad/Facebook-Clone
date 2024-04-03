@@ -4,7 +4,6 @@ import { useAuth } from "../Context/AuthContextProvider";
 
 const PrivateRoute: React.FC = ( children ) => {
   let { currentUser } = useAuth();
-
   if (currentUser) {
     return <Outlet />;
   } else {

@@ -207,8 +207,10 @@
 
 .rightBar .container .item .user .buttons {
   display: flex;
+  /* justify-content: space-around; */
   align-items: center;
   gap: 10px;
+  margin-left: 5px;
 }
 
 .rightBar .container .item .user .buttons button {
@@ -219,9 +221,15 @@
 }
 
 .rightBar .container .item .user .buttons button:first-child {
-  background-color: #5271ff;
+  background-color: #0866ff;
+  padding: 6px 12px;
+  border-radius: 5px;
+
 }
 
 .rightBar .container .item .user .buttons button:last-child {
-  background-color: #f0544f;
+  background-color: #e4e6eb;
+  color: #000;
+  padding: 6px 15px;
+  border-radius: 5px;
 }

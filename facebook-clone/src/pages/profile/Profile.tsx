@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -181,6 +182,5 @@ export default function Profile() {
        
       </Flex>
     </>
-  );
-}
+
 

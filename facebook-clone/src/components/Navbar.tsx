@@ -226,10 +226,10 @@ export default function Nav() {
         const results: SearchResult[] = [];
         querySnapshot.forEach((doc) => {
           const userData = doc.data();
-          if (userData.displayName.toLowerCase().includes(searchTerm.toLowerCase())) {
+          if (userData.displayName?.toLowerCase().includes(searchTerm.toLowerCase())) {
             results.push({ uid: doc.id, displayName: userData.displayName });
           }
-        });
+        }); 
         setSearchResults(results);
       } catch (error) {
         console.error("Error searching Firestore:", error);
@@ -390,14 +390,14 @@ export default function Nav() {
 
 
 
-  const spacingSize = useBreakpointValue({ base: 'small', sm: '2px', md: 'large', lg: "lg", xl: "xl" });
+  const spacingSize = useBreakpointValue({ base: 'small', sm: '1px', md: '1px', lg: "lg", xl: "xl" });
   const bgColor = useColorModeValue('white', 'gray.900');
   const searchBgColor = useColorModeValue("white", "gray.800");
   const searchInputColor = useColorModeValue("gray.100", "gray.700");
   const searchTextColor = useColorModeValue("gray.900", "white");
 
 
-  const breakpoint = useBreakpointValue({ base: "base", sm: "sm", md: "md" });
+  const breakpoint = useBreakpointValue({ base: "base", sm: "sm", md: "md", lg: "lg" });
   const buttonText = colorMode === 'light' ? 'Light Mode' : 'Dark Mode';
   // const auth = getAuth();
   // const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {});
@@ -407,7 +407,7 @@ export default function Nav() {
     <>
 
       <ColorModeScript />
-      {breakpoint === "md" && (
+      {breakpoint === "lg" && (
         <ColorModeProvider>
           <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={0} zIndex={1000} position={"sticky"} >
             <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
@@ -418,7 +418,7 @@ export default function Nav() {
                   src={facebook_logo}
                 />
                 {/* ------------------------------ -------------------------------*/}
-                <Box display={{ base: "block", md: "block", lg: "none" }}>
+                <Box display={{ base: "block", md: "none", lg: "none" }}>
                   <FaSearch color="gray" onClick={toggleSearch} />
                   {isSearchOpen && (
                     <>
@@ -484,19 +484,19 @@ export default function Nav() {
                       left="0"
                       right="0"
                       zIndex="999"
-                      
+
                       bg={searchBgColor}
                       boxShadow="lg"
                       borderRadius="md"
                       overflowY="auto"
-                      maxHeight="300px" 
+                      maxHeight="300px"
                     >
                       {searching ? (
-                         <Stack spacing={2} p={2}>
-                         <Skeleton height='20px' />
-                         <Skeleton height='20px' />
-                         <Skeleton height='20px' />
-                       </Stack>
+                        <Stack spacing={2} p={2}>
+                          <Skeleton height='20px' />
+                          <Skeleton height='20px' />
+                          <Skeleton height='20px' />
+                        </Stack>
                       ) : searchResults.length === 0 ? (
                         <Text>No results found</Text>
                       ) : (
@@ -773,7 +773,7 @@ export default function Nav() {
       )
       }
       {
-        breakpoint === ("sm") && (
+        breakpoint === ("md") && (
           <ColorModeProvider>
             <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" position="sticky" top={0} zIndex={1000}>
               <Flex h={16} alignItems={'center'} justifyContent={'space-between'} flexShrink={0}>
@@ -795,9 +795,10 @@ export default function Nav() {
                         position="absolute"
                         top={10}
                         zIndex={10}
-                        bg="white"
+                        bg={colorMode === "light" ? "white" : "gray.800"}
                         boxShadow="lg"
                         borderRadius={20}
+                        color="gray"
                         mt={2}
                         width="200px" // Adjust width as needed
                       >
@@ -805,6 +806,7 @@ export default function Nav() {
                           type="text"
                           placeholder="Search Facebook"
                           borderRadius={20}
+                          color="gray"
                           value={searchTerm}
                           onChange={handleSearchChange}
                         // position="relative"
@@ -822,13 +824,17 @@ export default function Nav() {
                         // top="35"
                         right="0"
                         zIndex="999"
-                        bg="white"
+                        bg={colorMode === "light" ? "white" : "gray.800"}
                         boxShadow="lg"
                         borderRadius="md"
                         width="200px" // Adjust width as needed
                       >
                         {searching ? (
-                          <Text>Loading...</Text>
+                           <Stack spacing={2} p={2}>
+                           <Skeleton height='20px' />
+                           <Skeleton height='20px' />
+                           <Skeleton height='20px' />
+                         </Stack>
                         ) : searchResults.length === 0 ? (
                           <Text>No results found</Text>
                         ) : (
@@ -876,13 +882,15 @@ export default function Nav() {
                     as={IconButton}
                     icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
                     aria-label="Toggle menu"
-                    display={{ base: "block", md: "none" }}
-                    variant="ghost"
+                    display={{ base: "block", md: "block" }}
+                    // variant="ghost"
                     onClick={toggleMenu}
+                  // maxHeight={"300px"}
+                  // overflow={"auto"}
                   />
                   <Flex alignItems="center">
 
-                    <MenuList>
+                    <MenuList maxH="700px" overflowY="auto">
                       <MenuItem>
                         <Link to="/groups">{<HiOutlineUserGroup fontSize={"30px"} />}</Link>
                       </MenuItem>
@@ -998,8 +1006,9 @@ export default function Nav() {
                   </Flex>
                 </Menu>
                 <Box>
-                  <Menu>
 
+
+                  {/* <Menu>
                     <MenuButton
                       as={Button}
                       rounded={'full'}
@@ -1022,37 +1031,62 @@ export default function Nav() {
                       <MenuItem>Account Settings</MenuItem>
                       <MenuItem>Logout</MenuItem>
                     </MenuList>
-                  </Menu>
+                  </Menu> */}
 
-                  <Menu >
+                  <Menu>
                     <MenuButton
                       as={Button}
                       rounded={'full'}
                       variant={'link'}
                       cursor={'pointer'}
-                      minW={0}>
+                      minW={0}
+                    >
+
                       {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
-                      <Avatar boxSize='15px'>
-                        <AvatarBadge boxSize='1.00em' bg='green.500' />
+
+                      <Avatar size="sm" src={user?.photoURL as string}>
+                        <AvatarBadge boxSize='1.25em' bg='green.500' />
                       </Avatar>
+
                     </MenuButton>
                     <MenuList alignItems={'center'}>
                       <Flex p={4}>
                         <Center>
-                          <Avatar boxSize='15px' src='https://bit.ly/broken-link' />
+                          <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                          <p>Username</p>
+                          <Link to={`/profile/${user?.uid}`}>
+                            <p>{user?.displayName}</p>
+                          </Link>
                         </Center>
                       </Flex>
                       <MenuDivider />
-                      <MenuItem>Your Servers</MenuItem>
+                      <MenuItem>
+                        <Box borderRadius="50%" bg="gray.200" p={2}>
+                          <Icon as={IoIosSettings} boxSize={5} color="black" fontWeight="bold" />
+
+                        </Box>
+                        <Box p={3}>Setting & privacy</Box>
+                      </MenuItem>
+
+                      <MenuItem>
+                        <Box borderRadius="50%" bg="gray.200" p={2}>
+                          <Icon as={IoMdHelpCircle} boxSize={5} color="black" fontWeight="bold" />
+
+                        </Box>
+                        <Box p={3}>Help & support</Box>
+                      </MenuItem>
                       <Accordion defaultIndex={[0]} allowMultiple>
                         <AccordionItem>
                           <h2>
                             <AccordionButton>
-                              <Box as="span" flex='1' textAlign='left'>
-                                Account Settings
+                              <Box borderRadius="50%" bg="gray.200" p={2}>
+                                <Icon as={IoMdMoon} boxSize={5} color="black" fontWeight="bold" />
+
+                              </Box>
+                              <Box as="span" flex='1' textAlign='left' ml={1}>
+
+                                Display
                               </Box>
                               <AccordionIcon />
                             </AccordionButton>
@@ -1060,24 +1094,26 @@ export default function Nav() {
                           <AccordionPanel pb={4}>
                             <FormControl display='flex' alignItems='center'>
                               <FormLabel htmlFor='dark-mode' mb='0'>
-                                Dark mode
+                                {buttonText}
                               </FormLabel>
-                              <Switch id='dark-mode' isChecked={colorMode === 'dark'} onChange={toggleColorMode} />
+                              <Switch id='dark-mode' isChecked={colorMode === 'dark'} onChange={handleToggleColorMode} />
                             </FormControl>
                           </AccordionPanel>
                           <Divider />
-                          <AccordionPanel pb={4}>
-                            <FormControl display='flex' alignItems='center'>
-                              <FormLabel htmlFor='light-mode' mb='0'>
-                                Light mode
-                              </FormLabel>
-                              <Switch id='light-mode' isChecked={colorMode === 'light'} onChange={toggleColorMode} />
-                            </FormControl>
-                          </AccordionPanel>
+
                         </AccordionItem>
                       </Accordion>
-                      <MenuItem>Logout</MenuItem>
+                      <MenuItem>
+                        <Box borderRadius="50%" bg="gray.200" p={2}>
+                          <Icon as={RiFeedbackFill} boxSize={5} color="black" fontWeight="bold" />
+
+                        </Box>
+                        <Box p={3}>Give feedback</Box>
+                      </MenuItem>
+
+                      <MenuItem fontWeight={"bold"} onClick={handleLogout}>Log out</MenuItem>
                     </MenuList>
+
                   </Menu>
                 </Box>
               </Flex>
@@ -1090,68 +1126,86 @@ export default function Nav() {
 
 
       {
-        breakpoint === "base" && (
+        breakpoint === ("base" || "sm") && (
           <ColorModeProvider>
-            <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={0} zIndex={1000} position={"sticky"}>
+            <Box bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={-1} zIndex={1000} position={"sticky"}>
               <Flex alignItems="center" justifyContent="space-between">
-                <Image src={facebook} width={"40%"} height={"100px"} top={"0%"} />
+                <Image src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg" width={"40%"} height={"100px"} top={"0%"} />
 
                 <Flex alignItems="center" position="relative">
                   {/* Search Icon */}
-                  <FaSearch color="gray" onClick={toggleSearch} />
+                  <Box display="flex" alignItems="center" justifyContent="flex-end">
+  {/* Search Icon */}
+  <FaSearch color="gray" onClick={toggleSearch} />
 
-                  {/* Search Input Field */}
-                  {isSearchOpen && (
-                    <Box
-                      position="absolute"
-                      top={7}
-                      right={34}
-                      zIndex={10}
-                      bg="white"
-                      boxShadow="lg"
-                      borderRadius={20}
-                      mt={2}
-                      width="200px" // Adjust width as needed
-                    >
-                      <Input
-                        type="text"
-                        placeholder="Search Facebook"
-                        borderRadius={20}
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        position={"absolute"}
-                      />
-                    </Box>
-                  )}
+  {/* Search Input Field */}
+  {isSearchOpen && (
+    <Box
+      position="relative"
+      mr={2} // Adjust margin as needed
+      mt={3}
+    >
+      <Box
+        position="absolute"
+        top={0}
+        right={0} // Align to the right
+        zIndex={10}
+        bg={colorMode === "light" ? "white" : "gray.800"}
+        boxShadow="lg"
+        borderRadius={20}
+        width="200px" // Adjust width as needed
+      >
+        <Input
+          type="text"
+          placeholder="Search Facebook"
+          borderRadius={20}
+          value={searchTerm}
+          onChange={handleSearchChange}
+          position="absolute"
+        />
+      </Box>
+    </Box>
+  )}
 
-                  {/* Search Results */}
-                  {searchTerm && (
-                    <Box
-                      position="absolute"
-                      top="calc(100% + 40px)"
-                      left={0}
-                      right={100}
-                      zIndex={999}
-                      bg="white"
-                      boxShadow="lg"
-                      borderRadius="md"
-                      width="200px" // Adjust width as needed
-                    >
-                      {searching ? (
-                        <Text></Text>
-                      ) : searchResults.length === 0 ? (
-                        <Text>No results found</Text>
-                      ) : (
-                        searchResults.map((result, index) => (
-                          <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
-                            <Box p={3} borderBottomWidth="1px">
-                              <Text>{result.displayName}</Text>
-                            </Box>
-                          </Link>
-                        ))
-                      )}
-                    </Box>
-                  )}
+  {/* Search Results */}
+  {searchTerm && (
+    <Box
+      position="relative"
+      mr={2} // Adjust margin as needed
+      mt={20}
+    >
+      <Box
+        position="absolute"
+        top={0}
+        right={0} // Align to the right
+        zIndex={10}
+        bg={colorMode === "light" ? "white" : "gray.800"}
+        boxShadow="lg"
+        borderRadius="md"
+        width="200px" // Adjust width as needed
+      >
+        {searching ? (
+          <Stack spacing={2} p={2}>
+            <Skeleton height='20px' />
+            <Skeleton height='20px' />
+            <Skeleton height='20px' />
+          </Stack>
+        ) : searchResults.length === 0 ? (
+          <Text>No results found</Text>
+        ) : (
+          searchResults.map((result, index) => (
+            <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
+              <Box p={3} borderBottomWidth="1px">
+                <Text>{result.displayName}</Text>
+              </Box>
+            </Link>
+          ))
+        )}
+      </Box>
+    </Box>
+  )}
+</Box>
+
                   {/* </Flex> */}
 
                   <Menu
@@ -1160,13 +1214,15 @@ export default function Nav() {
                       as={IconButton}
                       icon={isMenuOpen ? <CloseIcon /> : <HamburgerIcon />}
                       aria-label="Toggle menu"
-                      borderRadius="50%" bg="gray.200"
+                      borderRadius="50%"
                       display={{ base: "block", md: "none" }}
                       variant="ghost"
+                      color={"black.200"}
+                      fontWeight={"bold"}
                       onClick={toggleMenu}
                     />
                     <Flex alignItems="center">
-                      <MenuList>
+                      <MenuList maxH="700px" overflowY="auto">
                         <MenuItem>
                           <div className="item">
                             <img src={Friends} alt="" />
@@ -1262,7 +1318,7 @@ export default function Nav() {
             <Divider borderWidth="2px" color={'grey'} />
 
 
-            <Flex  bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={20} zIndex={1000} position={"sticky"}>
+            <Flex bg={bgColor} px={3} boxShadow={"lg"} width="100%" top={20} zIndex={1000} position={"sticky"}>
               <Center>
                 {Midlink.map((ele, index) => (
                   <React.Fragment key={index}>
@@ -1281,7 +1337,7 @@ export default function Nav() {
                   </React.Fragment>
                 ))}
               </Center>
-              <Box ml={2} mt={2}>
+              <Box ml={1} mt={2}>
                 <Menu >
 
 
@@ -1303,64 +1359,101 @@ export default function Nav() {
                     </Center>
                     <br />
                     <MenuDivider />
-                    <MenuItem>Your Servers</MenuItem>
-                    <MenuItem>Account Settings</MenuItem>
-                    <MenuItem>Logout</MenuItem>
+                    <MenuItem>No Notifications yet</MenuItem>
+                    {/* <MenuItem>Account Settings</MenuItem> */}
+                    {/* <MenuItem>Logout</MenuItem> */}
                   </MenuList>
                 </Menu>
               </Box>
-              <Box ml={3} mt={2} >
-                <Menu>
-
+              <Box ml={4} mt={2} >
+                <Menu >
                   <MenuButton
                     as={Button}
                     rounded={'full'}
                     variant={'link'}
                     cursor={'pointer'}
-                    minW={0}>
-                    <Box >
-                      <Icon as={RiMessengerLine} boxSize={7} color="grey" fontWeight="bold" />
-                    </Box>
+                    minW={0}
+                  >
+
+                    {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
+
+                    <Avatar size="sm" src={user?.photoURL as string}>
+                      <AvatarBadge boxSize='1.25em' bg='green.500' />
+                    </Avatar>
+
                   </MenuButton>
                   <MenuList alignItems={'center'}>
-                    <Center>
-                      <Tooltip label='Chats'>
-                        <p >Chats</p>
-                      </Tooltip>
-                    </Center>
-                    <br />
+                    <Flex p={4}>
+                      <Center>
+                        <Avatar size="sm" src={user?.photoURL as string} />
+                      </Center>
+                      <Center p={2}>
+                        <Link to={`/profile/${user?.uid}`}>
+                          <p>{user?.displayName}</p>
+                        </Link>
+                      </Center>
+                    </Flex>
                     <MenuDivider />
-                    <MenuItem>Your Servers</MenuItem>
-                    <MenuItem>Account Settings</MenuItem>
-                    <MenuItem>Logout</MenuItem>
+                    <MenuItem>
+                      <Box borderRadius="50%" bg="gray.200" p={2}>
+                        <Icon as={IoIosSettings} boxSize={5} color="black" fontWeight="bold" />
+
+                      </Box>
+                      <Box p={3}>Setting & privacy</Box>
+                    </MenuItem>
+
+                    <MenuItem>
+                      <Box borderRadius="50%" bg="gray.200" p={2}>
+                        <Icon as={IoMdHelpCircle} boxSize={5} color="black" fontWeight="bold" />
+
+                      </Box>
+                      <Box p={3}>Help & support</Box>
+                    </MenuItem>
+                    <Accordion defaultIndex={[0]} allowMultiple>
+                      <AccordionItem>
+                        <h2>
+                          <AccordionButton>
+                            <Box borderRadius="50%" bg="gray.200" p={2}>
+                              <Icon as={IoMdMoon} boxSize={5} color="black" fontWeight="bold" />
+
+                            </Box>
+                            <Box as="span" flex='1' textAlign='left' ml={1}>
+
+                              Display
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={4}>
+                          <FormControl display='flex' alignItems='center'>
+                            <FormLabel htmlFor='dark-mode' mb='0'>
+                              {buttonText}
+                            </FormLabel>
+                            <Switch id='dark-mode' isChecked={colorMode === 'dark'} onChange={handleToggleColorMode} />
+                          </FormControl>
+                        </AccordionPanel>
+                        <Divider />
+
+                      </AccordionItem>
+                    </Accordion>
+                    <MenuItem>
+                      <Box borderRadius="50%" bg="gray.200" p={2}>
+                        <Icon as={RiFeedbackFill} boxSize={5} color="black" fontWeight="bold" />
+
+                      </Box>
+                      <Box p={3}>Give feedback</Box>
+                    </MenuItem>
+
+                    <MenuItem fontWeight={"bold"} onClick={handleLogout}>Log out</MenuItem>
                   </MenuList>
+
                 </Menu>
               </Box>
             </Flex>
             <Divider borderWidth="1px" color={'black'} />
-
-
           </ColorModeProvider >
         )
       }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </>
   )
 

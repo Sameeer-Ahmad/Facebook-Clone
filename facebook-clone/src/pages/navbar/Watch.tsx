@@ -1,7 +1,9 @@
+
+
 import { Avatar } from "@chakra-ui/avatar";
 import { Button, IconButton } from "@chakra-ui/button";
 import { Card, CardBody, CardFooter, CardHeader } from "@chakra-ui/card";
-import { Image } from "@chakra-ui/image";
+//import { Image } from "@chakra-ui/image";
 import {
   AspectRatio,
   Box,
@@ -92,12 +94,12 @@ const Watch = () => {
 
   return (
     <>
-      <Flex>
+      <Flex >
         <WatchSidebar />
-        <Center>
-          <Box border={"1px solid red"} flexBasis={"100%"} >
+        <Center width={"100%"} >
+          <Box   flexBasis={"100%"}  display={"flex"}  flexDir={"column"} justifyContent={"center"} alignItems={"center"}  >
             {videos.map((el) => (
-              <Card maxW="md" key={el.id} m={4} width={"150%"}>
+              <Card width={"800px"}  maxW="xl" key={el.id} m={4} >
                 <CardHeader>
                   <Flex>
                     <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
@@ -159,4 +161,4 @@ const Watch = () => {
     </>
   );
 };
-export default Watch;
+export default Watch;
