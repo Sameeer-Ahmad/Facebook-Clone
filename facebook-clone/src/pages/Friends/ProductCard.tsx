@@ -22,7 +22,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     <>
     
     
-    <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" width={"250px"} >
+    <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" width={"250px"} height={"300px"} >
       <Image src={product.images[0]} alt={product.title} height={"200px"} overflow={"hidden"} width={"100%"}/>
 
       <Box p="6">
