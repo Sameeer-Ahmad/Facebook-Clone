@@ -99,7 +99,7 @@ const AddFriends: React.FC = () => {
 
   return (
     <>
-    <Nav/>
+    <Nav />
     <Flex>
     <Sidebar/>
     <Flex flexWrap="wrap" justifyContent="center">
