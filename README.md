@@ -77,10 +77,13 @@ N/A
 ## Technology Stack
 List and provide a brief overview of the technologies used in the project.
 
-- React
+- React-js
+- Redux
+- Html-css-javascript
 - TypeScript
 - Firebase (Authentication, Realtime Database)
 - Chakra UI
+  
 
 
 ## Screensort
