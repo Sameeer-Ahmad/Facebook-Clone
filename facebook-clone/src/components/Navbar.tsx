@@ -496,6 +496,7 @@ export default function Nav() {
                           <Skeleton height='20px' />
                           <Skeleton height='20px' />
                           <Skeleton height='20px' />
+                          <Skeleton height='20px' />
                         </Stack>
                       ) : searchResults.length === 0 ? (
                         <Text>No results found</Text>
@@ -529,14 +530,13 @@ export default function Nav() {
                   </React.Fragment>
                 ))}
               </Flex>
-              {/* ------------------------------------------ */}
               <Flex alignItems={'center'} ml={1}>
                 <Stack direction={'row'} spacing={7}>
 
 
                   <Menu>
                     <MenuButton
-                    
+
                       as={Button}
                       rounded={'full'}
                       variant={'link'}
@@ -561,7 +561,6 @@ export default function Nav() {
                         </Box>
                         <Box fontWeight={"bold"} p={3}>Post</Box>
                       </MenuItem>
-                      {/* <Divider /> */}
                       <MenuItem>
                         <Box borderRadius="50%" bg="gray.200" p={2}>
                           <Icon as={IoBook} boxSize={5} color="black" fontWeight="bold" />
@@ -569,7 +568,6 @@ export default function Nav() {
                         </Box>
                         <Box fontWeight={"bold"} p={3}>Story</Box>
                       </MenuItem>
-                      {/* <Divider /> */}
                       <MenuItem>
                         <Box borderRadius="50%" bg="gray.200" p={2}>
                           <Icon as={FaFilm} boxSize={5} color="black" fontWeight="bold" />
@@ -577,7 +575,7 @@ export default function Nav() {
                         </Box>
                         <Box fontWeight={"bold"} p={3}>Reels</Box>
                       </MenuItem>
-                      {/* <Divider /> */}
+             
                       <MenuItem>
                         <Box borderRadius="50%" bg="gray.200" p={2}>
                           <Icon as={MdOutlineStar} boxSize={5} color="black" fontWeight="bold" />
