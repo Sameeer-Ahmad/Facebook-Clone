@@ -39,6 +39,8 @@ const AllRoutes = () => {
         <Route path="/:username/:uid" element={<Profile />} />
       </Routes>
     </div>
+    
   );
 };
+
 export default AllRoutes;
