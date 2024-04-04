@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
+import Nav from '../../components/Navbar';
 
 
 interface CardProps {
@@ -25,6 +26,7 @@ const Card: React.FC<CardProps> = ({ imageSrc, name, onButtonClick }) => {
   };
 
   return (
+
     <Box
       boxShadow={"rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px"}
       maxW="sm"
