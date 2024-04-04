@@ -17,6 +17,7 @@ import {
   SimpleGrid,
   Avatar,
   Grid,
+  Stack,
 } from "@chakra-ui/react";
 import { Feed } from "../../components/MiddleFeedParts/FeedSections/Feed";
 
@@ -30,6 +31,7 @@ import { IoLocation } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa6";
 import { IoMdStopwatch } from "react-icons/io";
 import { MdRssFeed } from "react-icons/md";
+import { MdPrivacyTip } from "react-icons/md";
 
 interface Postl {
   id: string;
@@ -109,13 +111,13 @@ export default function Profile() {
               w={["100%", "100%", "100%", "100%", "70%", "70%"]}
               borderRadius={"8px"}
               src={
-                "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+                "https://c4.wallpaperflare.com/wallpaper/185/600/59/anime-boruto-boruto-uzumaki-mitsuki-naruto-wallpaper-thumb.jpg"
               }
               objectFit="cover"
               alt="#"
             />
           </Flex>
-          <Flex direction={"row"} justify={"center"} mt={-12}>
+          <Flex direction={"row"} justify={"center"} mt={-12} flexWrap={"wrap"}>
             <Avatar
               h={"200px"}
               w={"200px"}
@@ -124,7 +126,28 @@ export default function Profile() {
                 border: "2px solid white",
               }}
             /> 
+
+            <Stack>
+            <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>{user?.displayName}</Text>
+            <Text fontWeight={"700"}>100 friends</Text>
+            <Flex>{cardDataArray.map((el)=>(
+              <Box marginBottom={4}>
+              <Image width={"30px"} height={"30px"} borderRadius={"50%"}  src={el.imageSrc}/>
+              </Box>
+            ))}</Flex>
+            </Stack>
+          </Flex>
+          <Divider border={"1px solid #d1d5da"} marginTop={3}/>
+          <Flex p={2} marginLeft={["0","110px"]}>
+            <Button>Posts</Button>
+            <Button>About</Button>
+            <Button>Friends</Button>
+            <Button>Photos</Button>
+            <Button>Videos</Button>
+            <Button>Reels</Button>
+
             <Text fontWeight={"bold"} fontSize={"2xl"} mt={32}>{displayName}</Text>
+
           </Flex>
         </Box>
       </Center>
@@ -139,6 +162,19 @@ export default function Profile() {
           direction="column"
         >
           <SimpleGrid spacing={4} mt={4}>
+          <Card>
+  <CardBody>
+    <Flex  alignItems={"center"}>
+      
+    <MdPrivacyTip />
+   
+      <Box marginLeft={4}>
+    <Text fontWeight={"700"}>You've locked your profile</Text>
+    <Text fontWeight={"700"} color={"#0866ff"}>Learn more</Text>
+    </Box>
+    </Flex>
+  </CardBody>
+</Card>
             <Card>
               <CardHeader>
                 <Heading size="md"> Intro</Heading>
