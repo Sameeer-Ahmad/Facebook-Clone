@@ -34,7 +34,8 @@ List out the key features of your application.
 ## Design Decisions or Assumptions
 List your design decisions & assumptions
 
-- Utilized Firebase Realtime Database for its real-time data synchronization capabilities
+- Employed Firebase Authentication for user authentication and authorization, leveraging its seamless integration with Firebase services.
+- Utilized Git for version control, enabling collaborative development and code management among team members.
 - Chose Chakra UI for consistent and customizable styling
 
 ## Installation & Getting started
