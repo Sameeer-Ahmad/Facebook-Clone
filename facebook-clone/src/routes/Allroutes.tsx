@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "../pages/navbar/Home";
 import Friends from "../pages/navbar/Friends";
 import Watch from "../pages/navbar/Watch";
@@ -15,6 +15,7 @@ import { app } from "../firebase";
 
 const AllRoutes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
   useEffect(() => {
     const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -22,18 +23,18 @@ const AllRoutes = () => {
     });
     return () => unsubscribe();
   }, []);
-
+  const shouldRenderNav = isLoggedIn && location.pathname !== "/login";
   return (
     <div>
-      {isLoggedIn && <Nav />}
+   {shouldRenderNav && <Nav />}
       <Routes>
-        <Route element={<PrivateRoute />}>
+       
           <Route path="/" element={<Home />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/watch" element={<Watch />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/groups" element={<Groups />} />
-        </Route>
+      
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/:username/:uid" element={<Profile />} />
