@@ -6,6 +6,7 @@ import {  useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard, { Product } from "./productcard";
 import { fetchProductsSuccess, setError, setLoading } from "../../redux/ProductReducer/action";
+import Nav from "../../components/Navbar";
 
 
 
@@ -90,9 +91,10 @@ const Marcketing = () => {
       );
     }
 
+          
     return (
       <>
-
+          
         <Flex alignItems="center" justify="space-between" p={4} borderWidth="1px" borderRadius="lg">
           <Text ml={2} fontWeight={"bold"} fontSize={"35px"}>Today's Picks</Text>
           <Input 
