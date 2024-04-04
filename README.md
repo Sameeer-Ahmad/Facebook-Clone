@@ -17,11 +17,9 @@ facebook-clone/
 ├─ frontend/
 │  ├─ ...
 
-## Video Walkthrough of the project
-Attach a very short video walkthough of all of the features [ 1 - 3 minutes ]
 
 ## Video Walkthrough of the codebase
-Attach a very short video walkthough of codebase [ 1 - 5 minutes ]
+Attach a very short video walkthough of codebase [ 4 - 5 minutes ]
 
 ## Features
 List out the key features of your application.
