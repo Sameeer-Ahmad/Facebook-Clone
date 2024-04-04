@@ -96,7 +96,7 @@ import Fund from "../Images/13.png";
 import { element } from "prop-types";
 import Sidebar from "./Sidebar";
 import { app, db } from "../firebase"; // Import Firebase configuration
-import { QueryDocumentSnapshot, collection, getDocs, onSnapshot } from "firebase/firestore";
+import { QueryDocumentSnapshot, collection, doc, getDoc, getDocs, onSnapshot } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 
 
@@ -108,6 +108,7 @@ interface NavLinkProps {
 }
 
 interface SearchResult {
+  username: string;
   uid: string;
   displayName: string;
 }
@@ -216,7 +217,23 @@ export default function Nav() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searching, setSearching] = useState(false);
 
-
+  const getUserUsername = async (userId: string) => {
+    try {
+      const userDocRef = doc(db, "users", userId);
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
+        const username = userData.username; // Assuming 'username' is the field containing the username
+        return username;
+      } else {
+        console.log("User document does not exist");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user document:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     const searchFirebase = async () => {
@@ -224,12 +241,17 @@ export default function Nav() {
       try {
         const querySnapshot = await getDocs(collection(db, "users"));
         const results: SearchResult[] = [];
-        querySnapshot.forEach((doc) => {
+        // querySnapshot.forEach((doc) => {
+        await Promise.all(querySnapshot.docs.map(async (doc) => {
           const userData = doc.data();
+          // const username = userData.username;
           if (userData.displayName?.toLowerCase().includes(searchTerm.toLowerCase())) {
-            results.push({ uid: doc.id, displayName: userData.displayName });
+            const userId = doc.id;
+            const username = await getUserUsername(userId);
+            results.push({ uid: doc.id, displayName: userData.displayName, username: username });
+            console.log(results);
           }
-        }); 
+        }));
         setSearchResults(results);
       } catch (error) {
         console.error("Error searching Firestore:", error);
@@ -460,7 +482,8 @@ export default function Nav() {
                           <Text>No results found</Text>
                         ) : (
                           searchResults.map((result, index) => (
-                            <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
+                            <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch}>
+
                               <Box p={3} borderBottomWidth="1px">
                                 <Text>{result.displayName}</Text>
                               </Box>
@@ -502,7 +525,8 @@ export default function Nav() {
                         <Text>No results found</Text>
                       ) : (
                         searchResults.map((result, index) => (
-                          <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch} color="gray">
+
+                          <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch} color="gray">
                             <Box p={3} borderBottomWidth="1px" color="gray">
                               <Text>{result.displayName}</Text>
                             </Box>
@@ -575,7 +599,7 @@ export default function Nav() {
                         </Box>
                         <Box fontWeight={"bold"} p={3}>Reels</Box>
                       </MenuItem>
-             
+
                       <MenuItem>
                         <Box borderRadius="50%" bg="gray.200" p={2}>
                           <Icon as={MdOutlineStar} boxSize={5} color="black" fontWeight="bold" />
@@ -703,7 +727,9 @@ export default function Nav() {
                           <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                          <Link to={`/profile/${user?.uid}`}>
+                          {/* <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch} color="gray"> */}
+
+                          <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
                             <p>{user?.displayName}</p>
                           </Link>
                         </Center>
@@ -829,20 +855,21 @@ export default function Nav() {
                         width="200px" // Adjust width as needed
                       >
                         {searching ? (
-                           <Stack spacing={2} p={2}>
-                           <Skeleton height='20px' />
-                           <Skeleton height='20px' />
-                           <Skeleton height='20px' />
-                         </Stack>
+                          <Stack spacing={2} p={2}>
+                            <Skeleton height='20px' />
+                            <Skeleton height='20px' />
+                            <Skeleton height='20px' />
+                          </Stack>
                         ) : searchResults.length === 0 ? (
                           <Text>No results found</Text>
                         ) : (
                           searchResults.map((result, index) => (
-                            <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
-                              <Box p={3} borderBottomWidth="1px">
-                                <Text>{result.displayName}</Text>
-                              </Box>
-                            </Link>
+                            <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch}>
+
+                            <Box p={3} borderBottomWidth="1px">
+                              <Text>{result.displayName}</Text>
+                            </Box>
+                          </Link>
                           ))
                         )}
                       </Box>
@@ -1054,7 +1081,7 @@ export default function Nav() {
                           <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                          <Link to={`/profile/${user?.uid}`}>
+                        <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
                             <p>{user?.displayName}</p>
                           </Link>
                         </Center>
@@ -1134,80 +1161,81 @@ export default function Nav() {
                 <Flex alignItems="center" position="relative">
                   {/* Search Icon */}
                   <Box display="flex" alignItems="center" justifyContent="flex-end">
-  {/* Search Icon */}
-  <FaSearch color="gray" onClick={toggleSearch} />
+                    {/* Search Icon */}
+                    <FaSearch color="gray" onClick={toggleSearch} />
 
-  {/* Search Input Field */}
-  {isSearchOpen && (
-    <Box
-      position="relative"
-      mr={2} // Adjust margin as needed
-      mt={3}
-    >
-      <Box
-        position="absolute"
-        top={0}
-        right={0} // Align to the right
-        zIndex={10}
-        bg={colorMode === "light" ? "white" : "gray.800"}
-        boxShadow="lg"
-        borderRadius={20}
-        width="200px" // Adjust width as needed
-      >
-        <Input
-          type="text"
-          placeholder="Search Facebook"
-          borderRadius={20}
-          value={searchTerm}
-          onChange={handleSearchChange}
-          position="absolute"
-        />
-      </Box>
-    </Box>
-  )}
+                    {/* Search Input Field */}
+                    {isSearchOpen && (
+                      <Box
+                        position="relative"
+                        mr={2} 
+                        mt={3}
+                      >
+                        <Box
+                          position="absolute"
+                          top={0}
+                          right={0} // Align to the right
+                          zIndex={10}
+                          bg={colorMode === "light" ? "white" : "gray.800"}
+                          boxShadow="lg"
+                          borderRadius={20}
+                          width="200px" // Adjust width as needed
+                        >
+                          <Input
+                            type="text"
+                            placeholder="Search Facebook"
+                            borderRadius={20}
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            position="absolute"
+                          />
+                        </Box>
+                      </Box>
+                    )}
 
-  {/* Search Results */}
-  {searchTerm && (
-    <Box
-      position="relative"
-      mr={2} // Adjust margin as needed
-      mt={20}
-    >
-      <Box
-        position="absolute"
-        top={0}
-        right={0} // Align to the right
-        zIndex={10}
-        bg={colorMode === "light" ? "white" : "gray.800"}
-        boxShadow="lg"
-        borderRadius="md"
-        width="200px" // Adjust width as needed
-      >
-        {searching ? (
-          <Stack spacing={2} p={2}>
-            <Skeleton height='20px' />
-            <Skeleton height='20px' />
-            <Skeleton height='20px' />
-          </Stack>
-        ) : searchResults.length === 0 ? (
-          <Text>No results found</Text>
-        ) : (
-          searchResults.map((result, index) => (
-            <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
-              <Box p={3} borderBottomWidth="1px">
-                <Text>{result.displayName}</Text>
-              </Box>
-            </Link>
-          ))
-        )}
-      </Box>
-    </Box>
-  )}
-</Box>
+                    {/* Search Results */}
+                    {searchTerm && (
+                      <Box
+                        position="relative"
+                        mr={2} // Adjust margin as needed
+                        mt={20}
+                      >
+                        <Box
+                          position="absolute"
+                          top={0}
+                          right={0} // Align to the right
+                          zIndex={10}
+                          bg={colorMode === "light" ? "white" : "gray.800"}
+                          boxShadow="lg"
+                          borderRadius="md"
+                          width="200px" // Adjust width as needed
+                        >
+                          {searching ? (
+                            <Stack spacing={2} p={2}>
+                              <Skeleton height='20px' />
+                              <Skeleton height='20px' />
+                              <Skeleton height='20px' />
+                            </Stack>
+                          ) : searchResults.length === 0 ? (
+                            <Text>No results found</Text>
+                          ) : (
+                            searchResults.map((result, index) => (
+                              <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch}>
+
+                              <Box p={3} borderBottomWidth="1px">
+                                <Text>{result.displayName}</Text>
+                              </Box>
+                            </Link>
+                            ))
+                          )}
+                        </Box>
+                      </Box>
+                    )}
+                  </Box>
 
                   {/* </Flex> */}
 
-                  <Menu
+                  {/* <Menu
                     placement="left-start"  >
                     <MenuButton
                       as={IconButton}
@@ -1310,7 +1338,7 @@ export default function Nav() {
                         </MenuItem>
                       </MenuList>
                     </Flex>
-                  </Menu>
+                  </Menu> */}
                 </Flex>
               </Flex>
             </Box>
@@ -1387,7 +1415,7 @@ export default function Nav() {
                         <Avatar size="sm" src={user?.photoURL as string} />
                       </Center>
                       <Center p={2}>
-                        <Link to={`/profile/${user?.uid}`}>
+                      <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
                           <p>{user?.displayName}</p>
                         </Link>
                       </Center>

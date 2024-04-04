@@ -37,7 +37,8 @@ const AllRoutes = () => {
         </Route>
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/:username/:uid" element={<Profile />} />
+        {/* <Route path="/:username/:uid" element={<Profile />} /> */}
+        <Route path="/profile/:displayName/:uid" element={<Profile />} />
       </Routes>
     </div>
   );

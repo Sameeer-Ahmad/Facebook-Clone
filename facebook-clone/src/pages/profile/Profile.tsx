@@ -21,7 +21,7 @@ import {
 import { Feed } from "../../components/MiddleFeedParts/FeedSections/Feed";
 
 import { getAuth } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Timestamp, collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import PostPage from "../../components/MiddleFeedParts/PostPage";
@@ -43,6 +43,7 @@ interface Postl {
   // postUserId: string;
 }
 export default function Profile() {
+  const { displayName } = useParams();
   const cardDataArray: { imageSrc: string }[] = [
     {
       imageSrc:
@@ -123,7 +124,7 @@ export default function Profile() {
                 border: "2px solid white",
               }}
             /> 
-            <Text fontWeight={"bold"} fontSize={"2xl"} mt={32}>{user?.displayName}</Text>
+            <Text fontWeight={"bold"} fontSize={"2xl"} mt={32}>{displayName}</Text>
           </Flex>
         </Box>
       </Center>
