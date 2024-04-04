@@ -85,19 +85,26 @@ List and provide a brief overview of the technologies used in the project.
 
 ## Screensort
 ## Login Page
-<img src="">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/login.JPG">
 
 ## Homepage
-<img src="">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/Homepage.JPG">
 
 ## Friends Page
-<img src="">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/friends.JPG">
 
 ## Watch Video page
-<img src="">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/videopage.JPG">
 
 ## Marcketplace Page
-<img src="">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/marcketpage.JPG">
+
+## Profile Page
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/profilepage.JPG">
+
+## Dark Mode
+
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/darkmode.JPG">
 
 
 
