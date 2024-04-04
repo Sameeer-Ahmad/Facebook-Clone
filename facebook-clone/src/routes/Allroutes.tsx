@@ -38,10 +38,7 @@ const AllRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/:username/:uid" element={<Profile />} />
       </Routes>
-      
     </div>
-
   );
 };
-
 export default AllRoutes;

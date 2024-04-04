@@ -14,23 +14,15 @@ import Courses from "../Images/12.png";
 import Fund from "../Images/13.png";
 import { getAuth } from "firebase/auth";
 
-
-
 const Sidebar = () => {
   const auth = getAuth();
-
-
   const user = auth.currentUser;
- 
   return (
     <div className="leftBar">
       <div className="container">
         <div className="menu">
           <div className="user">
-            <img
-              src={user?.photoURL as any}
-              alt=""
-            />
+            <img src={user?.photoURL as any} alt="" />
             <span>{user?.displayName}</span>
           </div>
           <div className="item">
