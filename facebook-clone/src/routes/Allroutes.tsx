@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { app } from "../firebase";
 
+
 const AllRoutes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
