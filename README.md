@@ -73,6 +73,7 @@ If your application relies on external APIs, document them and include any neces
 In case of Backend Applications provide a list of your API endpoints, methods, brief descriptions, and examples of request/response.
 N/A
 
+
 ## Technology Stack
 List and provide a brief overview of the technologies used in the project.
 
@@ -80,3 +81,43 @@ List and provide a brief overview of the technologies used in the project.
 - TypeScript
 - Firebase (Authentication, Realtime Database)
 - Chakra UI
+
+
+## Screensort
+## Login Page
+<img src="">
+
+## Homepage
+<img src="">
+
+## Friends Page
+<img src="">
+
+## Watch Video page
+<img src="">
+
+## Marcketplace Page
+<img src="">
+
+
+
+
+## Team Members
+The project was developed collaboratively by the following 5 team members:
+
++ **Sameer** (Team Lead) - 
+   <a href="">LinkedIn</a>
+     <a href="">Github</a>
++ **Gulshaba** - 
+  <a href="">LinkedIn</a>
+     <a href="">Github</a>
++ **Sujeet** - 
+    <a href="">LinkedIn</a>
+     <a href="">Github</a>
++ **Sachin** - fw28_183
+  <a href="/">LinkedIn</a>
+     <a href="">Github</a>
++ **Rohan Kumar Sethi** - fw28_214
+   <a href="">LinkedIn</a>
+     <a href="">Github</a>
+
