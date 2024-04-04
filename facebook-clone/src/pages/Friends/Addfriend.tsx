@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
-import Sidebar from '../../components/Sidebar';
-import Nav from '../../components/Navbar';
+
 
 interface CardProps {
   imageSrc: string;
@@ -99,9 +98,9 @@ const AddFriends: React.FC = () => {
 
   return (
     <>
-    <Nav />
+    
     <Flex>
-    <Sidebar/>
+    
     <Flex flexWrap="wrap" justifyContent="center">
       {cardDataArray.map((card, index) => (
         <Card
