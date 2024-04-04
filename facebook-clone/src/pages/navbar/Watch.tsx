@@ -86,79 +86,59 @@ const videos = [
       video: "https://www.youtube.com/embed/fjHtjT7GO1c?si=T_5_4y_3YClQBQo0",
     },
   ];
-const Watch = () => {
-    const [likes,setLikes]=useState<number>(0);
-    const [comments,setComments]=useState<string>("");
-    const [commentsCount,setCommentsCount]=useState<number>(0);
- 
-
-  return (
-    <>
-      <Flex >
+  const Watch = () => {
+    
+  
+    return (
+      <Flex  mt={4} >
         <WatchSidebar />
-        <Center width={"100%"} >
-          <Box   flexBasis={"100%"}  display={"flex"}  flexDir={"column"} justifyContent={"center"} alignItems={"center"}  >
+        <Center width={"100%"}  flex="1">
+          <Flex
+            flexDir="column"
+            alignItems="center"
+            maxW="800px"
+            width="100%"
+          >
             {videos.map((el) => (
-              <Card width={"800px"}  maxW="xl" key={el.id} m={4} >
+              <Card key={el.id} mb={4} width="100%">
                 <CardHeader>
-                  <Flex>
-                    <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                      <Avatar
-                        // name="Segun Adebayo"
-                        src="https://bit.ly/sage-adebayo"
+                  <Flex alignItems="center">
+                    <Avatar src="https://bit.ly/sage-adebayo" />
+                    <Box ml={2}>
+                      <Heading size="sm">{el.userName}</Heading>
+                    </Box>
+                    <Box flex="1" textAlign="right">
+                      <IconButton
+                        variant="ghost"
+                        colorScheme="gray"
+                        aria-label="See menu"
+                        icon={<BsThreeDotsVertical />}
                       />
-
-                      <Box>
-                        <Heading size="sm">{el.userName}</Heading>
-                        {/* <Text>{}</Text> */}
-                      </Box>
-                    </Flex>
-                    <IconButton
-                      variant="ghost"
-                      colorScheme="gray"
-                      aria-label="See menu"
-                      icon={<BsThreeDotsVertical />}
-                    />
+                    </Box>
                   </Flex>
                 </CardHeader>
                 <CardBody>
                   <Text>{el.title}</Text>
                 </CardBody>
-
-                <AspectRatio maxW="560px" ratio={1}>
+                <AspectRatio ratio={16 / 9}>
                   <iframe
-                    width="560"
-                    height="315"
                     src={el.video}
                     title="YouTube video player"
+                    width="100%"
+                    height="100%"
                   ></iframe>
                 </AspectRatio>
-
-                <CardFooter
-                  justify="space-between"
-                  flexWrap="wrap"
-                  sx={{
-                    "& > button": {
-                      minW: "136px",
-                    },
-                  }}
-                >
-                  <Button flex="1" variant="ghost" leftIcon={<BiLike />}>
-                    Like
-                  </Button>
-                  <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
-                    Comment
-                  </Button>
-                  <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
-                    Share
-                  </Button>
+                <CardFooter justify="space-between">
+                  <Button leftIcon={<BiLike />}>Like</Button>
+                  <Button leftIcon={<BiChat />}>Comment</Button>
+                  <Button leftIcon={<BiShare />}>Share</Button>
                 </CardFooter>
               </Card>
             ))}
-          </Box>
+          </Flex>
         </Center>
       </Flex>
-    </>
-  );
-};
-export default Watch;
+    );
+  };
+  
+  export default Watch;
