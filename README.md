@@ -117,7 +117,7 @@ The project was developed collaboratively by the following 5 team members:
 + **Sachin** - fw28_183
   <a href="/">LinkedIn</a>
      <a href="">Github</a>
-+ **Rohan Kumar Sethi** - fw28_214
++ **Rohan** - fw28_214
    <a href="">LinkedIn</a>
      <a href="">Github</a>
 
