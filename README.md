@@ -128,6 +128,6 @@ The project was developed collaboratively by the following 5 team members:
   <a href="/">LinkedIn</a>
      <a href="">Github</a>
 + **Rohan** - fw28_214
-   <a href="">LinkedIn</a>
-     <a href="">Github</a>
+   <a href="https://www.linkedin.com/in/rohansethi347">LinkedIn</a>
+     <a href="https://github.com/ROHANKUMAR347">Github</a>
 
