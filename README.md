@@ -61,7 +61,7 @@ User authentication using Firebase Auth
 ## Profile Page
 - The application offers a personalized My Profile page where users can view their Profile and view their activity.
 
-<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/profilePage.JPG">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/profilepage.JPG">
 
 ## Design Decisions or Assumptions
 - Employed Firebase Authentication for secure user login and authentication processes, ensuring user data confidentiality and authentication integrity.
