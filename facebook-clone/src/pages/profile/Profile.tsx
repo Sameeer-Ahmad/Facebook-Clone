@@ -121,31 +121,39 @@ export default function Profile() {
             <Avatar
               h={"200px"}
               w={"200px"}
-              src={ user?.photoURL as any}
+              src={user?.photoURL as any}
               css={{
                 border: "2px solid white",
               }}
-            /> 
+            />
 
             <Stack ml={2}>
-            <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>{displayName}</Text>
-            <Text fontWeight={"700"}>378 friends</Text>
-            <Flex>{cardDataArray.map((el)=>(
-              <Box marginBottom={4}>
-              <Image width={"30px"} height={"30px"} borderRadius={"50%"}  src={el.imageSrc}/>
-              </Box>
-            ))}</Flex>
+              <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>
+                {displayName}
+              </Text>
+              <Text fontWeight={"700"}>378 friends</Text>
+              <Flex>
+                {cardDataArray.map((el) => (
+                  <Box marginBottom={4}>
+                    <Image
+                      width={"30px"}
+                      height={"30px"}
+                      borderRadius={"50%"}
+                      src={el.imageSrc}
+                    />
+                  </Box>
+                ))}
+              </Flex>
             </Stack>
           </Flex>
-          <Divider border={"1px solid #d1d5da"} marginTop={3}/>
-          <Flex p={2} marginLeft={["0","110px"]}>
+          <Divider border={"1px solid #d1d5da"} marginTop={3} />
+          <Flex p={2} marginLeft={["0", "110px"]}>
             <Button>Posts</Button>
             <Button>About</Button>
             <Button>Friends</Button>
             <Button>Photos</Button>
             <Button>Videos</Button>
             <Button>Reels</Button>
-
           </Flex>
         </Box>
       </Center>
@@ -160,19 +168,20 @@ export default function Profile() {
           direction="column"
         >
           <SimpleGrid spacing={4} mt={4}>
-          <Card>
-  <CardBody>
-    <Flex  alignItems={"center"}>
-      
-    <MdPrivacyTip />
-   
-      <Box marginLeft={4}>
-    <Text fontWeight={"700"}>You've locked your profile</Text>
-    <Text fontWeight={"700"} color={"#0866ff"}>Learn more</Text>
-    </Box>
-    </Flex>
-  </CardBody>
-</Card>
+            <Card>
+              <CardBody>
+                <Flex alignItems={"center"}>
+                  <MdPrivacyTip />
+
+                  <Box marginLeft={4}>
+                    <Text fontWeight={"700"}>You've locked your profile</Text>
+                    <Text fontWeight={"700"} color={"#0866ff"}>
+                      Learn more
+                    </Text>
+                  </Box>
+                </Flex>
+              </CardBody>
+            </Card>
             <Card>
               <CardHeader>
                 <Heading size="md"> Intro</Heading>

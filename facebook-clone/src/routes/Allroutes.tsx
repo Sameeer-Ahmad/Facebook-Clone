@@ -11,18 +11,28 @@ import Nav from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { app } from "../firebase";
+import { Center, Spinner } from "@chakra-ui/react";
 
 const AllRoutes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
+
   useEffect(() => {
     const auth = getAuth(app);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setIsLoggedIn(!!user);
+      setIsLoading(false); // Set loading to false once authentication state is determined
     });
     return () => unsubscribe();
   }, []);
-  const shouldRenderNav = isLoggedIn && location.pathname !== "/login";
+
+  if (isLoading) {
+    return<Center></Center>
+  }
+
+  const shouldRenderNav = isLoggedIn && location.pathname !== "/login" && location.pathname !== "/signup";
+
   return (
     <div>
       {shouldRenderNav && <Nav />}
@@ -35,6 +45,7 @@ const AllRoutes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile/:displayName/:uid" element={<Profile />} />
+        {!isLoggedIn && <Route path="*" element={<Navigate to="/login" />} />}
       </Routes>
     </div>
   );
