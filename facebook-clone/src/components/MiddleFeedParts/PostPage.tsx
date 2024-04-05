@@ -38,6 +38,8 @@ import { AiFillLike } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 const auth = getAuth();
 const user = auth.currentUser;
+
+
 interface Post {
   postId: string | any;
   user: User | null;
@@ -65,7 +67,8 @@ export const PostPage: FC<Post> = ({
   const [likes, setLikes] = useState<Like[]>([]);
   const [liked, setLiked] = useState<boolean>(false);
   const [posts, setPosts] = useState<Post[]>([]);
-
+const auth=getAuth();
+const userimage=auth.currentUser?.photoURL
   const handleDelete = async () => {
     try {
       await deleteDoc(doc(db, "posts", postId));
@@ -183,6 +186,15 @@ export const PostPage: FC<Post> = ({
   useEffect(() => {
     setLiked(likes.some((like) => like.id === user?.uid));
   }, [likes, user?.uid]);
+  console.log("user:", user);
+console.log("postUserId:", postUserId);
+// console.log("userId:", userId);
+console.log("user?.uid:", user?.uid);
+console.log(postId);
+
+console.log(userimage);
+
+
   return (
     <>
       <Center>
@@ -196,7 +208,8 @@ export const PostPage: FC<Post> = ({
           <CardHeader>
             <Flex justify={"space-between"}>
               <Flex gap={"18px"}>
-                <Avatar src={user?.photoURL || ""} />
+              <Avatar src={user && user.uid !== postUserId ? "https://cdn-icons-png.flaticon.com/512/3135/3135715.png": auth.currentUser?.photoURL as any} />
+
                 <Flex flexDir={"column"}>
                   <Heading mt={"10px"} fontWeight={"600"} size="sm">
                     {username}
@@ -291,7 +304,8 @@ export const PostPage: FC<Post> = ({
               <>
                 <Box as="form" onSubmit={handleSubmit}>
                   <Flex mb={"5px"} mt={"5px"} gap={"10px"}>
-                    <Avatar src={user?.photoURL as any} />
+                  <Avatar src={auth.currentUser?.photoURL  as any} />
+
                     <Input
                       type="text"
                       placeholder="Add a comment..."

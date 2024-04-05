@@ -15,10 +15,16 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { app, db } from "../firebase";
+import { app, db, storage } from "../firebase";
 import { FC, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+} from "firebase/storage";
 
 const Days: number[] = [];
 for (let day = 1; day <= 31; day++) {
@@ -59,6 +65,7 @@ const Signup: FC = () => {
     year: string;
   }>({ day: "", month: "", year: "" });
   const [gender, setGender] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [signupSuccess, setSignupSuccess] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
@@ -91,8 +98,6 @@ const Signup: FC = () => {
     }
   };
 
-  // ----------------------------------------------------------------
-
   const handleonChangeBirthday = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setBirthday((prevBirthday) => ({
@@ -104,53 +109,71 @@ const Signup: FC = () => {
   const handleOnChangeGender = (value: string) => {
     setGender(value);
   };
-  interface UserData {
-    displayName: string;
-    email: string;
-    birthday: { day: string; month: string; year: string };
-    gender: string;
-  }
 
-  const handleSubmitSignupUser = (e: React.FormEvent) => {
-    e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((res) => {
-        if (auth.currentUser) {
-          updateProfile(auth.currentUser, {
-            displayName: firstName + " " + lastName,
-            photoURL: "https://i.stack.imgur.com/l60Hf.png",
-          })
-            .then((s) => {
-              setDoc(doc(db, "users", res.user.uid), {
-                uid: res.user.uid,
-                displayName: res.user.displayName,
-                email: res.user.email,
-                photoURL: "https://i.stack.imgur.com/l60Hf.png",
-                birthday,
-                gender,
-                bio: "",
-              });
-            })
-            .then(() => {
-              navigate("/login");
-
-              toast({
-                title: "Account created.",
-                description: "We've created your account for you.",
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-              });
-            })
-            .catch((error) => {
-              console.error("Error updating profile: ", error);
-            });
-        }
-      })
-      .catch((error) => {
-        console.error("Error signing up: ", error);
-      });
+  const handleOnChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFile(e.target.files[0]);
+    }
   };
+  // const user=auth.currentUser
+
+  const handleSubmitSignupUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+
+      const storageRef = ref(storage, `${res.user?.uid}`);
+
+      const uploadTask = uploadBytesResumable(storageRef, selectedFile!);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Get the progress percentage
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+          // Update your progress bar or display the progress
+        },
+        (error: any) => {
+          console.log(error);
+        },
+        async () => {
+          const downloadURL: string = await getDownloadURL(
+            uploadTask.snapshot.ref
+          );
+
+          if (res.user) {
+            await updateProfile(res.user, {
+              displayName: firstName + " " + lastName,
+              photoURL: downloadURL,
+            });
+            await setDoc(doc(db, "users", res.user.uid), {
+              uid: res.user.uid,
+              displayName: firstName + " " + lastName,
+              email,
+              photoURL: downloadURL,
+              birthday,
+              gender,
+              bio: "",
+            });
+            navigate("/login");
+          } else {
+            console.log("current user is null");
+          }
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(selectedFile);
+  console.log("user", auth.currentUser);
+
+  console.log("photourl", auth.currentUser?.photoURL);
+
   return (
     <Box
       display={"flex"}
@@ -171,15 +194,27 @@ const Signup: FC = () => {
         w={["90%", "80%", "70%", "60%", "35%"]}
         bg={"white"}
       >
-        <Box mt={-4}>
-          <Text fontSize={"32px"} fontWeight={"600"}>
-            Sign Up
-          </Text>
-          <Text fontSize={"15px"} fontWeight={"400"} mb={2}>
-            It's quick and easy.
-          </Text>
+        <Box display={"flex"} justifyContent={"space-between"} flexDirection={"column"} mt={-4}>
+          <Box>
+            <Text fontSize={"32px"} fontWeight={"600"}>
+              Sign Up
+            </Text>
+            <Text fontSize={"15px"} fontWeight={"400"} mb={2}>
+              It's quick and easy.
+            </Text>
+          </Box> <hr />
+          <Box display={"flex"}dir="column">
+            <Input
+              size={"sm"}
+              type="file"
+              border={"none"}
+              accept="image/*"
+              onChange={handleOnChangeFile}
+              ml={-3} mt={4}
+            />
+          </Box>
         </Box>
-        <hr />
+       
         {signupSuccess ? (
           <Box>
             <Text fontSize="16px" fontWeight="600" textAlign="center" mb="4">

@@ -121,15 +121,16 @@ export default function Profile() {
             <Avatar
               h={"200px"}
               w={"200px"}
-              src={"https://i.stack.imgur.com/l60Hf.png"}
+              src={ user?.photoURL as any}
               css={{
                 border: "2px solid white",
               }}
             /> 
 
-            <Stack>
+            <Stack ml={2}>
             <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>{displayName}</Text>
-            <Text fontWeight={"700"}>100 friends</Text>
+            <Text fontWeight={"700"}>378 friends</Text>
+
             <Flex>{cardDataArray.map((el)=>(
               <Box marginBottom={4}>
               <Image width={"30px"} height={"30px"} borderRadius={"50%"}  src={el.imageSrc}/>
@@ -145,8 +146,6 @@ export default function Profile() {
             <Button>Photos</Button>
             <Button>Videos</Button>
             <Button>Reels</Button>
-
-            <Text fontWeight={"bold"} fontSize={"2xl"} mt={32}>{displayName}</Text>
 
           </Flex>
         </Box>
