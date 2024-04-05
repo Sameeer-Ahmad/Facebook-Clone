@@ -102,17 +102,17 @@ Application Overview
 The project was developed collaboratively by the following 5 team members:
 
 + **Sameer** (Team Lead) - 
-   <a href="">LinkedIn</a>
-     <a href="">Github</a>
+   <a href="https://www.linkedin.com/in/sameer-ahmad-aa985428b/">LinkedIn</a>
+     <a href="https://github.com/Sameeer-Ahmad">Github</a>
 + **Gulshaba** - 
-  <a href="">LinkedIn</a>
-     <a href="">Github</a>
+  <a href="https://www.linkedin.com/in/gulshaba-parveen/">LinkedIn</a>
+     <a href="https://github.com/Gulshaba-Parveen">Github</a>
 + **Sujeet** - 
-    <a href="">LinkedIn</a>
-     <a href="">Github</a>
+    <a href="https://www.linkedin.com/in/sujeet-kumar-2b4750195">LinkedIn</a>
+     <a href="https://github.com/suj01">Github</a>
 + **Sachin** - 
-  <a href="/">LinkedIn</a>
-     <a href="">Github</a>
+  <a href="https://www.linkedin.com/in/sachin-kumanache/">LinkedIn</a>
+     <a href="https://github.com/sachinkumanache">Github</a>
 + **Rohan** - fw28_214
    <a href="https://www.linkedin.com/in/rohansethi347">LinkedIn</a>
      <a href="https://github.com/ROHANKUMAR347">Github</a>
