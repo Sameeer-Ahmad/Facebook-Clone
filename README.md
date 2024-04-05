@@ -20,7 +20,7 @@ User authentication using Firebase Auth
 ## Sign Up Page
 - The application offers a sign-up page where users can create new accounts quickly and securely. Users can register by providing basic information such as email, username, and password , Date of Birth , gender. The sign-up process is intuitive and user-friendly, encouraging seamless onboarding for new users.
 
-<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/SignUp.jpg">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/SignUp.JPG">
 
 ## Login Page
 - The application provides a login page for existing users to securely access their accounts. Users can log in using their registered email address and password. The login page ensures a streamlined authentication process, allowing users to quickly access their personalized content and features .
@@ -45,12 +45,12 @@ User authentication using Firebase Auth
 ## Friends
 - The application incorporates a dedicated static friend page where users can manage their connections easily. 
 
-<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/friends.jpg">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/friends.JPG">
 
 ##  Watch page
 - The application introduces a Watch page where users can discover and enjoy a curated selection of videos .
 
-<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/videopage.jpg">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/videopage.JPG">
 
 ## Marcketplace Page
 - The application introduces a dynamic Market page enriched with pagination, sorting, and filtering functionalities for enhanced user experience. Users can conveniently browse through products, organize listings based on their preferences, and efficiently find desired items within the marketplace.
@@ -61,7 +61,7 @@ User authentication using Firebase Auth
 ## Profile Page
 - The application offers a personalized My Profile page where users can view their Profile and view their activity.
 
-<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/profilePage.jpg">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/profilePage.JPG">
 
 ## Design Decisions or Assumptions
 - Employed Firebase Authentication for secure user login and authentication processes, ensuring user data confidentiality and authentication integrity.
