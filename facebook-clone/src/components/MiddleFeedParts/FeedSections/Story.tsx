@@ -4,7 +4,9 @@ import { StoryCards } from "./StoryCards";
 import { getAuth } from "@firebase/auth";
 const auth = getAuth();
 const user = auth.currentUser;
+
 export const Story = () => {
+
   return (
     <>
       <Center>
@@ -17,9 +19,11 @@ export const Story = () => {
             height={["180px", "220px"]}
             margin={3}
             borderRadius={"10px"}
+            // border={"1px solid gray"}
           >
+           
             <Image
-              src={user?.photoURL as any}
+              src="https://i.stack.imgur.com/l60Hf.png"
               borderRadius={"10px 10px 0 0"}
               objectFit={"cover"}
               width="100%"
