@@ -18,12 +18,12 @@ https://drive.google.com/file/d/10m9FuOXFxnzcP-IixjFR0B8Mn5E0tqU7/view?usp=shari
 ## Features
 User authentication using Firebase Auth
 ## Sign Up Page
--The application offers a sign-up page where users can create new accounts quickly and securely. Users can register by providing basic information such as email, username, and password , Date of Birth , gender. The sign-up process is intuitive and user-friendly, encouraging seamless onboarding for new users.
+- The application offers a sign-up page where users can create new accounts quickly and securely. Users can register by providing basic information such as email, username, and password , Date of Birth , gender. The sign-up process is intuitive and user-friendly, encouraging seamless onboarding for new users.
 
-<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/SignUp.jpg">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/SignUp.JPG">
 
 ## Login Page
--The application provides a login page for existing users to securely access their accounts. Users can log in using their registered email address and password. The login page ensures a streamlined authentication process, allowing users to quickly access their personalized content and features .
+- The application provides a login page for existing users to securely access their accounts. Users can log in using their registered email address and password. The login page ensures a streamlined authentication process, allowing users to quickly access their personalized content and features .
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/login.JPG">
 
@@ -48,32 +48,32 @@ User authentication using Firebase Auth
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/friends.JPG">
 
 ##  Watch page
--The application introduces a Watch page where users can discover and enjoy a curated selection of videos .
+- The application introduces a Watch page where users can discover and enjoy a curated selection of videos .
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/videopage.JPG">
 
 ## Marcketplace Page
--The application introduces a dynamic Market page enriched with pagination, sorting, and filtering functionalities for enhanced user experience. Users can conveniently browse through products, organize listings based on their preferences, and efficiently find desired items within the marketplace.
+- The application introduces a dynamic Market page enriched with pagination, sorting, and filtering functionalities for enhanced user experience. Users can conveniently browse through products, organize listings based on their preferences, and efficiently find desired items within the marketplace.
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/marcketpage.JPG">
 
 
 ## Profile Page
--The application offers a personalized My Profile page where users can view their Profile and view their activity.
+- The application offers a personalized My Profile page where users can view their Profile and view their activity.
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/profilepage.JPG">
 
 
 ## Dark Mode
--The application now offers a Dark Mode feature, providing users with the option to switch the entire interface to a darker color scheme for improved visibility in low-light environments. Users can toggle Dark Mode on or off according to their preference.
+- The application now offers a Dark Mode feature, providing users with the option to switch the entire interface to a darker color scheme for improved visibility in low-light environments. Users can toggle Dark Mode on or off according to their preference.
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/darkmode.JPG">
 
 ## Design Decisions or Assumptions
--Employed Firebase Authentication for secure user login and authentication processes, ensuring user data confidentiality and authentication integrity.
--Utilized Git version control for efficient collaboration among team members, enabling seamless code management, version tracking, and code review processes.
--Chose Chakra UI for its comprehensive and customizable component library, facilitating rapid development and consistent UI styling across the application.
--Implemented responsive design principles to ensure the application's adaptability across various devices and screen sizes, enhancing accessibility and user experience for a diverse audience.
+- Employed Firebase Authentication for secure user login and authentication processes, ensuring user data confidentiality and authentication integrity.
+- Utilized Git version control for efficient collaboration among team members, enabling seamless code management, version tracking, and code review processes.
+- Chose Chakra UI for its comprehensive and customizable component library, facilitating rapid development and consistent UI styling across the application.
+- Implemented responsive design principles to ensure the application's adaptability across various devices and screen sizes, enhancing accessibility and user experience for a diverse audience.
 
 ## Installation & Getting started
 Detailed instructions on how to install, configure, and get the project running. For BE/FS projects, guide the reviewer on how to check the Firebase configuration.
