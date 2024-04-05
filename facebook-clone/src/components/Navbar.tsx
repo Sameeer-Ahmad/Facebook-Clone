@@ -111,6 +111,7 @@ interface SearchResult {
   username: string;
   uid: string;
   displayName: string;
+  imageUrl: string;
 }
 interface Notification {
   id: string;
@@ -248,7 +249,8 @@ export default function Nav() {
           if (userData.displayName?.toLowerCase().includes(searchTerm.toLowerCase())) {
             const userId = doc.id;
             const username = await getUserUsername(userId);
-            results.push({ uid: doc.id, displayName: userData.displayName, username: username });
+            const imageUrl = userData.photoURL;
+            results.push({ uid: doc.id, displayName: userData.displayName, username: username, imageUrl: imageUrl });
             console.log(results);
           }
         }));
@@ -484,9 +486,13 @@ export default function Nav() {
                           searchResults.map((result, index) => (
                             <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch}>
 
-                              <Box p={3} borderBottomWidth="1px">
+                              {/* <Box p={3} borderBottomWidth="1px">
                                 <Text>{result.displayName}</Text>
-                              </Box>
+                              </Box> */}
+                              <Flex align="center" p={3} borderBottomWidth="1px" color="gray">
+                                <Avatar src={result.imageUrl} mr={3} />
+                                <Text>{result.displayName}</Text>
+                              </Flex>
                             </Link>
                           ))
                         )}
@@ -527,8 +533,19 @@ export default function Nav() {
                         searchResults.map((result, index) => (
 
                           <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch} color="gray">
-                            <Box p={3} borderBottomWidth="1px" color="gray">
+                            {/* <Box p={3} borderBottomWidth="1px" color="gray">
                               <Text>{result.displayName}</Text>
+                            </Box> */}
+                            <Box
+                              _hover={{ bg: "gray.200" }}
+                              p={3}
+                              borderBottomWidth="1px"
+                              color="gray"
+                            >
+                              <Flex align="center">
+                                <Avatar src={result.imageUrl} mr={3} />
+                                <Text>{result.displayName}</Text>
+                              </Flex>
                             </Box>
                           </Link>
                         ))
@@ -670,9 +687,7 @@ export default function Nav() {
                       </Center>
                       <br />
                       <MenuDivider />
-                      <MenuItem>Your Servers</MenuItem>
-                      <MenuItem>Account Settings</MenuItem>
-                      <MenuItem>Logout</MenuItem>
+                      <MenuItem>No Chats yet</MenuItem>
                     </MenuList>
                   </Menu>
 
@@ -853,6 +868,8 @@ export default function Nav() {
                         boxShadow="lg"
                         borderRadius="md"
                         width="200px" // Adjust width as needed
+                        overflowY="auto"
+                        maxHeight="300px"
                       >
                         {searching ? (
                           <Stack spacing={2} p={2}>
@@ -865,11 +882,18 @@ export default function Nav() {
                         ) : (
                           searchResults.map((result, index) => (
                             <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch}>
-
-                            <Box p={3} borderBottomWidth="1px">
-                              <Text>{result.displayName}</Text>
-                            </Box>
-                          </Link>
+                              <Box
+                                _hover={{ bg: "gray.200" }} 
+                                p={3}
+                                borderBottomWidth="1px"
+                                color="gray"
+                              >
+                                <Flex align="center">
+                                  <Avatar src={result.imageUrl} mr={3} />
+                                  <Text>{result.displayName}</Text>
+                                </Flex>
+                              </Box>
+                            </Link>
                           ))
                         )}
                       </Box>
@@ -1081,7 +1105,7 @@ export default function Nav() {
                           <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                        <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
+                          <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
                             <p>{user?.displayName}</p>
                           </Link>
                         </Center>
@@ -1168,7 +1192,7 @@ export default function Nav() {
                     {isSearchOpen && (
                       <Box
                         position="relative"
-                        mr={2} 
+                        mr={2}
                         mt={3}
                       >
                         <Box
@@ -1209,6 +1233,8 @@ export default function Nav() {
                           boxShadow="lg"
                           borderRadius="md"
                           width="200px" // Adjust width as needed
+                          overflowY="auto"
+                          maxHeight="300px"
                         >
                           {searching ? (
                             <Stack spacing={2} p={2}>
@@ -1222,10 +1248,11 @@ export default function Nav() {
                             searchResults.map((result, index) => (
                               <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch}>
 
-                              <Box p={3} borderBottomWidth="1px">
-                                <Text>{result.displayName}</Text>
-                              </Box>
-                            </Link>
+                                <Flex align="center" p={3} borderBottomWidth="1px" color="gray">
+                                  <Avatar src={result.imageUrl} mr={3} />
+                                  <Text>{result.displayName}</Text>
+                                </Flex>
+                              </Link>
                             ))
                           )}
                         </Box>
@@ -1415,7 +1442,7 @@ export default function Nav() {
                         <Avatar size="sm" src={user?.photoURL as string} />
                       </Center>
                       <Center p={2}>
-                      <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
+                        <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
                           <p>{user?.displayName}</p>
                         </Link>
                       </Center>
