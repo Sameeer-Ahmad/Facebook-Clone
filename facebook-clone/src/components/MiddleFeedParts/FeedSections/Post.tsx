@@ -3,7 +3,7 @@ import { Flex } from "@chakra-ui/react";
 import { Feed } from "./Feed";
 import { PostPage } from "../PostPage";
 import { Story } from "./Story";
-import { useNavigate } from "react-router-dom";
+
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { db } from "../../../firebase";
@@ -16,11 +16,13 @@ interface Post {
   id: string;
   caption: string;
   imageUrl: string;
+  
   likes: number;
   postUserId: string;
   userName: string;
   timestamp: Timestamp;
   uid: string;
+  
 }
 
 export const Post = () => {
@@ -59,6 +61,7 @@ export const Post = () => {
                 postId={post.id}
                 user={user}
                 username={post.userName}
+                // photoURL={post.photoURL}
                 caption={post.caption}
                 imageURL={post.imageUrl}
                 noOfLikes={post.likes}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
-import Nav from '../../components/Navbar';
+
 
 
 interface CardProps {

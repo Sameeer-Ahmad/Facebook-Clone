@@ -2,9 +2,11 @@ import { SmallAddIcon } from "@chakra-ui/icons";
 import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
 import { StoryCards } from "./StoryCards";
 import { getAuth } from "@firebase/auth";
-const auth = getAuth();
-const user = auth.currentUser;
+
 export const Story = () => {
+  const auth = getAuth();
+const user = auth.currentUser;
+
   return (
     <>
       <Center>
@@ -18,14 +20,15 @@ export const Story = () => {
             margin={3}
             borderRadius={"10px"}
           >
+
             <Image
-              src={user?.photoURL as any}
+            key={user?.photoURL} 
+              src={user?.photoURL as any } 
               borderRadius={"10px 10px 0 0"}
               objectFit={"cover"}
               width="100%"
               height="70%"
             />
-
             <SmallAddIcon
               fontSize={["16px", "20px", "24px"]}
               borderRadius={"50%"}
