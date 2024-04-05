@@ -169,10 +169,10 @@ const Signup: FC = () => {
     }
   };
 
-  console.log(selectedFile);
-  console.log("user", auth.currentUser);
+  // console.log(selectedFile);
+  // console.log("user", auth.currentUser);
 
-  console.log("photourl", auth.currentUser?.photoURL);
+  // console.log("photourl", auth.currentUser?.photoURL);
 
   return (
     <Box
