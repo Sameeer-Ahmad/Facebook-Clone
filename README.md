@@ -7,9 +7,9 @@ The Facebook Clone project is a recreation of the popular social media platform,
 Fullstack
 
 ## Deployed App
-Frontend: https://facebook-clone-frontend.firebaseapp.com/
-Backend:Firebase used for backend services
-Database: Firebase Realtime Database
+- Frontend: https://facebook-clone-frontend.firebaseapp.com/
+- Backend:Firebase used for backend services
+- Database: Firebase Realtime Database
 
 
 ## Video Walkthrough of the codebase
