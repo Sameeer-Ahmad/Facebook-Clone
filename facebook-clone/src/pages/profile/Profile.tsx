@@ -130,6 +130,7 @@ export default function Profile() {
             <Stack ml={2}>
             <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>{displayName}</Text>
             <Text fontWeight={"700"}>378 friends</Text>
+
             <Flex>{cardDataArray.map((el)=>(
               <Box marginBottom={4}>
               <Image width={"30px"} height={"30px"} borderRadius={"50%"}  src={el.imageSrc}/>
