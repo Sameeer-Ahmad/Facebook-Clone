@@ -128,7 +128,7 @@ export default function Profile() {
             /> 
 
             <Stack>
-            <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>{user?.displayName}</Text>
+            <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>{displayName}</Text>
             <Text fontWeight={"700"}>100 friends</Text>
             <Flex>{cardDataArray.map((el)=>(
               <Box marginBottom={4}>
