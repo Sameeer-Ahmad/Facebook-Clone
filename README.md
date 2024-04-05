@@ -52,14 +52,14 @@ User authentication using Firebase Auth
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/videopage.JPG">
 
-## Marcketplace Page
+## Marketplace Page
 - The application introduces a dynamic Market page enriched with pagination, sorting, and filtering functionalities for enhanced user experience. Users can conveniently browse through products, organize listings based on their preferences, and efficiently find desired items within the marketplace.
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/marketpage.jpg">
 
 
 ## Profile Page
-- The application offers a personalized My Profile page where users can view their Profile and view their activity.
+- The application offers a personalized My Profile page where users can view their Profile and view their activities.
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/profilepage.JPG">
 
