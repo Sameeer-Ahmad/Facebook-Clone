@@ -3,9 +3,11 @@ import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
 import { StoryCards } from "./StoryCards";
 import { getAuth } from "@firebase/auth";
 
+
 export const Story = () => {
   const auth = getAuth();
 const user = auth.currentUser;
+
 
   return (
     <>
@@ -19,11 +21,14 @@ const user = auth.currentUser;
             height={["180px", "220px"]}
             margin={3}
             borderRadius={"10px"}
+            // border={"1px solid gray"}
           >
+
 
             <Image
             key={user?.photoURL} 
               src={user?.photoURL as any } 
+
               borderRadius={"10px 10px 0 0"}
               objectFit={"cover"}
               width="100%"

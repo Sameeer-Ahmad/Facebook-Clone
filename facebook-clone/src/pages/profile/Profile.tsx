@@ -44,8 +44,19 @@ interface Postl {
   uid: string;
   // postUserId: string;
 }
+
+interface ProfileParams {
+  displayName: string;
+}
+
+interface UserData {
+  photoURL: string;
+  displayName: string;
+}
 export default function Profile() {
-  const { displayName } = useParams();
+   const { displayName } = useParams();
+   const [userData, setUserData] = useState<UserData | null>(null);
+
   const cardDataArray: { imageSrc: string }[] = [
     {
       imageSrc:
@@ -101,6 +112,19 @@ export default function Profile() {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+      snapshot.forEach((doc) => {
+        const data = doc.data() as UserData; // Cast data to UserData type
+        if (data.displayName === displayName) {
+          setUserData(data);
+        }
+      });
+    });
+
+    return () => unsubscribe();
+  }, [displayName]);
   return (
     <>
       <Center>
@@ -121,29 +145,20 @@ export default function Profile() {
             <Avatar
               h={"200px"}
               w={"200px"}
-              src={user?.photoURL as any}
+              src={ user?.photoURL as any}
               css={{
                 border: "2px solid white",
               }}
             />
 
             <Stack ml={2}>
-              <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>
-                {displayName}
-              </Text>
-              <Text fontWeight={"700"}>378 friends</Text>
-              <Flex>
-                {cardDataArray.map((el) => (
-                  <Box marginBottom={4}>
-                    <Image
-                      width={"30px"}
-                      height={"30px"}
-                      borderRadius={"50%"}
-                      src={el.imageSrc}
-                    />
-                  </Box>
-                ))}
-              </Flex>
+            <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>{displayName}</Text>
+            <Text fontWeight={"700"}>378 friends</Text>
+            <Flex>{cardDataArray.map((el)=>(
+              <Box marginBottom={4}>
+              <Image width={"30px"} height={"30px"} borderRadius={"50%"}  src={el.imageSrc}/>
+              </Box>
+            ))}</Flex>
             </Stack>
           </Flex>
           <Divider border={"1px solid #d1d5da"} marginTop={3} />
