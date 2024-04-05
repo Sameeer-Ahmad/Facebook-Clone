@@ -116,7 +116,7 @@ export default function Profile() {
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
       snapshot.forEach((doc) => {
-        const data = doc.data() as UserData; // Cast data to UserData type
+        const data = doc.data() as UserData; 
         if (data.displayName === displayName) {
           setUserData(data);
         }
