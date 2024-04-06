@@ -17,8 +17,6 @@ export interface Product {
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
     <>
- 
-    
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" width={"250px"} height={"300px"} >
       <Image src={product.imageArr[0]} alt={product.title} height={"200px"} overflow={"hidden"} width={"100%"}/>
 
