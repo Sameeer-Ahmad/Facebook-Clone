@@ -56,7 +56,7 @@ import { HiOutlineUserGroup } from "react-icons/hi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CgMenuGridO } from "react-icons/cg";
 import { FaFacebookMessenger } from "react-icons/fa";
-import { IoNotifications } from "react-icons/io5";
+import { IoLogOut, IoNotifications } from "react-icons/io5";
 import { useBreakpointValue } from '@chakra-ui/react';
 import { TfiPencilAlt } from "react-icons/tfi";
 import { IoBook } from "react-icons/io5";
@@ -417,8 +417,6 @@ export default function Nav() {
   const spacingSize = useBreakpointValue({ base: 'small', sm: '1px', md: '1px', lg: "lg", xl: "xl" });
   const bgColor = useColorModeValue('white', 'gray.900');
   const searchBgColor = useColorModeValue("white", "gray.800");
-  const searchInputColor = useColorModeValue("gray.100", "gray.700");
-  const searchTextColor = useColorModeValue("gray.900", "white");
 
 
   const breakpoint = useBreakpointValue({ base: "base", sm: "sm", md: "md", lg: "lg" });
@@ -731,7 +729,7 @@ export default function Nav() {
 
                       {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
 
-                      <Avatar size="sm" src={user?.photoURL as string}>
+                      <Avatar  size="sm" src={user?.photoURL as string}>
                         <AvatarBadge boxSize='1.25em' bg='green.500' />
                       </Avatar>
 
@@ -742,7 +740,7 @@ export default function Nav() {
                           <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                          {/* <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch} color="gray"> */}
+                      
 
                           <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
                             <p>{user?.displayName}</p>
@@ -799,8 +797,13 @@ export default function Nav() {
                         </Box>
                         <Box p={3}>Give feedback</Box>
                       </MenuItem>
-
-                      <MenuItem fontWeight={"bold"} onClick={handleLogout}>Log out</MenuItem>
+                   
+                      <MenuItem   fontWeight={"bold"}
+                       onClick={handleLogout}>
+                         <Box borderRadius="50%" bg="gray.200" p={3}>
+                         <IoLogOut />
+                        </Box>
+                        <Box ml={2} p={1}>Log out</Box></MenuItem>
                     </MenuList>
 
                   </Menu>
@@ -1091,8 +1094,6 @@ export default function Nav() {
                       cursor={'pointer'}
                       minW={0}
                     >
-
-                      {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
 
                       <Avatar size="sm" src={user?.photoURL as string}>
                         <AvatarBadge boxSize='1.25em' bg='green.500' />
@@ -1414,8 +1415,7 @@ export default function Nav() {
                     <br />
                     <MenuDivider />
                     <MenuItem>No Notifications yet</MenuItem>
-                    {/* <MenuItem>Account Settings</MenuItem> */}
-                    {/* <MenuItem>Logout</MenuItem> */}
+                    
                   </MenuList>
                 </Menu>
               </Box>

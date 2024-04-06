@@ -33,8 +33,6 @@ const Marcketing = () => {
       try {
         dispatch(setLoading(true));
         const response = await axios.get(`https://json-server-moc-4.onrender.com/product`);
-      
-
         dispatch(fetchProductsSuccess(response.data));
         setFilteredProducts(response.data);
         console.log("data",response.data);
