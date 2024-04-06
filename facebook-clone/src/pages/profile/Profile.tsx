@@ -42,7 +42,19 @@ interface Postl {
   userName: string;
   timestamp: Timestamp;
   uid: string;
+  userImage:string
   // postUserId: string;
+}
+interface PostData {
+  id: string;
+  caption: string;
+  imageUrl: string;
+  likes: number;
+  postUserId: string;
+  userName: string; // Add userName property
+  timestamp: Timestamp;
+  uid: string;
+  userImage: string;
 }
 
 interface ProfileParams {
@@ -105,13 +117,16 @@ export default function Profile() {
       const postData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
-      setPosts(postData as any[]);
-      console.log("postdata", postData);
+      })) as PostData[]; // Cast to PostData[]
+      
+      // Filter posts by userName
+      const filteredPosts = postData.filter(post => post.userName === displayName);
+      setPosts(filteredPosts);
+      console.log("postdata", filteredPosts);
     });
-
+  
     return unsubscribe;
-  }, []);
+  }, [displayName]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
@@ -135,7 +150,7 @@ export default function Profile() {
               w={["100%", "100%", "100%", "100%", "70%", "70%"]}
               borderRadius={"8px"}
               src={
-                "https://c4.wallpaperflare.com/wallpaper/185/600/59/anime-boruto-boruto-uzumaki-mitsuki-naruto-wallpaper-thumb.jpg"
+                "https://images.pexels.com/photos/259698/pexels-photo-259698.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
               }
               objectFit="cover"
               alt="#"
@@ -145,13 +160,14 @@ export default function Profile() {
             <Avatar
               h={"200px"}
               w={"200px"}
-              src={ user?.photoURL as any}
+              src={ userData?.photoURL || ""}
               css={{
                 border: "2px solid white",
               }}
             />
 
             <Stack ml={2}>
+
             <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>{displayName}</Text>
             <Text fontWeight={"700"}>378 friends</Text>
             <Flex>{cardDataArray.map((el)=>(
@@ -256,14 +272,14 @@ export default function Profile() {
           <Center>
             <Flex className="profileRightBottom">
               <Flex direction={"column"}>
-                <Feed />
+              
                 <Center
                   bg="grey.100"
                   h="40px"
                   color="black"
                   width={"100%"}
                 ></Center>
-
+<Feed/>
                 {posts
                   .sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds)
                   .map((post) => (
@@ -277,6 +293,7 @@ export default function Profile() {
                       noOfLikes={post.likes}
                       postUserId={post.uid}
                       timestamp={post.timestamp}
+                      userImage={post.imageUrl}
                     />
                   ))}
               </Flex>
