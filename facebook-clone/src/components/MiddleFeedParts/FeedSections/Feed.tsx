@@ -27,11 +27,9 @@ import {
   Timestamp,
   addDoc,
   collection,
-  doc,
   getDocs,
   onSnapshot,
   serverTimestamp,
-  setDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebase";
 

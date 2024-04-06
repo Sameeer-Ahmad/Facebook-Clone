@@ -36,9 +36,6 @@ import { IoIosNotifications } from "react-icons/io";
 import { HiSaveAs } from "react-icons/hi";
 import { AiFillLike } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
-const auth = getAuth();
-const user = auth.currentUser;
-
 
 interface Post {
   postId: string | any;

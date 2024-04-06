@@ -6,7 +6,7 @@ import {  useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard, { Product } from "./productcard";
 import { fetchProductsSuccess, setError, setLoading } from "../../redux/ProductReducer/action";
-import Nav from "../../components/Navbar";
+
 
 
 
@@ -32,9 +32,13 @@ const Marcketing = () => {
     const fetchAllProducts = async () => {
       try {
         dispatch(setLoading(true));
-        const response = await axios.get(`https://dummyjson.com/products`);
-        dispatch(fetchProductsSuccess(response.data.products));
-        setFilteredProducts(response.data.products);
+        const response = await axios.get(`https://json-server-moc-4.onrender.com/product`);
+      
+
+        dispatch(fetchProductsSuccess(response.data));
+        setFilteredProducts(response.data);
+        console.log("data",response.data);
+        
       } catch (error) {
         console.error("Error fetching products:", error);
         dispatch(setError("Error fetching products: " + error));
