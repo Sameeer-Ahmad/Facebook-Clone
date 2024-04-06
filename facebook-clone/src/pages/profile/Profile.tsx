@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import {
   Box,
   Flex,
   Image,
   Heading,
   Text,
-  Spacer,
   Center,
   Divider,
-  GridItem,
   Card,
   CardHeader,
   CardBody,
@@ -16,13 +14,11 @@ import {
   Button,
   SimpleGrid,
   Avatar,
-  Grid,
   Stack,
 } from "@chakra-ui/react";
 import { Feed } from "../../components/MiddleFeedParts/FeedSections/Feed";
-
 import { getAuth } from "firebase/auth";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Timestamp, collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import PostPage from "../../components/MiddleFeedParts/PostPage";
@@ -43,8 +39,8 @@ interface Postl {
   timestamp: Timestamp;
   uid: string;
   userImage:string
-  // postUserId: string;
 }
+
 interface PostData {
   id: string;
   caption: string;
@@ -55,10 +51,6 @@ interface PostData {
   timestamp: Timestamp;
   uid: string;
   userImage: string;
-}
-
-interface ProfileParams {
-  displayName: string;
 }
 
 interface UserData {
@@ -109,7 +101,6 @@ export default function Profile() {
   ];
   const auth = getAuth();
   const user = auth.currentUser;
-  const navigate = useNavigate();
   const [posts, setPosts] = useState<Postl[]>([]);
 
   useEffect(() => {
@@ -117,8 +108,7 @@ export default function Profile() {
       const postData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      })) as PostData[]; // Cast to PostData[]
-      
+      })) as PostData[]; 
       // Filter posts by userName
       const filteredPosts = postData.filter(post => post.userName === displayName);
       setPosts(filteredPosts);
@@ -131,7 +121,7 @@ export default function Profile() {
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
       snapshot.forEach((doc) => {
-        const data = doc.data() as UserData; // Cast data to UserData type
+        const data = doc.data() as UserData; 
         if (data.displayName === displayName) {
           setUserData(data);
         }
@@ -140,6 +130,7 @@ export default function Profile() {
 
     return () => unsubscribe();
   }, [displayName]);
+
   return (
     <>
       <Center>

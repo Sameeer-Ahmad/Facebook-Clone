@@ -4,7 +4,7 @@ import { Feed } from "./Feed";
 import { PostPage } from "../PostPage";
 import { Story } from "./Story";
 
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { db } from "../../../firebase";
 import { Timestamp, collection, onSnapshot } from "firebase/firestore";
@@ -24,7 +24,7 @@ interface Post {
   uid: string;
 }
 
-export const Post = () => {
+export const Post: FC = () => {
   const auth = getAuth();
   const user = auth.currentUser;
   const [posts, setPosts] = useState<Post[]>([]);

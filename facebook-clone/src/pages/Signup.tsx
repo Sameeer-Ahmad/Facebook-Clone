@@ -69,7 +69,6 @@ const Signup: FC = () => {
  
   const [passwordError, setPasswordError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
-  const toast = useToast();
 
   const handleonChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFirstName(e.target.value);
