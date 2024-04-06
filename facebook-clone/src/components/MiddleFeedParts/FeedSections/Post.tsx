@@ -16,13 +16,12 @@ interface Post {
   id: string;
   caption: string;
   imageUrl: string;
-  
   likes: number;
   postUserId: string;
   userName: string;
+  userImage:string,
   timestamp: Timestamp;
   uid: string;
-  
 }
 
 export const Post = () => {
@@ -61,7 +60,7 @@ export const Post = () => {
                 postId={post.id}
                 user={user}
                 username={post.userName}
-                // photoURL={post.photoURL}
+                userImage={post.userImage}
                 caption={post.caption}
                 imageURL={post.imageUrl}
                 noOfLikes={post.likes}

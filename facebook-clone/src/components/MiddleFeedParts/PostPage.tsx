@@ -49,6 +49,7 @@ interface Post {
   noOfLikes: number;
   postUserId: string;
   timestamp: Timestamp | null;
+  userImage:string
 }
 
 export const PostPage: FC<Post> = ({
@@ -60,6 +61,7 @@ export const PostPage: FC<Post> = ({
   noOfLikes,
   postUserId,
   timestamp,
+  userImage
 }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
@@ -68,7 +70,7 @@ export const PostPage: FC<Post> = ({
   const [liked, setLiked] = useState<boolean>(false);
   const [posts, setPosts] = useState<Post[]>([]);
 const auth=getAuth();
-const userimage=auth.currentUser?.photoURL
+
   const handleDelete = async () => {
     try {
       await deleteDoc(doc(db, "posts", postId));
@@ -186,14 +188,6 @@ const userimage=auth.currentUser?.photoURL
   useEffect(() => {
     setLiked(likes.some((like) => like.id === user?.uid));
   }, [likes, user?.uid]);
-  console.log("user:", user);
-console.log("postUserId:", postUserId);
-// console.log("userId:", userId);
-console.log("user?.uid:", user?.uid);
-console.log(postId);
-
-console.log(userimage);
-
 
   return (
     <>
@@ -208,7 +202,7 @@ console.log(userimage);
           <CardHeader>
             <Flex justify={"space-between"}>
               <Flex gap={"18px"}>
-              <Avatar src={user && user.uid !== postUserId ? "https://cdn-icons-png.flaticon.com/512/3135/3135715.png": auth.currentUser?.photoURL as any} />
+              <Avatar src={ userImage as any} />
 
                 <Flex flexDir={"column"}>
                   <Heading mt={"10px"} fontWeight={"600"} size="sm">

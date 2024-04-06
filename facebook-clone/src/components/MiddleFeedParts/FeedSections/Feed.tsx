@@ -45,6 +45,7 @@ export const Feed = () => {
   const [likes, setLikes] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement | any>(null);
   const [posts, setPosts] = useState<any>([]);
+  const [userImage, setUserImage] = useState<string | null>(null);
 
   const auth = getAuth();
   const user = auth.currentUser;
@@ -54,7 +55,12 @@ export const Feed = () => {
       fileInputRef.current.click();
     }
   };
-
+  useEffect(() => {
+    if (user) {
+      setUserImage(user.photoURL);
+    }
+  }, [user]);
+  
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -92,9 +98,12 @@ export const Feed = () => {
     imageUrl: string;
     likes: number;
     userName: string;
+    userImage:string;
     uid: string;
     timestamp: Timestamp;
+
   }
+console.log("post",posts);
 
   const handleUpload = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -112,6 +121,7 @@ export const Feed = () => {
             imageUrl: "",
             likes: likes,
             userName: user?.displayName,
+            userImage:user?.photoURL,
             uid: user?.uid,
             timestamp: serverTimestamp(),
           });
@@ -126,6 +136,7 @@ export const Feed = () => {
             imageUrl: url,
             likes: likes,
             userName: user?.displayName,
+            userImage:user?.photoURL,
             uid: user?.uid,
             timestamp: serverTimestamp(),
           });
@@ -139,7 +150,7 @@ export const Feed = () => {
         console.log(error);
       }
     }
-  };
+  }; 
 
   const handleCloseModal = () => {
     setCaption("");
@@ -167,7 +178,7 @@ export const Feed = () => {
             <ModalBody borderTop={"2px solid #e4e6eb"}>
               <Flex align={"center"} gap={1}>
                 <Image
-                  src={user?.photoURL as string}
+                  src={userImage  as string}
                   width={"50px"}
                   height={"50px"}
                   borderRadius={"50%"}
@@ -293,7 +304,7 @@ export const Feed = () => {
         >
           <Flex gap={5} p={2} borderBottom={"3px solid #e4e6eb"}>
             <Image
-              src={user?.photoURL as string}
+              src={userImage  as string}
               width={["30px", "40px", "50px"]}
               height={["30px", "40px", "50px"]}
               borderRadius={"50%"}
