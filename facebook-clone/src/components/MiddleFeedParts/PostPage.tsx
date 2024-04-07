@@ -1,6 +1,7 @@
 import { User, getAuth } from "firebase/auth";
 import React, { FC, useEffect, useState } from "react";
 import { db } from "../../firebase";
+import { PiShareFatLight } from "react-icons/pi";
 import {
   Timestamp,
   collection,
@@ -287,7 +288,7 @@ const auth=getAuth();
               >
                 Comment
               </Button>
-              <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
+              <Button flex="1" variant="ghost" leftIcon={<PiShareFatLight />}>
                 Share
               </Button>
             </Flex>

@@ -52,22 +52,16 @@ User authentication using Firebase Auth
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/videopage.JPG">
 
-## Marcketplace Page
+## Marketplace Page
 - The application introduces a dynamic Market page enriched with pagination, sorting, and filtering functionalities for enhanced user experience. Users can conveniently browse through products, organize listings based on their preferences, and efficiently find desired items within the marketplace.
 
-<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/marcketpage.JPG">
+<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/marketpage.jpg">
 
 
 ## Profile Page
-- The application offers a personalized My Profile page where users can view their Profile and view their activity.
+- The application offers a personalized My Profile page where users can view their Profile and view their activities.
 
 <img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/profilepage.JPG">
-
-
-## Dark Mode
-- The application now offers a Dark Mode feature, providing users with the option to switch the entire interface to a darker color scheme for improved visibility in low-light environments. Users can toggle Dark Mode on or off according to their preference.
-
-<img src="https://github.com/Sameeer-Ahmad/Facebook-Clone/blob/main/facebook-clone/src/Images/Screensort/darkmode.JPG">
 
 ## Design Decisions or Assumptions
 - Employed Firebase Authentication for secure user login and authentication processes, ensuring user data confidentiality and authentication integrity.
@@ -95,20 +89,6 @@ Application Overview
 # 3. Create new posts by clicking on the appropriate button, interact with existing posts by liking or commenting on them, and manage your profile settings as needed.
 ```
 
-## Credentials
-Provide user credentials for authenticated pages
-
-- Email: test@example.com
-- Password: password123
-
-## APIs Used
-If your application relies on external APIs, document them and include any necessary links or references.
-
-## API Endpoints
-In case of Backend Applications provide a list of your API endpoints, methods, brief descriptions, and examples of request/response.
-N/A
-
-
 ## Technology Stack
 - React-js
 - Redux
@@ -122,17 +102,17 @@ N/A
 The project was developed collaboratively by the following 5 team members:
 
 + **Sameer** (Team Lead) - 
-   <a href="">LinkedIn</a>
-     <a href="">Github</a>
+   <a href="https://www.linkedin.com/in/sameer-ahmad-aa985428b/">LinkedIn</a>
+     <a href="https://github.com/Sameeer-Ahmad">Github</a>
 + **Gulshaba** - 
-  <a href="">LinkedIn</a>
-     <a href="">Github</a>
+  <a href="https://www.linkedin.com/in/gulshaba-parveen/">LinkedIn</a>
+     <a href="https://github.com/Gulshaba-Parveen">Github</a>
 + **Sujeet** - 
-    <a href="">LinkedIn</a>
-     <a href="">Github</a>
+    <a href="https://www.linkedin.com/in/sujeet-kumar-2b4750195">LinkedIn</a>
+     <a href="https://github.com/suj01">Github</a>
 + **Sachin** - 
-  <a href="/">LinkedIn</a>
-     <a href="">Github</a>
+  <a href="https://www.linkedin.com/in/sachin-kumanache/">LinkedIn</a>
+     <a href="https://github.com/sachinkumanache">Github</a>
 + **Rohan** - fw28_214
    <a href="https://www.linkedin.com/in/rohansethi347">LinkedIn</a>
      <a href="https://github.com/ROHANKUMAR347">Github</a>
