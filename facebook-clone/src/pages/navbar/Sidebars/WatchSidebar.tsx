@@ -1,8 +1,7 @@
-'use client'
+"use client";
 
-import React, { ReactNode } from 'react'
+import React, { ReactNode } from "react";
 import {
-  IconButton,
   Box,
   CloseButton,
   Flex,
@@ -14,143 +13,161 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
-} from '@chakra-ui/react'
-import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
-  FiMenu,
-} from 'react-icons/fi'
-import { IconType } from 'react-icons'
-import { ReactText } from 'react'
+  InputLeftElement,
+  InputGroup,
+  Input,
+} from "@chakra-ui/react";
+import { IconType } from "react-icons";
+import { ReactText } from "react";
+import { Search2Icon } from "@chakra-ui/icons";
+import { MdOndemandVideo } from "react-icons/md";
+import { RiLiveLine } from "react-icons/ri";
+import { TfiVideoClapper } from "react-icons/tfi";
+import { RiSlideshow3Line } from "react-icons/ri";
+import { BsRocketTakeoff } from "react-icons/bs";
+import { BsFillSave2Fill } from "react-icons/bs";
 
 interface LinkItemProps {
-  name: string
-  icon: IconType
+  name: string;
+  icon: IconType;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Videos', icon: FiHome },
-  { name: 'Trending', icon: FiTrendingUp },
-  { name: 'Explore', icon: FiCompass },
-  { name: 'Favourites', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
-]
+  { name: "Live", icon: RiLiveLine },
+  { name: "Reels", icon: TfiVideoClapper },
+  { name: "Shows", icon: RiSlideshow3Line },
+  { name: "Explore", icon: BsRocketTakeoff },
+  { name: "Saved videos", icon: BsFillSave2Fill },
+];
 
 export default function WatchSidebar() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+    <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+      <SidebarContent
+        onClose={() => onClose}
+        display={{ base: "none", md: "block" }}
+      />
       <Drawer
         isOpen={isOpen}
         placement="left"
         onClose={onClose}
         returnFocusOnClose={false}
         onOverlayClick={onClose}
-        size="full">
+        size="full"
+      >
         <DrawerContent>
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
-      {/* <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} /> */}
       <Box ml={{ base: 0, md: 60 }} p="4">
         {/* Content */}
       </Box>
     </Box>
-  )
+  );
 }
 
 interface SidebarProps extends BoxProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   return (
     <Box
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue("white", "gray.900")}
       borderRight="1px"
-      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      w={{ base: 'auto', md: 60 }}
-    //   pos="fixed"
+      borderRightColor={useColorModeValue("gray.200", "gray.700")}
+      w={{ base: "full", md: "330px" }}
+      pos="fixed"
       h="full"
-      {...rest}>
+      overflowY="auto"
+      {...rest}
+    >
+      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+        <Text fontSize="2xl" fontWeight="bold">
+          Video
+        </Text>
+        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
+      </Flex>
+      <>
+        <InputGroup borderRadius={5} size="sm" p={"0 10px 0 10px"}>
+          <InputLeftElement
+            pointerEvents="none"
+            children={<Search2Icon color="gray.600" marginLeft={"20px"} />}
+          />
+          <Input
+            type="text"
+            placeholder="Search videos"
+            bg={"#f0f2f5"}
+            borderRadius={30}
+          />
+        </InputGroup>
+      </>
+      <Box bgColor="#f0f2f5" m={"0 8px 0 8px"} borderRadius={"5px"}>
+        <Flex align="center" ml="3" mt="3" p={2} mb="2">
+          <Icon
+            as={MdOndemandVideo}
+            borderRadius="50%"
+            p="1"
+            fontSize="31px"
+            color="white"
+            bgColor="#1877f2"
+          />
+          <Text ml="2" fontWeight="600" mr="6">
+            Home
+          </Text>
+        </Flex>
+      </Box>
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon}>
           {link.name}
         </NavItem>
       ))}
     </Box>
-  )
-}
+  );
+};
 
 interface NavItemProps extends FlexProps {
-  icon: IconType
-  children: ReactText
+  icon: IconType;
+  children: ReactText;
 }
 const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   return (
     <Box
       as="a"
       href="#"
-      style={{ textDecoration: 'none' }}
-      _focus={{ boxShadow: 'none' }}>
+      style={{ textDecoration: "none" }}
+      _focus={{ boxShadow: "none" }}
+    >
       <Flex
         align="center"
-        p="4"
+        p="2"
         mx="4"
         borderRadius="lg"
         role="group"
         cursor="pointer"
         _hover={{
-          bg: '#e4e6eb',
-        //   color: 'white',
+          bg: "#f0f2f5",
+          color: "black",
         }}
-        {...rest}>
+        fontWeight="600"
+        {...rest}
+      >
         {icon && (
-          <Icon
-            mr="4"
-            fontSize="16"
-            _groupHover={{
-            //   color: 'white',
-            }}
-            as={icon}
-          />
+          <Box bg="#e4e6eb" borderRadius="50%" p="1" mr="4">
+            <Icon
+              fontSize="20"
+              color="black"
+              _groupHover={{
+                color: "black",
+              }}
+              as={icon}
+            />
+          </Box>
         )}
         {children}
       </Flex>
+        
     </Box>
-  )
-}
-
-// interface MobileProps extends FlexProps {
-//   onOpen: () => void
-// }
-// const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
-//   return (
-//     <Flex
-//       ml={{ base: 0, md: 60 }}
-//       px={{ base: 4, md: 24 }}
-//       height="20"
-//       alignItems="center"
-//       bg={useColorModeValue('white', 'gray.900')}
-//       borderBottomWidth="1px"
-//       borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-//       justifyContent="flex-start"
-//       {...rest}>
-//       <IconButton
-//         variant="outline"
-//         onClick={onOpen}
-//         aria-label="open menu"
-//         icon={<FiMenu />}
-//       />
-
-//       <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-//         Logo
-//       </Text>
-//     </Flex>
-//   )
-// }
+  );
+};
