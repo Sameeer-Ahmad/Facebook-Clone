@@ -305,8 +305,11 @@ return (
             w={"33%"}
             h={"35px"}
           >
-            <span>Female</span>
+           <label htmlFor="female" style={{ cursor: "pointer" }}>
+    Female
+  </label>
             <Radio
+            id="female"
               value="female"
               ml={["20%", "50%", "52%", "68%", "44%", "75%"]}
             ></Radio>
@@ -321,14 +324,17 @@ return (
             flexDirection="row"
             h={"35px"}
           >
-            <span>Male</span>
+          <label htmlFor="male" style={{ cursor: "pointer" }}>
+    Male
+  </label>
             <Radio
+            id="male"
               value="male"
               ml={["38%", "62%", "64%", "75z%", "57%", "80%"]}
             ></Radio>
           </Flex>
 
-          <Flex
+          <Flex 
             border="1px solid gray"
             borderRadius="md"
             p={1}
@@ -338,8 +344,10 @@ return (
             w={"33%"}
             h={"35px"}
           >
-            <span>Custom</span>
-            <Radio
+            <label htmlFor="custom" style={{ cursor: "pointer" }}>
+    Custom
+  </label>
+            <Radio id="custom"
               value="custom"
               ml={["14%", "46%", "50%", "65%", "40%", "75%"]}
               borderWidth="2px"

@@ -21,7 +21,7 @@ import { getAuth } from "firebase/auth";
 import { useParams } from "react-router-dom";
 import { Timestamp, collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
-import PostPage from "../../components/MiddleFeedParts/PostPage";
+import PostPage from "../../components/MiddleFeedParts/PostPage"; 
 import { AiTwotoneHome } from "react-icons/ai";
 import { IoLocation } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa6";
@@ -270,7 +270,7 @@ export default function Profile() {
                   color="black"
                   width={"100%"}
                 ></Center>
-<Feed/>
+                { user?.displayName ===displayName && <Feed />}
                 {posts
                   .sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds)
                   .map((post) => (
