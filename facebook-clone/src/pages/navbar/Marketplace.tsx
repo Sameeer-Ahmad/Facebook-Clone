@@ -11,6 +11,7 @@ import { fetchProductsSuccess, setError, setLoading } from "../../redux/ProductR
 
 
 
+
 const Marcketing = () => {
     const dispatch = useDispatch();
     const loading: boolean = useSelector((state: any) => state.loading); 
@@ -31,9 +32,11 @@ const Marcketing = () => {
     const fetchAllProducts = async () => {
       try {
         dispatch(setLoading(true));
-        const response = await axios.get(`https://dummyjson.com/products`);
-        dispatch(fetchProductsSuccess(response.data.products));
-        setFilteredProducts(response.data.products);
+        const response = await axios.get(`https://json-server-moc-4.onrender.com/product`);
+        dispatch(fetchProductsSuccess(response.data));
+        setFilteredProducts(response.data);
+        console.log("data",response.data);
+        
       } catch (error) {
         console.error("Error fetching products:", error);
         dispatch(setError("Error fetching products: " + error));
@@ -90,9 +93,10 @@ const Marcketing = () => {
       );
     }
 
+          
     return (
       <>
-
+          
         <Flex alignItems="center" justify="space-between" p={4} borderWidth="1px" borderRadius="lg">
           <Text ml={2} fontWeight={"bold"} fontSize={"35px"}>Today's Picks</Text>
           <Input 

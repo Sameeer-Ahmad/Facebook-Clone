@@ -1,5 +1,6 @@
 
 import { Box, Image, Badge,  } from '@chakra-ui/react';
+import Nav from '../../components/Navbar';
 
 
 
@@ -8,22 +9,16 @@ export interface Product {
   title: string;
   description: string;
   price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  brand: string;
-  category: string;
-  thumbnail: string;
-  images: string[];
+  location:string;
+  seller:string
+  imageArr: string[];
 }
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   return (
     <>
-    
-    
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" width={"250px"} height={"300px"} >
-      <Image src={product.images[0]} alt={product.title} height={"200px"} overflow={"hidden"} width={"100%"}/>
+      <Image src={product.imageArr[0]} alt={product.title} height={"200px"} overflow={"hidden"} width={"100%"}/>
 
       <Box p="6">
         <Box display="flex" alignItems="baseline">
@@ -38,7 +33,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             textTransform="uppercase"
             ml="2"
           >
-            {product.category}
+            {/* {product.category} */}
           </Box>
         </Box>
 

@@ -1,6 +1,7 @@
 import { User, getAuth } from "firebase/auth";
 import React, { FC, useEffect, useState } from "react";
 import { db } from "../../firebase";
+import { PiShareFatLight } from "react-icons/pi";
 import {
   Timestamp,
   collection,
@@ -36,8 +37,7 @@ import { IoIosNotifications } from "react-icons/io";
 import { HiSaveAs } from "react-icons/hi";
 import { AiFillLike } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
-const auth = getAuth();
-const user = auth.currentUser;
+
 interface Post {
   postId: string | any;
   user: User | null;
@@ -47,6 +47,7 @@ interface Post {
   noOfLikes: number;
   postUserId: string;
   timestamp: Timestamp | null;
+  userImage:string
 }
 
 export const PostPage: FC<Post> = ({
@@ -58,6 +59,7 @@ export const PostPage: FC<Post> = ({
   noOfLikes,
   postUserId,
   timestamp,
+  userImage
 }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
@@ -65,6 +67,7 @@ export const PostPage: FC<Post> = ({
   const [likes, setLikes] = useState<Like[]>([]);
   const [liked, setLiked] = useState<boolean>(false);
   const [posts, setPosts] = useState<Post[]>([]);
+const auth=getAuth();
 
   const handleDelete = async () => {
     try {
@@ -183,6 +186,7 @@ export const PostPage: FC<Post> = ({
   useEffect(() => {
     setLiked(likes.some((like) => like.id === user?.uid));
   }, [likes, user?.uid]);
+
   return (
     <>
       <Center>
@@ -196,7 +200,8 @@ export const PostPage: FC<Post> = ({
           <CardHeader>
             <Flex justify={"space-between"}>
               <Flex gap={"18px"}>
-                <Avatar src={user?.photoURL || ""} />
+              <Avatar src={ userImage as any} />
+
                 <Flex flexDir={"column"}>
                   <Heading mt={"10px"} fontWeight={"600"} size="sm">
                     {username}
@@ -283,7 +288,7 @@ export const PostPage: FC<Post> = ({
               >
                 Comment
               </Button>
-              <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
+              <Button flex="1" variant="ghost" leftIcon={<PiShareFatLight />}>
                 Share
               </Button>
             </Flex>
@@ -291,7 +296,8 @@ export const PostPage: FC<Post> = ({
               <>
                 <Box as="form" onSubmit={handleSubmit}>
                   <Flex mb={"5px"} mt={"5px"} gap={"10px"}>
-                    <Avatar src={user?.photoURL as any} />
+                  <Avatar src={auth.currentUser?.photoURL  as any} />
+
                     <Input
                       type="text"
                       placeholder="Add a comment..."

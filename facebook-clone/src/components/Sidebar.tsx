@@ -13,6 +13,8 @@ import Tutorials from "../Images/11.png";
 import Courses from "../Images/12.png";
 import Fund from "../Images/13.png";
 import { getAuth } from "firebase/auth";
+import { Link } from "react-router-dom";
+import { Flex } from "@chakra-ui/react";
 
 const Sidebar = () => {
   const auth = getAuth();
@@ -22,8 +24,12 @@ const Sidebar = () => {
       <div className="container">
         <div className="menu">
           <div className="user">
-            <img src={user?.photoURL as any} alt="" />
+          <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
+            <Flex >
+            <img src={user?.photoURL as any} alt="" style={{ marginRight: "8px" }}/>
             <span>{user?.displayName}</span>
+            </Flex>
+            </Link>
           </div>
           <div className="item">
             <img src={Friends} alt="" />

@@ -2,13 +2,17 @@ import { SmallAddIcon } from "@chakra-ui/icons";
 import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
 import { StoryCards } from "./StoryCards";
 import { getAuth } from "@firebase/auth";
-const auth = getAuth();
-const user = auth.currentUser;
+
+
 export const Story = () => {
+  const auth = getAuth();
+const user = auth.currentUser;
+
+
   return (
     <>
       <Center>
-        <Flex>
+        <Flex  >
           <Box
             boxShadow={
               "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px"
@@ -19,13 +23,13 @@ export const Story = () => {
             borderRadius={"10px"}
           >
             <Image
-              src={user?.photoURL as any}
+            key={user?.photoURL} 
+              src={user?.photoURL as any } 
               borderRadius={"10px 10px 0 0"}
               objectFit={"cover"}
               width="100%"
               height="70%"
             />
-
             <SmallAddIcon
               fontSize={["16px", "20px", "24px"]}
               borderRadius={"50%"}
@@ -39,7 +43,6 @@ export const Story = () => {
               left={["40px", "40px", "50px"]}
               objectFit={"cover"}
             />
-
             <Text
               fontSize={["10px", "sm", "sm", "md", "md", "md"]}
               fontWeight={500}
@@ -48,7 +51,7 @@ export const Story = () => {
               Create story
             </Text>
           </Box>
-          <Box
+          <Box 
             boxShadow={
               "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;"
             }
@@ -74,7 +77,7 @@ export const Story = () => {
               left={"-5px"}
               color={"white"}
             >
-             John Doe
+             Anna
             </Text>
           </Box>
           <Box

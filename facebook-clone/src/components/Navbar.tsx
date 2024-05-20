@@ -56,7 +56,7 @@ import { HiOutlineUserGroup } from "react-icons/hi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CgMenuGridO } from "react-icons/cg";
 import { FaFacebookMessenger } from "react-icons/fa";
-import { IoNotifications } from "react-icons/io5";
+import { IoLogOut, IoNotifications } from "react-icons/io5";
 import { useBreakpointValue } from '@chakra-ui/react';
 import { TfiPencilAlt } from "react-icons/tfi";
 import { IoBook } from "react-icons/io5";
@@ -96,7 +96,7 @@ import Fund from "../Images/13.png";
 import { element } from "prop-types";
 import Sidebar from "./Sidebar";
 import { app, db } from "../firebase"; // Import Firebase configuration
-import { QueryDocumentSnapshot, collection, getDocs, onSnapshot } from "firebase/firestore";
+import { QueryDocumentSnapshot, collection, doc, getDoc, getDocs, onSnapshot } from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 
 
@@ -108,8 +108,10 @@ interface NavLinkProps {
 }
 
 interface SearchResult {
+  username: string;
   uid: string;
   displayName: string;
+  imageUrl: string;
 }
 interface Notification {
   id: string;
@@ -216,7 +218,23 @@ export default function Nav() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searching, setSearching] = useState(false);
 
-
+  const getUserUsername = async (userId: string) => {
+    try {
+      const userDocRef = doc(db, "users", userId);
+      const userDocSnapshot = await getDoc(userDocRef);
+      if (userDocSnapshot.exists()) {
+        const userData = userDocSnapshot.data();
+        const username = userData.username; // Assuming 'username' is the field containing the username
+        return username;
+      } else {
+        console.log("User document does not exist");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user document:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     const searchFirebase = async () => {
@@ -224,12 +242,18 @@ export default function Nav() {
       try {
         const querySnapshot = await getDocs(collection(db, "users"));
         const results: SearchResult[] = [];
-        querySnapshot.forEach((doc) => {
+        // querySnapshot.forEach((doc) => {
+        await Promise.all(querySnapshot.docs.map(async (doc) => {
           const userData = doc.data();
+          // const username = userData.username;
           if (userData.displayName?.toLowerCase().includes(searchTerm.toLowerCase())) {
-            results.push({ uid: doc.id, displayName: userData.displayName });
+            const userId = doc.id;
+            const username = await getUserUsername(userId);
+            const imageUrl = userData.photoURL;
+            results.push({ uid: doc.id, displayName: userData.displayName, username: username, imageUrl: imageUrl });
+            console.log(results);
           }
-        }); 
+        }));
         setSearchResults(results);
       } catch (error) {
         console.error("Error searching Firestore:", error);
@@ -393,8 +417,6 @@ export default function Nav() {
   const spacingSize = useBreakpointValue({ base: 'small', sm: '1px', md: '1px', lg: "lg", xl: "xl" });
   const bgColor = useColorModeValue('white', 'gray.900');
   const searchBgColor = useColorModeValue("white", "gray.800");
-  const searchInputColor = useColorModeValue("gray.100", "gray.700");
-  const searchTextColor = useColorModeValue("gray.900", "white");
 
 
   const breakpoint = useBreakpointValue({ base: "base", sm: "sm", md: "md", lg: "lg" });
@@ -460,10 +482,15 @@ export default function Nav() {
                           <Text>No results found</Text>
                         ) : (
                           searchResults.map((result, index) => (
-                            <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
-                              <Box p={3} borderBottomWidth="1px">
+                            <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch}>
+
+                              {/* <Box p={3} borderBottomWidth="1px">
                                 <Text>{result.displayName}</Text>
-                              </Box>
+                              </Box> */}
+                              <Flex align="center" p={3} borderBottomWidth="1px" color="gray">
+                                <Avatar src={result.imageUrl} mr={3} />
+                                <Text>{result.displayName}</Text>
+                              </Flex>
                             </Link>
                           ))
                         )}
@@ -496,14 +523,27 @@ export default function Nav() {
                           <Skeleton height='20px' />
                           <Skeleton height='20px' />
                           <Skeleton height='20px' />
+                          <Skeleton height='20px' />
                         </Stack>
                       ) : searchResults.length === 0 ? (
                         <Text>No results found</Text>
                       ) : (
                         searchResults.map((result, index) => (
-                          <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch} color="gray">
-                            <Box p={3} borderBottomWidth="1px" color="gray">
+
+                          <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch} color="gray">
+                            {/* <Box p={3} borderBottomWidth="1px" color="gray">
                               <Text>{result.displayName}</Text>
+                            </Box> */}
+                            <Box
+                              _hover={{ bg: "gray.200" }}
+                              p={3}
+                              borderBottomWidth="1px"
+                              color="gray"
+                            >
+                              <Flex align="center">
+                                <Avatar src={result.imageUrl} mr={3} />
+                                <Text>{result.displayName}</Text>
+                              </Flex>
                             </Box>
                           </Link>
                         ))
@@ -529,13 +569,13 @@ export default function Nav() {
                   </React.Fragment>
                 ))}
               </Flex>
-              {/* ------------------------------------------ */}
               <Flex alignItems={'center'} ml={1}>
                 <Stack direction={'row'} spacing={7}>
 
 
                   <Menu>
                     <MenuButton
+
                       as={Button}
                       rounded={'full'}
                       variant={'link'}
@@ -560,7 +600,6 @@ export default function Nav() {
                         </Box>
                         <Box fontWeight={"bold"} p={3}>Post</Box>
                       </MenuItem>
-                      {/* <Divider /> */}
                       <MenuItem>
                         <Box borderRadius="50%" bg="gray.200" p={2}>
                           <Icon as={IoBook} boxSize={5} color="black" fontWeight="bold" />
@@ -568,7 +607,6 @@ export default function Nav() {
                         </Box>
                         <Box fontWeight={"bold"} p={3}>Story</Box>
                       </MenuItem>
-                      {/* <Divider /> */}
                       <MenuItem>
                         <Box borderRadius="50%" bg="gray.200" p={2}>
                           <Icon as={FaFilm} boxSize={5} color="black" fontWeight="bold" />
@@ -576,7 +614,7 @@ export default function Nav() {
                         </Box>
                         <Box fontWeight={"bold"} p={3}>Reels</Box>
                       </MenuItem>
-                      {/* <Divider /> */}
+
                       <MenuItem>
                         <Box borderRadius="50%" bg="gray.200" p={2}>
                           <Icon as={MdOutlineStar} boxSize={5} color="black" fontWeight="bold" />
@@ -647,9 +685,7 @@ export default function Nav() {
                       </Center>
                       <br />
                       <MenuDivider />
-                      <MenuItem>Your Servers</MenuItem>
-                      <MenuItem>Account Settings</MenuItem>
-                      <MenuItem>Logout</MenuItem>
+                      <MenuItem>No Chats yet</MenuItem>
                     </MenuList>
                   </Menu>
 
@@ -693,7 +729,7 @@ export default function Nav() {
 
                       {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
 
-                      <Avatar size="sm" src={user?.photoURL as string}>
+                      <Avatar  size="sm" src={user?.photoURL as string}>
                         <AvatarBadge boxSize='1.25em' bg='green.500' />
                       </Avatar>
 
@@ -704,7 +740,9 @@ export default function Nav() {
                           <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                          <Link to={`/profile/${user?.uid}`}>
+                      
+
+                          <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
                             <p>{user?.displayName}</p>
                           </Link>
                         </Center>
@@ -759,8 +797,13 @@ export default function Nav() {
                         </Box>
                         <Box p={3}>Give feedback</Box>
                       </MenuItem>
-
-                      <MenuItem fontWeight={"bold"} onClick={handleLogout}>Log out</MenuItem>
+                   
+                      <MenuItem   fontWeight={"bold"}
+                       onClick={handleLogout}>
+                         <Box borderRadius="50%" bg="gray.200" p={3}>
+                         <IoLogOut />
+                        </Box>
+                        <Box ml={2} p={1}>Log out</Box></MenuItem>
                     </MenuList>
 
                   </Menu>
@@ -828,20 +871,30 @@ export default function Nav() {
                         boxShadow="lg"
                         borderRadius="md"
                         width="200px" // Adjust width as needed
+                        overflowY="auto"
+                        maxHeight="300px"
                       >
                         {searching ? (
-                           <Stack spacing={2} p={2}>
-                           <Skeleton height='20px' />
-                           <Skeleton height='20px' />
-                           <Skeleton height='20px' />
-                         </Stack>
+                          <Stack spacing={2} p={2}>
+                            <Skeleton height='20px' />
+                            <Skeleton height='20px' />
+                            <Skeleton height='20px' />
+                          </Stack>
                         ) : searchResults.length === 0 ? (
                           <Text>No results found</Text>
                         ) : (
                           searchResults.map((result, index) => (
-                            <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
-                              <Box p={3} borderBottomWidth="1px">
-                                <Text>{result.displayName}</Text>
+                            <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch}>
+                              <Box
+                                _hover={{ bg: "gray.200" }} 
+                                p={3}
+                                borderBottomWidth="1px"
+                                color="gray"
+                              >
+                                <Flex align="center">
+                                  <Avatar src={result.imageUrl} mr={3} />
+                                  <Text>{result.displayName}</Text>
+                                </Flex>
                               </Box>
                             </Link>
                           ))
@@ -1042,8 +1095,6 @@ export default function Nav() {
                       minW={0}
                     >
 
-                      {/* <Avatar size="sm" src='https://bit.ly/broken-link' /> */}
-
                       <Avatar size="sm" src={user?.photoURL as string}>
                         <AvatarBadge boxSize='1.25em' bg='green.500' />
                       </Avatar>
@@ -1055,7 +1106,7 @@ export default function Nav() {
                           <Avatar size="sm" src={user?.photoURL as string} />
                         </Center>
                         <Center p={2}>
-                          <Link to={`/profile/${user?.uid}`}>
+                          <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
                             <p>{user?.displayName}</p>
                           </Link>
                         </Center>
@@ -1135,80 +1186,84 @@ export default function Nav() {
                 <Flex alignItems="center" position="relative">
                   {/* Search Icon */}
                   <Box display="flex" alignItems="center" justifyContent="flex-end">
-  {/* Search Icon */}
-  <FaSearch color="gray" onClick={toggleSearch} />
+                    {/* Search Icon */}
+                    <FaSearch color="gray" onClick={toggleSearch} />
 
-  {/* Search Input Field */}
-  {isSearchOpen && (
-    <Box
-      position="relative"
-      mr={2} // Adjust margin as needed
-      mt={3}
-    >
-      <Box
-        position="absolute"
-        top={0}
-        right={0} // Align to the right
-        zIndex={10}
-        bg={colorMode === "light" ? "white" : "gray.800"}
-        boxShadow="lg"
-        borderRadius={20}
-        width="200px" // Adjust width as needed
-      >
-        <Input
-          type="text"
-          placeholder="Search Facebook"
-          borderRadius={20}
-          value={searchTerm}
-          onChange={handleSearchChange}
-          position="absolute"
-        />
-      </Box>
-    </Box>
-  )}
+                    {/* Search Input Field */}
+                    {isSearchOpen && (
+                      <Box
+                        position="relative"
+                        mr={2}
+                        mt={3}
+                      >
+                        <Box
+                          position="absolute"
+                          top={0}
+                          right={0} // Align to the right
+                          zIndex={10}
+                          bg={colorMode === "light" ? "white" : "gray.800"}
+                          boxShadow="lg"
+                          borderRadius={20}
+                          width="200px" // Adjust width as needed
+                        >
+                          <Input
+                            type="text"
+                            placeholder="Search Facebook"
+                            borderRadius={20}
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            position="absolute"
+                          />
+                        </Box>
+                      </Box>
+                    )}
 
-  {/* Search Results */}
-  {searchTerm && (
-    <Box
-      position="relative"
-      mr={2} // Adjust margin as needed
-      mt={20}
-    >
-      <Box
-        position="absolute"
-        top={0}
-        right={0} // Align to the right
-        zIndex={10}
-        bg={colorMode === "light" ? "white" : "gray.800"}
-        boxShadow="lg"
-        borderRadius="md"
-        width="200px" // Adjust width as needed
-      >
-        {searching ? (
-          <Stack spacing={2} p={2}>
-            <Skeleton height='20px' />
-            <Skeleton height='20px' />
-            <Skeleton height='20px' />
-          </Stack>
-        ) : searchResults.length === 0 ? (
-          <Text>No results found</Text>
-        ) : (
-          searchResults.map((result, index) => (
-            <Link key={index} to={`/profile/${result.uid}`} onClick={clearSearch}>
-              <Box p={3} borderBottomWidth="1px">
-                <Text>{result.displayName}</Text>
-              </Box>
-            </Link>
-          ))
-        )}
-      </Box>
-    </Box>
-  )}
-</Box>
+                    {/* Search Results */}
+                    {searchTerm && (
+                      <Box
+                        position="relative"
+                        mr={2} // Adjust margin as needed
+                        mt={20}
+                      >
+                        <Box
+                          position="absolute"
+                          top={0}
+                          right={0} // Align to the right
+                          zIndex={10}
+                          bg={colorMode === "light" ? "white" : "gray.800"}
+                          boxShadow="lg"
+                          borderRadius="md"
+                          width="200px" // Adjust width as needed
+                          overflowY="auto"
+                          maxHeight="300px"
+                        >
+                          {searching ? (
+                            <Stack spacing={2} p={2}>
+                              <Skeleton height='20px' />
+                              <Skeleton height='20px' />
+                              <Skeleton height='20px' />
+                            </Stack>
+                          ) : searchResults.length === 0 ? (
+                            <Text>No results found</Text>
+                          ) : (
+                            searchResults.map((result, index) => (
+                              <Link key={index} to={`/profile/${result.displayName}/${result.uid}`} onClick={clearSearch}>
+
+                                <Flex align="center" p={3} borderBottomWidth="1px" color="gray">
+                                  <Avatar src={result.imageUrl} mr={3} />
+                                  <Text>{result.displayName}</Text>
+                                </Flex>
+                              </Link>
+                            ))
+                          )}
+                        </Box>
+                      </Box>
+                    )}
+                  </Box>
 
                   {/* </Flex> */}
 
-                  <Menu
+                  {/* <Menu
                     placement="left-start"  >
                     <MenuButton
                       as={IconButton}
@@ -1311,7 +1366,7 @@ export default function Nav() {
                         </MenuItem>
                       </MenuList>
                     </Flex>
-                  </Menu>
+                  </Menu> */}
                 </Flex>
               </Flex>
             </Box>
@@ -1360,8 +1415,7 @@ export default function Nav() {
                     <br />
                     <MenuDivider />
                     <MenuItem>No Notifications yet</MenuItem>
-                    {/* <MenuItem>Account Settings</MenuItem> */}
-                    {/* <MenuItem>Logout</MenuItem> */}
+                    
                   </MenuList>
                 </Menu>
               </Box>
@@ -1388,7 +1442,7 @@ export default function Nav() {
                         <Avatar size="sm" src={user?.photoURL as string} />
                       </Center>
                       <Center p={2}>
-                        <Link to={`/profile/${user?.uid}`}>
+                        <Link to={`/profile/${user?.displayName}/${user?.uid}`}>
                           <p>{user?.displayName}</p>
                         </Link>
                       </Center>

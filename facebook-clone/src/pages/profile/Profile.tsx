@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import {
   Box,
   Flex,
   Image,
   Heading,
   Text,
-  Spacer,
   Center,
   Divider,
-  GridItem,
   Card,
   CardHeader,
   CardBody,
@@ -16,20 +14,20 @@ import {
   Button,
   SimpleGrid,
   Avatar,
-  Grid,
+  Stack,
 } from "@chakra-ui/react";
 import { Feed } from "../../components/MiddleFeedParts/FeedSections/Feed";
-
 import { getAuth } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Timestamp, collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
-import PostPage from "../../components/MiddleFeedParts/PostPage";
+import PostPage from "../../components/MiddleFeedParts/PostPage"; 
 import { AiTwotoneHome } from "react-icons/ai";
 import { IoLocation } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa6";
 import { IoMdStopwatch } from "react-icons/io";
 import { MdRssFeed } from "react-icons/md";
+import { MdPrivacyTip } from "react-icons/md";
 
 interface Postl {
   id: string;
@@ -40,9 +38,29 @@ interface Postl {
   userName: string;
   timestamp: Timestamp;
   uid: string;
-  // postUserId: string;
+  userImage:string
+}
+
+interface PostData {
+  id: string;
+  caption: string;
+  imageUrl: string;
+  likes: number;
+  postUserId: string;
+  userName: string; // Add userName property
+  timestamp: Timestamp;
+  uid: string;
+  userImage: string;
+}
+
+interface UserData {
+  photoURL: string;
+  displayName: string;
 }
 export default function Profile() {
+   const { displayName } = useParams();
+   const [userData, setUserData] = useState<UserData | null>(null);
+
   const cardDataArray: { imageSrc: string }[] = [
     {
       imageSrc:
@@ -83,7 +101,6 @@ export default function Profile() {
   ];
   const auth = getAuth();
   const user = auth.currentUser;
-  const navigate = useNavigate();
   const [posts, setPosts] = useState<Postl[]>([]);
 
   useEffect(() => {
@@ -91,13 +108,29 @@ export default function Profile() {
       const postData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
-      setPosts(postData as any[]);
-      console.log("postdata", postData);
+      })) as PostData[]; 
+      // Filter posts by userName
+      const filteredPosts = postData.filter(post => post.userName === displayName);
+      setPosts(filteredPosts);
+      console.log("postdata", filteredPosts);
+    });
+  
+    return unsubscribe;
+  }, [displayName]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+      snapshot.forEach((doc) => {
+        const data = doc.data() as UserData; 
+        if (data.displayName === displayName) {
+          setUserData(data);
+        }
+      });
     });
 
-    return unsubscribe;
-  }, []);
+    return () => unsubscribe();
+  }, [displayName]);
+
   return (
     <>
       <Center>
@@ -108,22 +141,41 @@ export default function Profile() {
               w={["100%", "100%", "100%", "100%", "70%", "70%"]}
               borderRadius={"8px"}
               src={
-                "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+                "https://images.pexels.com/photos/259698/pexels-photo-259698.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
               }
               objectFit="cover"
               alt="#"
             />
           </Flex>
-          <Flex direction={"row"} justify={"center"} mt={-12}>
+          <Flex direction={"row"} justify={"center"} mt={-12} flexWrap={"wrap"}>
             <Avatar
               h={"200px"}
               w={"200px"}
-              src={"https://i.stack.imgur.com/l60Hf.png"}
+              src={ userData?.photoURL || ""}
               css={{
                 border: "2px solid white",
               }}
-            /> 
-            <Text fontWeight={"bold"} fontSize={"2xl"} mt={32}>{user?.displayName}</Text>
+            />
+
+            <Stack ml={2}>
+
+            <Text fontWeight={"bold"} fontSize={"2xl"} mt={"50px"}>{displayName}</Text>
+            <Text fontWeight={"700"}>378 friends</Text>
+            <Flex>{cardDataArray.map((el)=>(
+              <Box marginBottom={4}>
+              <Image width={"30px"} height={"30px"} borderRadius={"50%"}  src={el.imageSrc}/>
+              </Box>
+            ))}</Flex>
+            </Stack>
+          </Flex>
+          <Divider border={"1px solid #d1d5da"} marginTop={3} />
+          <Flex p={2} marginLeft={["0", "110px"]}>
+            <Button>Posts</Button>
+            <Button>About</Button>
+            <Button>Friends</Button>
+            <Button>Photos</Button>
+            <Button>Videos</Button>
+            <Button>Reels</Button>
           </Flex>
         </Box>
       </Center>
@@ -138,6 +190,20 @@ export default function Profile() {
           direction="column"
         >
           <SimpleGrid spacing={4} mt={4}>
+            <Card>
+              <CardBody>
+                <Flex alignItems={"center"}>
+                  <MdPrivacyTip />
+
+                  <Box marginLeft={4}>
+                    <Text fontWeight={"700"}>You've locked your profile</Text>
+                    <Text fontWeight={"700"} color={"#0866ff"}>
+                      Learn more
+                    </Text>
+                  </Box>
+                </Flex>
+              </CardBody>
+            </Card>
             <Card>
               <CardHeader>
                 <Heading size="md"> Intro</Heading>
@@ -197,14 +263,14 @@ export default function Profile() {
           <Center>
             <Flex className="profileRightBottom">
               <Flex direction={"column"}>
-                <Feed />
+              
                 <Center
                   bg="grey.100"
                   h="40px"
                   color="black"
                   width={"100%"}
                 ></Center>
-
+                { user?.displayName ===displayName && <Feed />}
                 {posts
                   .sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds)
                   .map((post) => (
@@ -218,6 +284,7 @@ export default function Profile() {
                       noOfLikes={post.likes}
                       postUserId={post.uid}
                       timestamp={post.timestamp}
+                      userImage={post.imageUrl}
                     />
                   ))}
               </Flex>

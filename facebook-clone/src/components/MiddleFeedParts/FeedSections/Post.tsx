@@ -3,8 +3,8 @@ import { Flex } from "@chakra-ui/react";
 import { Feed } from "./Feed";
 import { PostPage } from "../PostPage";
 import { Story } from "./Story";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+
+import { FC, useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { db } from "../../../firebase";
 import { Timestamp, collection, onSnapshot } from "firebase/firestore";
@@ -19,11 +19,12 @@ interface Post {
   likes: number;
   postUserId: string;
   userName: string;
+  userImage:string,
   timestamp: Timestamp;
   uid: string;
 }
 
-export const Post = () => {
+export const Post: FC = () => {
   const auth = getAuth();
   const user = auth.currentUser;
   const [posts, setPosts] = useState<Post[]>([]);
@@ -59,6 +60,7 @@ export const Post = () => {
                 postId={post.id}
                 user={user}
                 username={post.userName}
+                userImage={post.userImage}
                 caption={post.caption}
                 imageURL={post.imageUrl}
                 noOfLikes={post.likes}
